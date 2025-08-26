@@ -733,6 +733,7 @@ function initializeLanguageButtons() {
     }
 }
 
+
 // Main initialization function
 function updateEndpointInfo(signatoryId) {
     try {
