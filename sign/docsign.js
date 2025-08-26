@@ -37,7 +37,6 @@ function getDocSignConfig() {
 function getDocSignApiBaseUrl() {
     // Check if API_BASE_URL is set via environment variable
     if (typeof window !== 'undefined' && window.API_BASE_URL) {
-        console.log('Using API_BASE_URL from window:', window.API_BASE_URL);
         return window.API_BASE_URL;
     }
     
@@ -50,13 +49,11 @@ function getDocSignApiBaseUrl() {
         }
     }
     if (metaTagContent) {
-        console.log('Using API_BASE_URL from meta tag:', metaTagContent);
         return metaTagContent;
     }
     
     // Return default
     const cfg = getDocSignConfig();
-    console.log('Using default API_BASE_URL:', cfg.API_BASE_URL);
     return cfg.API_BASE_URL;
 }
 
@@ -205,7 +202,6 @@ function extractSignApplicationIdFromData(obj) {
             }
         });
         if (candidates.length) {
-            console.log('[DocSign] Candidates for signApplicationId from data:', candidates);
             return candidates[0].id;
         }
         return null;
@@ -218,8 +214,6 @@ function extractSignApplicationIdFromData(obj) {
 async function fetchSignatoryData(signatoryId) {
     try {
         const url = getDocSignApiUrl(_cfg().SIGNATORY_ENDPOINT + signatoryId);
-        console.log('Fetching signatory data from:', url);
-        
         const response = await fetch(url, {
             method: 'GET',
             headers: {
@@ -233,7 +227,6 @@ async function fetchSignatoryData(signatoryId) {
         }
 
         const data = await response.json();
-        console.log('Signatory data received:', data);
         return data;
     } catch (error) {
         console.error('Error fetching signatory data:', error);
@@ -600,23 +593,15 @@ function renderDocumentSigningPage(data) {
     const signAppIdFromQuery = getSignApplicationIdFromQuery();
     const signAppIdFromData = extractSignApplicationIdFromData(data) || extractSignApplicationIdFromData(fileInfo);
 
-    if (!signAppIdFromQuery && !signAppIdFromData) {
-        console.warn('[DocSign] No signApplicationId found in query or data; will try fileRef fields if present');
-    } else {
-        console.log('[DocSign] signApplicationId sources:', { signAppIdFromQuery, signAppIdFromData });
-    }
-
     const signAppId = signAppIdFromQuery || signAppIdFromData;
 
     if (signAppId) {
         const apiPdfUrl = resolveDocSignUrl(getFilesApiPdfUrl(signAppId));
-        console.log('[DocSign] Inline files endpoint will be called with signApplicationId:', { signAppId, fromQuery: !!signAppIdFromQuery, apiPdfUrl });
         if (typeof window !== 'undefined') {
             window.DEBUG_DocSign = window.DEBUG_DocSign || {};
             window.DEBUG_DocSign.state = { signAppIdFromQuery, signAppIdFromData, chosenSignAppId: signAppId, apiPdfUrl };
             window.DEBUG_DocSign.loadPdfFor = function(id) {
                 const u = resolveDocSignUrl(getFilesApiPdfUrl(id));
-                console.log('[DocSign][DEBUG] Forced inline PDF load for id:', id, 'url:', u);
                 loadAndDisplayPdf(u, fileInfo && fileInfo.fileName);
             };
         }
@@ -627,26 +612,22 @@ function renderDocumentSigningPage(data) {
             const uuidFromRaw = extractUuid(String(rawPdfUrl));
             if (uuidFromRaw) {
                 const inlineUrl = resolveDocSignUrl(getFilesApiPdfUrl(uuidFromRaw));
-                console.log('[DocSign] Derived signApplicationId from fileRef; calling inline endpoint:', { rawPdfUrl, uuidFromRaw, inlineUrl });
                 if (typeof window !== 'undefined') {
                     window.DEBUG_DocSign = window.DEBUG_DocSign || {};
                     window.DEBUG_DocSign.state = { signAppIdFromQuery, signAppIdFromData, chosenSignAppId: uuidFromRaw, derivedFrom: 'fileRef', rawPdfUrl, apiPdfUrl: inlineUrl };
                     window.DEBUG_DocSign.loadPdfFor = function(id) {
                         const u = resolveDocSignUrl(getFilesApiPdfUrl(id));
-                        console.log('[DocSign][DEBUG] Forced inline PDF load for id:', id, 'url:', u);
                         loadAndDisplayPdf(u, fileInfo && fileInfo.fileName);
                     };
                 }
                 loadAndDisplayPdf(inlineUrl, fileInfo && fileInfo.fileName);
             } else {
                 const absPdfUrl = resolveDocSignUrl(rawPdfUrl);
-                console.log('[DocSign] Falling back to direct fileRef URL (no signApplicationId available):', { absPdfUrl, fileRefWithQr: fileInfo && fileInfo.fileRefWithQr, fileRef: fileInfo && fileInfo.fileRef });
                 if (typeof window !== 'undefined') {
                     window.DEBUG_DocSign = window.DEBUG_DocSign || {};
                     window.DEBUG_DocSign.state = { signAppIdFromQuery, signAppIdFromData, chosenSignAppId: null, rawPdfUrl, absPdfUrl };
                     window.DEBUG_DocSign.loadPdfFor = function(id) {
                         const u = resolveDocSignUrl(getFilesApiPdfUrl(id));
-                        console.log('[DocSign][DEBUG] Forced inline PDF load for id:', id, 'url:', u);
                         loadAndDisplayPdf(u, fileInfo && fileInfo.fileName);
                     };
                 }
@@ -659,7 +640,6 @@ function renderDocumentSigningPage(data) {
                 window.DEBUG_DocSign.state = { signAppIdFromQuery, signAppIdFromData, chosenSignAppId: null };
                 window.DEBUG_DocSign.loadPdfFor = function(id) {
                     const u = resolveDocSignUrl(getFilesApiPdfUrl(id));
-                    console.log('[DocSign][DEBUG] Forced inline PDF load for id:', id, 'url:', u);
                     loadAndDisplayPdf(u, fileInfo && fileInfo.fileName);
                 };
             }
@@ -702,8 +682,7 @@ async function initiateSigning(signatoryId) {
         
         // Call the signing endpoint
         const url = getDocSignApiUrl(_cfg().SIGNING_ENDPOINT + signatoryId + '/process');
-        console.log('Initiating signing process:', url);
-        
+
         const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -717,8 +696,7 @@ async function initiateSigning(signatoryId) {
         }
 
         const data = await response.json();
-        console.log('Signing response received:', data);
-        
+
         // Redirect to the sign link
         if (data.signLink) {
             window.location.href = data.signLink;
@@ -775,13 +753,11 @@ async function initializeDocumentSigning() {
         const signAppIdFromQuery = getSignApplicationIdFromQuery();
         if (signAppIdFromQuery) {
             const apiPdfUrl = resolveDocSignUrl(getFilesApiPdfUrl(signAppIdFromQuery));
-            console.log('[DocSign] Early PDF load via query signApplicationId:', { signApplicationId: signAppIdFromQuery, apiPdfUrl });
             if (typeof window !== 'undefined') {
                 window.DEBUG_DocSign = window.DEBUG_DocSign || {};
                 window.DEBUG_DocSign.earlyPdf = { signApplicationId: signAppIdFromQuery, url: apiPdfUrl, at: new Date().toISOString() };
                 window.DEBUG_DocSign.loadPdfFor = function(id) {
                     const u = resolveDocSignUrl(getFilesApiPdfUrl(id));
-                    console.log('[DocSign][DEBUG] Forced inline PDF load for id:', id, 'url:', u);
                     loadAndDisplayPdf(u);
                 };
             }

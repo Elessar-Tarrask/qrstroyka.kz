@@ -68,4 +68,4 @@ if (typeof module !== 'undefined' && module.exports) {
         getNotificationApiUrl,
         API_CONFIG: getApiConfig()
     };
-} 
+}
