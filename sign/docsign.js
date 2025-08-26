@@ -467,6 +467,7 @@ function loadAndDisplayPdf(pdfUrl, fileName) {
             headers: {
                 'Accept': 'application/pdf'
             }
+
         })
             .then(function(response) {
                 if (!response.ok) throw new Error('PDF fetch error: ' + response.status);
