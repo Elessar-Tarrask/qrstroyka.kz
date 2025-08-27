@@ -402,14 +402,7 @@ function openPdfDb(callback) {
     request.onerror = function() { callback(null); };
 }
 
-function savePdfToCache(blob, cacheKey) {
-    openPdfDb(function(db) {
-        if (!db) return;
-        const tx = db.transaction('pdfs', 'readwrite');
-        const store = tx.objectStore('pdfs');
-        store.put(blob, cacheKey);
-    });
-}
+
 
 function getCachedPdfUrl(cacheKey, callback) {
     openPdfDb(function(db) {
