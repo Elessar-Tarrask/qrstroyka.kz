@@ -373,54 +373,7 @@ function getSignStateClass(signState) {
     return classMap[signState] || 'pending';
 }
 
-// Simple IndexedDB helpers for caching PDF blobs
-function openPdfDb(callback) {
-    const dbName = 'pdfCache';
-    const storeName = 'pdfs';
-    const idb = (typeof indexedDB !== 'undefined') ? indexedDB
-        : (typeof window !== 'undefined' && window.indexedDB) ? window.indexedDB
-        : (typeof globalThis !== 'undefined' && globalThis.indexedDB) ? globalThis.indexedDB
-        : null;
-    if (!idb) { callback(null); return; }
-    const request = idb.open(dbName, 1);
-    request.onupgradeneeded = function(event) {
-        const db = event.target.result;
-        if (!db.objectStoreNames.contains(storeName)) {
-            db.createObjectStore(storeName);
-        }
-    };
-    request.onsuccess = function(event) {
-        const db = event.target.result;
-        if (!db.objectStoreNames.contains(storeName)) {
-            db.close();
-            try { idb.deleteDatabase(dbName); } catch (e) { /* ignore */ }
-            setTimeout(() => openPdfDb(callback), 50);
-            return;
-        }
-        callback(db);
-    };
-    request.onerror = function() { callback(null); };
-}
-
-
-
-function getCachedPdfUrl(cacheKey, callback) {
-    openPdfDb(function(db) {
-        if (!db) return callback(null);
-        const tx = db.transaction('pdfs', 'readonly');
-        const store = tx.objectStore('pdfs');
-        const getReq = store.get(cacheKey);
-        getReq.onsuccess = function(e) {
-            const blob = e.target.result;
-            if (blob) {
-                callback(URL.createObjectURL(blob));
-            } else {
-                callback(null);
-            }
-        };
-        getReq.onerror = function() { callback(null); };
-    });
-}
+// PDF caching functions removed - PDFs are now always fetched fresh from endpoints
 
 function loadAndDisplayPdf(pdfUrl, fileName) {
     const objectEl = document.getElementById('pdfObject');
@@ -435,49 +388,38 @@ function loadAndDisplayPdf(pdfUrl, fileName) {
         downloadLink.setAttribute('download', fileName || 'document.pdf');
     }
 
-    getCachedPdfUrl(pdfUrl, function(cachedUrl) {
-        const setViewerSrc = (url) => {
-            if (objectEl) objectEl.setAttribute('data', url);
-            if (iframeEl) iframeEl.setAttribute('src', url);
-        };
+    const setViewerSrc = (url) => {
+        if (objectEl) objectEl.setAttribute('data', url);
+        if (iframeEl) iframeEl.setAttribute('src', url);
+    };
 
-        if (cachedUrl) {
-            setViewerSrc(cachedUrl);
-            if (downloadLink) downloadLink.href = cachedUrl;
-            if (newWindowLink) newWindowLink.href = cachedUrl;
-            return;
+    // Always fetch the PDF fresh from the endpoint (no caching)
+    fetch(pdfUrl, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/pdf'
         }
-
-        // Fetch the PDF as Blob
-        fetch(pdfUrl, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/pdf'
-            }
-
+    })
+        .then(function(response) {
+            if (!response.ok) throw new Error('PDF fetch error: ' + response.status);
+            return response.blob();
         })
-            .then(function(response) {
-                if (!response.ok) throw new Error('PDF fetch error: ' + response.status);
-                return response.blob();
-            })
-            .then(function(blob) {
-                const blobUrl = URL.createObjectURL(blob);
-                savePdfToCache(blob, pdfUrl);
-                setViewerSrc(blobUrl);
-                if (downloadLink) {
-                    downloadLink.href = blobUrl;
-                    downloadLink.setAttribute('download', fileName || 'document.pdf');
-                }
-                if (newWindowLink) {
-                    newWindowLink.href = blobUrl;
-                }
-            })
-            .catch(function(err) {
-                console.warn('[DocSign] PDF fetch failed, falling back to direct URL:', err);
-                // As a last resort, try to show direct URL (may download depending on headers)
-                setViewerSrc(pdfUrl);
-            });
-    });
+        .then(function(blob) {
+            const blobUrl = URL.createObjectURL(blob);
+            setViewerSrc(blobUrl);
+            if (downloadLink) {
+                downloadLink.href = blobUrl;
+                downloadLink.setAttribute('download', fileName || 'document.pdf');
+            }
+            if (newWindowLink) {
+                newWindowLink.href = blobUrl;
+            }
+        })
+        .catch(function(err) {
+            console.warn('[DocSign] PDF fetch failed, falling back to direct URL:', err);
+            // As a last resort, try to show direct URL (may download depending on headers)
+            setViewerSrc(pdfUrl);
+        });
 }
 
 // Function to render the document signing page
