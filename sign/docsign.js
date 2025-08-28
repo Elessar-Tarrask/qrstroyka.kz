@@ -487,6 +487,7 @@ function loadAndDisplayPdf(pdfUrl, fileName) {
     });
 }
 
+
 // Function to render the document signing page
 function renderDocumentSigningPage(data) {
     const container = document.getElementById('documentContainer');
