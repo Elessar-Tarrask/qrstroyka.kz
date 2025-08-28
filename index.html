@@ -220,21 +220,23 @@
             const defaultContent = document.getElementById('defaultContent');
             
             // Regular expression to match the patterns
-            const pattern = /^\/(order|resume|equipment|company)\/([^\/]+)$/;
+            const pattern = /^\/(order|resume|equipment|company|cv)\/([^\/]+)$/;
             const match = path.match(pattern);
             
             const typeMap = {
                 'order': 'заказ',
                 'resume': 'резюме',
                 'equipment': 'объявление',
-                'company': 'компания'
+                'company': 'компания',
+                'cv': 'резюме'
             };
 
             const typeDescriptionMap = {
                 'order': 'Просмотреть детали заказа',
                 'resume': 'Просмотреть резюме',
                 'equipment': 'Просмотреть объявление об оборудовании',
-                'company': 'Просмотреть профиль компании'
+                'company': 'Просмотреть профиль компании',
+                'cv': 'Просмотреть резюме'
             };
             
             if (match) {

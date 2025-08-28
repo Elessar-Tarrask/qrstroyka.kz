@@ -69,4 +69,3 @@ if (typeof module !== 'undefined' && module.exports) {
         API_CONFIG: getApiConfig()
     };
 }
-//
