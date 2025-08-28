@@ -401,7 +401,7 @@ function loadAndDisplayPdf(pdfUrl, fileName) {
         if (iframeEl) iframeEl.setAttribute('src', url);
     };
 
-    // Always fetch the PDF fresh from the endpoint with cache-busting
+    // Always fetch the PDF fresh from the endpoint with cache-busting parameters
     fetch(cacheBustUrl, {
         method: 'GET',
         headers: {
