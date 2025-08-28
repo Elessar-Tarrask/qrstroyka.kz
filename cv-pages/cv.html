@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Stroyka.kz - Резюме жасау</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            font-size: 15px;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        input, button, select, textarea, label {
+            font-family: inherit;
+            font-size: 0.97em;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 2rem 1.5rem 1.5rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .language-selector {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .lang-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 0.5rem 0.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .lang-btn.active {
+            background: rgba(255,255,255,0.9);
+            color: #4CAF50;
+        }
+
+        .app-download-buttons {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .app-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 0.5rem 0.8rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+
+        .app-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-1px);
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1rem;
+            background: white;
+            border-radius: 16px;
+            padding: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 2rem 1.5rem;
+        }
+
+        .info-section {
+            margin-bottom: 2rem;
+        }
+
+        .info-section h2 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .info-section p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .features {
+            display: grid;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: #4CAF50;
+            border-radius: 10px;
+            margin-right: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .feature-text {
+            flex: 1;
+        }
+
+        .feature-title {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .feature-desc {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .platform-highlight {
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            color: white;
+            text-align: center;
+        }
+
+        .highlight-content h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .highlight-content p {
+            font-size: 1rem;
+            line-height: 1.5;
+            opacity: 0.95;
+        }
+
+        .primary-button {
+            width: 100%;
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        .primary-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+            background: linear-gradient(135deg, #FF5722 0%, #FF9800 100%);
+        }
+
+        .header-cta-button {
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            animation: pulse 2s infinite;
+        }
+
+        .header-cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            background: linear-gradient(135deg, #FF5722 0%, #FF9800 100%);
+            animation: none;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            }
+            50% {
+                box-shadow: 0 4px 20px rgba(255, 107, 53, 0.4);
+            }
+            100% {
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            }
+        }
+
+        .primary-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 400px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .step {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .step.active {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .step.completed {
+            background: #2196F3;
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 55px !important;
+            height: 40px !important;
+            accent-color: #4CAF50;
+        }
+
+        .success-screen {
+            text-align: center;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: #4CAF50;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #4CAF50;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .cv-header {
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            border-radius: 16px;
+            margin: 2rem 0;
+        }
+
+        .cv-header h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            color: #4CAF50;
+            font-size: 0.9rem;
+            cursor: pointer;
+            padding: 0.5rem 0;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .back-button:hover {
+            color: #45a049;
+        }
+
+        .sms-info {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .sms-info p {
+            margin-bottom: 0.5rem;
+        }
+
+        .phone-display {
+            color: #4CAF50;
+            font-size: 1.1rem;
+        }
+
+        .sms-input-container {
+            display: flex;
+            justify-content: center;
+            margin: 1.5rem 0;
+        }
+
+        .sms-input-container input {
+            width: 200px;
+            height: 60px;
+            font-size: 2rem;
+            text-align: center;
+            letter-spacing: 0.5rem;
+            border: 3px solid #eee;
+            border-radius: 12px;
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .sms-input-container input:focus {
+            border-color: #4CAF50;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .resend-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .resend-button {
+            background: none;
+            border: 1px solid #4CAF50;
+            color: #4CAF50;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .resend-button:hover:not(:disabled) {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .resend-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .timer {
+            background: #ff9800;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .auth-info {
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        .auth-info p {
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        input[type='checkbox'] {
+            width: 24px !important;
+            height: 24px !important;
+            accent-color: #4CAF50;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
+                min-height: 100vh;
+            }
+            
+            .header {
+                border-radius: 0;
+                padding-top: 3rem;
+            }
+            
+            .app-download-buttons {
+                flex-direction: column;
+                gap: 0.3rem;
+            }
+            
+            .app-btn {
+                font-size: 0.7rem;
+                padding: 0.4rem 0.6rem;
+            }
+            
+            .language-selector {
+                top: 0.5rem;
+                right: 0.5rem;
+            }
+            
+            .sms-input-container input {
+                width: 180px;
+                height: 50px;
+                font-size: 1.5rem;
+                letter-spacing: 0.3rem;
+            }
+            
+            .resend-section {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .header-cta-button {
+                padding: 0.8rem 1.5rem;
+                font-size: 0.9rem;
+                margin-top: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="language-selector">
+                <button class="lang-btn active" onclick="changeLanguage('kk')">ҚАЗ</button>
+                <button class="lang-btn" onclick="changeLanguage('ru')">РУС</button>
+            </div>
+            
+            <div class="app-download-buttons">
+                <a href="https://apps.apple.com/us/app/stroyka-kz/id6742178994" class="app-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                    </svg>
+                    App Store
+                </a>
+                <a href="https://play.google.com/store/apps/details?id=kz.cmrhub" class="app-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.5,12.92 20.16,13.19L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/>
+                    </svg>
+                    Google Play
+                </a>
+            </div>
+            
+            <div class="logo">
+                <img src="../logo.png" alt="Stroyka.kz" onerror="this.style.display='none'">
+            </div>
+            <h1 data-kk="Арман жұмысыңызды табыңыз" data-ru="Найдите работу своей мечты">Арман жұмысыңызды табыңыз</h1>
+            <p class="subtitle" data-kk="Қазақстандағы ең жақсы жұмыс берушілермен байланысыңыз" data-ru="Подключитесь к лучшим работодателям Казахстана">Қазақстандағы ең жақсы жұмыс берушілермен байланысыңыз</p>
+            <button class="header-cta-button" onclick="openRegistration()" data-kk="🚀 Жұмыс іздеуді бастау" data-ru="🚀 Начать поиск работы">🚀 Жұмыс іздеуді бастау</button>
+        </div>
+
+        <div class="content">
+            <div class="info-section">
+                <h2 data-kk="Неліктен Stroyka.kz таңдау керек?" data-ru="Почему выбрать Stroyka.kz?">Неліктен Stroyka.kz таңдау керек?</h2>
+                <p data-kk="Құрылыс саласында жұмыс іздеп жүрсіз бе? Stroyka.kz - Қазақстандағы ең ірі құрылыс мамандарына арналған платформа. Құрылыс ешқашан тоқтамайды, сондықтан біздің платформада әрқашан жаңа мүмкіндіктер мен жұмыс орындары бар!" 
+                   data-ru="Ищете работу в строительной сфере? Stroyka.kz - крупнейшая платформа для строительных специалистов в Казахстане. Строительство никогда не останавливается, поэтому на нашей платформе всегда есть новые возможности и рабочие места!">
+                   Құрылыс саласында жұмыс іздеп жүрсіз бе? Stroyka.kz - Қазақстандағы ең ірі құрылыс мамандарына арналған платформа. Құрылыс ешқашан тоқтамайды, сондықтан біздің платформада әрқашан жаңа мүмкіндіктер мен жұмыс орындары бар!
+                </p>
+                <p data-kk="Құрылыс саласындағы кәсіби резюме - жақсы жағдайда жұмыс істеуге жол ашады. Біздің платформада құрылыс компаниялары үнемі жаңа жобаларға арналған мамандарды іздейді. Астана мен Алматыдағы тұрғын үйлер, облыс орталықтарындағы инфрақұрылым, өнеркәсіп кешендері - Қазақстан дамып келеді!" 
+                   data-ru="Профессиональное резюме в строительной сфере - путь к работе в хороших условиях. На нашей платформе строительные компании постоянно ищут специалистов для новых проектов. Жилые комплексы в Астане и Алматы, инфраструктура в областных центрах, промышленные объекты - Казахстан активно развивается!">
+                   Құрылыс саласындағы кәсіби резюме - жақсы жағдайда жұмыс істеуге жол ашады. Біздің платформада құрылыс компаниялары үнемі жаңа жобаларға арналған мамандарды іздейді. Астана мен Алматыдағы тұрғын үйлер, облыс орталықтарындағы инфрақұрылым, өнеркәсіп кешендері - Қазақстан дамып келеді!
+                </p>
+            </div>
+
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-text">
+                        <div class="feature-title" data-kk="Арман жұмысыңызды табыңыз" data-ru="Найдите работу мечты">Арман жұмысыңызды табыңыз</div>
+                        <div class="feature-desc" data-kk="Мыңдаған актуалды вакансиялар мен сапалы ұсыныстар" data-ru="Тысячи актуальных вакансий и качественных предложений">Мыңдаған актуалды вакансиялар мен сапалы ұсыныстар</div>
+                    </div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🏢</div>
+                    <div class="feature-text">
+                        <div class="feature-title" data-kk="Ең жақсы жұмыс берушілер" data-ru="Лучшие работодатели">Ең жақсы жұмыс берушілер</div>
+                        <div class="feature-desc" data-kk="Топ компаниялар мен беделді жұмыс берушілер" data-ru="Топовые компании и престижные работодатели">Топ компаниялар мен беделді жұмыс берушілер</div>
+                    </div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">💰</div>
+                    <div class="feature-text">
+                        <div class="feature-title" data-kk="Жоғары жалақы" data-ru="Высокая зарплата">Жоғары жалақы</div>
+                        <div class="feature-desc" data-kk="Нарықтағы ең жақсы жалақы ұсыныстары" data-ru="Лучшие зарплатные предложения на рынке">Нарықтағы ең жақсы жалақы ұсыныстары</div>
+                    </div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-text">
+                        <div class="feature-title" data-kk="Жылдам жұмысқа орналасу" data-ru="Быстрое трудоустройство">Жылдам жұмысқа орналасу</div>
+                        <div class="feature-desc" data-kk="Резюме жасау сізді байқатады және сұхбатқа шақырады" data-ru="Создание резюме поможет вас заметить и пригласить на собеседование">Резюме жасау сізді байқатады және сұхбатқа шақырады</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="platform-highlight">
+                <div class="highlight-content">
+                    <h3 data-kk="🔥 Сіздің дарыныңыз дұрыс жерде бағаланады!" data-ru="🔥 Ваш талант будет оценен по достоинству!">🔥 Сіздің дарыныңыз дұрыс жерде бағаланады!</h3>
+                    <p data-kk="Stroyka.kz мобильді қосымшасы арқылы сіздің резюмеңіз қысқа мерзімде көптеген HR мамандары мен компания басшыларының назарына түседі. Біздің алгоритм сіздің профиліңізді дұрыс жұмыс берушілермен автоматты түрде сәйкестендіреді." 
+                       data-ru="Через мобильное приложение Stroyka.kz ваше резюме быстро попадет в поле зрения множества HR-специалистов и руководителей компаний. Наш алгоритм автоматически сопоставляет ваш профиль с подходящими работодателями.">
+                       Stroyka.kz мобильді қосымшасы арқылы сіздің резюмеңіз қысқа мерзімде көптеген HR мамандары мен компания басшыларының назарына түседі. Біздің алгоритм сіздің профиліңізді дұрыс жұмыс берушілермен автоматты түрде сәйкестендіреді.
+                    </p>
+                </div>
+            </div>
+
+            <button class="primary-button" onclick="openRegistration()" data-kk="💼 Арман жұмысыңызды іздеу" data-ru="💼 Найти работу мечты">💼 Арман жұмысыңызды іздеу</button>
+        </div>
+    </div>
+
+    <!-- Registration Modal -->
+    <div class="modal" id="registrationModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal()">&times;</button>
+            
+            <!-- Step 1: Phone Input -->
+            <div id="step1" class="step-content">
+                <div class="modal-header">
+                    <h3 data-kk="Тіркелу" data-ru="Регистрация">Тіркелу</h3>
+                    <div class="step-indicator">
+                        <div class="step active">1</div>
+                        <div class="step">2</div>
+                        <div class="step">3</div>
+                    </div>
+                </div>
+                
+                <div class="error-message" id="error1"></div>
+                <div class="loading" id="loading1">
+                    <div class="spinner"></div>
+                    <p data-kk="Күте тұрыңыз..." data-ru="Подождите...">Күте тұрыңыз...</p>
+                </div>
+                
+                <div class="form-group">
+                    <label data-kk="Телефон нөміріңіз" data-ru="Ваш номер телефона">Телефон нөміріңіз</label>
+                    <input type="tel" id="phoneInput" placeholder="+7 777 123 45 67" maxlength="16">
+                </div>
+                
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="agreementCheck">
+                        <label for="agreementCheck">
+                            Продолжая, вы подтверждаете что ознакомлены и согласны с
+                            <a href="https://cmrapp.vercel.app/user-agreement.html" target="_blank" style="color:#0070c9;text-decoration:underline;">пользовательским соглашением</a>
+                            и
+                            <a href="https://cmrapp.vercel.app/" target="_blank" style="color:#0070c9;text-decoration:underline;">политикой конфиденциальности</a>
+                        </label>
+                    </div>
+                </div>
+                
+                <button class="primary-button" onclick="registerAndSendSMS()" data-kk="SMS жіберу" data-ru="Отправить SMS">SMS жіберу</button>
+            </div>
+
+            <!-- Step 2: SMS Verification -->
+            <div id="step2" class="step-content" style="display:none;">
+                <div class="modal-header">
+                    <h3 data-kk="SMS растау" data-ru="Подтверждение SMS">SMS растау</h3>
+                    <div class="step-indicator">
+                        <div class="step completed">1</div>
+                        <div class="step active">2</div>
+                        <div class="step">3</div>
+                    </div>
+                </div>
+                
+                <button class="back-button" onclick="goToStep(1)" data-kk="← Артқа" data-ru="← Назад">← Артқа</button>
+                
+                <div class="error-message" id="error2"></div>
+                <div class="loading" id="loading2">
+                    <div class="spinner"></div>
+                    <p data-kk="Код тексерілуде..." data-ru="Проверка кода...">Код тексерілуде...</p>
+                </div>
+                
+                <div class="sms-info">
+                    <p data-kk="SMS код жіберілді" data-ru="SMS код отправлен">SMS код жіберілді</p>
+                    <p class="phone-display"><strong id="phoneDisplaySMS"></strong></p>
+                </div>
+                
+                <div class="form-group">
+                    <label data-kk="SMS кодын енгізіңіз" data-ru="Введите SMS код">SMS кодын енгізіңіз</label>
+                    <div class="sms-input-container">
+                        <input type="text" id="smsCodeInput" placeholder="•••••" maxlength="5" autocomplete="one-time-code" inputmode="numeric">
+                    </div>
+                </div>
+                <div class="resend-section">
+                    <button class="resend-button" id="resendBtn" onclick="resendSMS()" data-kk="Қайта жіберу" data-ru="Отправить заново">Қайта жіберу</button>
+                    <span class="timer" id="timerDisplay"></span>
+                </div>
+            </div>
+
+            <!-- Step 3: Get Token -->
+            <div id="step3" class="step-content" style="display:none;">
+                <div class="modal-header">
+                    <h3 data-kk="Авторизация" data-ru="Авторизация">Авторизация</h3>
+                    <div class="step-indicator">
+                        <div class="step completed">1</div>
+                        <div class="step completed">2</div>
+                        <div class="step active">3</div>
+                    </div>
+                </div>
+                
+                <div class="error-message" id="error3"></div>
+                <div class="loading" id="loading3">
+                    <div class="spinner"></div>
+                    <p data-kk="Кіру..." data-ru="Вход...">Кіру...</p>
+                </div>
+                
+                <div class="auth-info">
+                    <p data-kk="Жүйеге кіріп жатырмыз..." data-ru="Выполняется вход в систему...">Жүйеге кіріп жатырмыз...</p>
+                </div>
+            </div>
+
+            <!-- Success Screen -->
+            <div id="successScreen" class="step-content" style="display:none;">
+                <div class="success-screen">
+                    <div class="success-icon">✓</div>
+                    <h3 data-kk="Сәтті тіркелдіңіз!" data-ru="Успешно зарегистрированы!">Сәтті тіркелдіңіз!</h3>
+                    <p data-kk="Енді арман жұмысыңызды іздей аласыз!" data-ru="Теперь вы можете искать работу мечты!">Енді арман жұмысыңызды іздей аласыз!</p>
+                    <button class="primary-button" onclick="showCVSection()" data-kk="Резюме жасау" data-ru="Создать резюме">Резюме жасау</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentLanguage = 'kk';
+        let userPhone = '';
+        let generatedPassword = '';
+        let authToken = '';
+
+        function changeLanguage(lang) {
+            currentLanguage = lang;
+            
+            // Update language buttons
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update text content
+            document.querySelectorAll('[data-kk][data-ru]').forEach(element => {
+                element.textContent = element.getAttribute('data-' + lang);
+            });
+            
+            // Update placeholders
+            const phoneInput = document.getElementById('phoneInput');
+            if (phoneInput) {
+                phoneInput.placeholder = lang === 'kk' ? '+7 777 123 45 67' : '+7 777 123 45 67';
+            }
+            
+            const smsInput = document.getElementById('smsCodeInput');
+            if (smsInput) {
+                smsInput.placeholder = '•••••';
+            }
+            localStorage.setItem('stroyka_lang', lang);
+        }
+
+        function openRegistration() {
+            document.getElementById('registrationModal').classList.add('show');
+            resetModal();
+        }
+
+        function closeModal() {
+            document.getElementById('registrationModal').classList.remove('show');
+        }
+
+        function resetModal() {
+            // Hide all steps
+            document.querySelectorAll('.step-content').forEach(step => {
+                step.style.display = 'none';
+            });
+            
+            // Show first step
+            document.getElementById('step1').style.display = 'block';
+            
+            // Clear inputs
+            document.getElementById('phoneInput').value = '';
+            document.getElementById('smsCodeInput').value = '';
+            document.getElementById('agreementCheck').checked = false;
+            
+            // Clear timer
+            if (resendInterval) {
+                clearInterval(resendInterval);
+                resendTimer = 0;
+            }
+            
+            // Reset resend button
+            const resendBtn = document.getElementById('resendBtn');
+            const timerDisplay = document.getElementById('timerDisplay');
+            if (resendBtn) {
+                resendBtn.disabled = false;
+                resendBtn.style.opacity = '1';
+            }
+            if (timerDisplay) {
+                timerDisplay.textContent = '';
+            }
+            
+            // Hide error messages and loading
+            hideAllErrors();
+            hideAllLoading();
+        }
+
+        function hideAllErrors() {
+            document.querySelectorAll('.error-message').forEach(error => {
+                error.style.display = 'none';
+            });
+        }
+
+        function hideAllLoading() {
+            document.querySelectorAll('.loading').forEach(loading => {
+                loading.style.display = 'none';
+            });
+        }
+
+        function showError(stepNum, message) {
+            const errorEl = document.getElementById('error' + stepNum);
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+        }
+
+        function showLoading(stepNum) {
+            document.getElementById('loading' + stepNum).style.display = 'block';
+        }
+
+        function hideLoading(stepNum) {
+            document.getElementById('loading' + stepNum).style.display = 'none';
+        }
+
+        function goToStep(stepNum) {
+            document.querySelectorAll('.step-content').forEach(step => {
+                step.style.display = 'none';
+            });
+            document.getElementById('step' + stepNum).style.display = 'block';
+            hideAllErrors();
+            hideAllLoading();
+            
+            // Clear timer if going back to step 1
+            if (stepNum === 1 && resendInterval) {
+                clearInterval(resendInterval);
+                resendTimer = 0;
+            }
+            
+            // Focus on SMS input when going to step 2
+            if (stepNum === 2) {
+                setTimeout(() => {
+                    const smsInput = document.getElementById('smsCodeInput');
+                    if (smsInput) {
+                        smsInput.focus();
+                    }
+                }, 100);
+            }
+        }
+
+        let resendTimer = 0;
+        let resendInterval = null;
+
+        async function registerAndSendSMS() {
+            const phoneRaw = document.getElementById('phoneInput').value.replace(/\D/g, '');
+            const agreement = document.getElementById('agreementCheck').checked;
+            
+            if (!phoneRaw || phoneRaw.length !== 11 || !phoneRaw.startsWith('7')) {
+                showError(1, currentLanguage === 'kk' ? 'Дұрыс телефон нөмірін енгізіңіз' : 'Введите корректный номер телефона');
+                return;
+            }
+            
+            if (!agreement) {
+                showError(1, currentLanguage === 'kk' ? 'Шарттармен келісуіңіз керек' : 'Необходимо согласиться с условиями');
+                return;
+            }
+            
+            userPhone = phoneRaw;
+            hideAllErrors();
+            showLoading(1);
+            
+            try {
+                // Step 1: Register user
+                const registerData = await apiService.registerUser(userPhone, true);
+                
+                // Step 2: Send SMS immediately after registration
+                await apiService.sendSMS(userPhone);
+                
+                document.getElementById('phoneDisplaySMS').textContent = '+' + userPhone.slice(0,1) + ' ' + userPhone.slice(1,4) + ' ' + userPhone.slice(4,7) + ' ' + userPhone.slice(7,9) + ' ' + userPhone.slice(9,11);
+                goToStep(2);
+                startResendTimer();
+                
+            } catch (error) {
+                
+                // More specific error messages
+                let errorMessage = currentLanguage === 'kk' ? 'Қате орын алды. Қайталап көріңіз.' : 'Произошла ошибка. Попробуйте снова.';
+                
+                if (error.message.includes('Failed to execute')) {
+                    errorMessage = currentLanguage === 'kk' ? 'Сервер қатесі. Қайталап көріңіз.' : 'Ошибка сервера. Попробуйте снова.';
+                } else if (error.message.includes('network')) {
+                    errorMessage = currentLanguage === 'kk' ? 'Интернет байланысы жоқ. Қайталап көріңіз.' : 'Нет интернет-соединения. Попробуйте снова.';
+                }
+                
+                showError(1, errorMessage);
+            }
+        }
+
+        function startResendTimer() {
+            resendTimer = 60;
+            const resendBtn = document.getElementById('resendBtn');
+            const timerDisplay = document.getElementById('timerDisplay');
+            
+            resendBtn.disabled = true;
+            resendBtn.style.opacity = '0.5';
+            
+            resendInterval = setInterval(() => {
+                resendTimer--;
+                timerDisplay.textContent = resendTimer;
+                
+                if (resendTimer <= 0) {
+                    clearInterval(resendInterval);
+                    resendBtn.disabled = false;
+                    resendBtn.style.opacity = '1';
+                    timerDisplay.textContent = '';
+                }
+            }, 1000);
+        }
+
+        async function resendSMS() {
+            try {
+                await apiService.sendSMS(userPhone);
+                startResendTimer();
+            } catch (error) {
+                
+                // More specific error messages
+                let errorMessage = currentLanguage === 'kk' ? 'SMS қайта жіберу қатесі' : 'Ошибка повторной отправки SMS';
+                
+                if (error.message.includes('Failed to execute')) {
+                    errorMessage = currentLanguage === 'kk' ? 'Сервер қатесі. Қайталап көріңіз.' : 'Ошибка сервера. Попробуйте снова.';
+                } else if (error.message.includes('network')) {
+                    errorMessage = currentLanguage === 'kk' ? 'Интернет байланысы жоқ. Қайталап көріңіз.' : 'Нет интернет-соединения. Попробуйте снова.';
+                }
+                
+                showError(2, errorMessage);
+            }
+        }
+
+        async function verifySMS() {
+            const smsCode = document.getElementById('smsCodeInput').value;
+            
+            if (!smsCode || smsCode.length !== 5) {
+                showError(2, currentLanguage === 'kk' ? '5 саннан тұратын кодты енгізіңіз' : 'Введите 5-значный код');
+                return;
+            }
+            
+            hideAllErrors();
+            showLoading(2);
+            
+            try {
+                const response = await apiService.verifySMS(userPhone, smsCode);
+                
+                // Handle different response formats
+                if (typeof response === 'string') {
+                    // Check if it looks like a password/token
+                    if (response.length > 0 && /^[a-zA-Z0-9@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+$/.test(response)) {
+                        generatedPassword = response.trim();
+                    } else {
+                        // If it's not a valid password format, use SMS code
+                        generatedPassword = smsCode;
+                    }
+                } else if (response && response.password) {
+                    generatedPassword = response.password.trim();
+                } else if (response && response.data && response.data.password) {
+                    generatedPassword = response.data.password.trim();
+                } else {
+                    // If no password in response, use SMS code as temporary password
+                    generatedPassword = smsCode;
+                }
+                
+                goToStep(3);
+                // Automatically proceed to get token
+                setTimeout(getAuthToken, 1000);
+            } catch (error) {
+                hideLoading(2);
+                showError(2, currentLanguage === 'kk' ? 'Қате код. Қайталап көріңіз.' : 'Неверный код. Попробуйте снова.');
+            }
+        }
+
+        async function getAuthToken() {
+            hideAllErrors();
+            showLoading(3);
+            
+            try {
+                const data = await apiService.getAuthToken(userPhone, generatedPassword);
+                
+                // Handle different response formats
+                if (data && data.access_token) {
+                    authToken = data.access_token;
+                } else if (data && data.token) {
+                    authToken = data.token;
+                } else if (typeof data === 'string') {
+                    authToken = data;
+                } else {
+                    throw new Error('No access token in response');
+                }
+                
+                // Show success screen
+                document.querySelectorAll('.step-content').forEach(step => {
+                    step.style.display = 'none';
+                });
+                document.getElementById('successScreen').style.display = 'block';
+            } catch (error) {
+                hideLoading(3);
+                showError(3, currentLanguage === 'kk' ? 'Авторизация қатесі. Қайталап көріңіз.' : 'Ошибка авторизации. Попробуйте снова.');
+            }
+        }
+
+        function showCVSection() {
+            closeModal();
+            
+            // Save user data to localStorage
+            const userData = {
+                phone: userPhone,
+                accessToken: authToken,
+                isAuthenticated: true,
+                timestamp: Date.now()
+            };
+            localStorage.setItem('stroyka_cv_auth', JSON.stringify(userData));
+            
+            // Redirect to CV creation page
+            window.location.href = 'create-cv.html';
+        }
+
+        // Check if user is already authenticated on page load
+        function checkAuthentication() {
+            const storedAuth = localStorage.getItem('stroyka_cv_auth');
+            if (storedAuth) {
+                try {
+                    const userData = JSON.parse(storedAuth);
+                    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+                    
+                    // Check if auth is still valid (within 24 hours)
+                    if (userData.isAuthenticated && 
+                        userData.timestamp && 
+                        (Date.now() - userData.timestamp) < twentyFourHours) {
+                        
+                        // User is authenticated, redirect to CV creation page
+                        window.location.href = 'create-cv.html';
+                        return true;
+                    } else {
+                        // Auth expired, clear storage
+                        localStorage.removeItem('stroyka_cv_auth');
+                    }
+                } catch (e) {
+                    // Invalid data, clear storage
+                    localStorage.removeItem('stroyka_cv_auth');
+                }
+            }
+            return false;
+        }
+
+        // Format phone input and SMS input
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication first
+            if (checkAuthentication()) {
+                return; // User is authenticated, will be redirected
+            }
+            
+            const phoneInput = document.getElementById('phoneInput');
+            if (phoneInput) {
+                let isFormatting = false;
+                
+                phoneInput.addEventListener('input', function(e) {
+                    if (isFormatting) return;
+                    isFormatting = true;
+                    
+                    // Get cursor position before formatting
+                    let cursorPosition = e.target.selectionStart;
+                    let oldValue = e.target.value;
+                    
+                    // Extract only digits
+                    let value = e.target.value.replace(/\D/g, '');
+                    
+                    // Handle 8 to 7 replacement
+                    if (value.startsWith('8')) {
+                        value = '7' + value.slice(1);
+                    }
+                    
+                    // Ensure starts with 7 if any digits entered
+                    if (!value.startsWith('7') && value.length > 0) {
+                        value = '7' + value;
+                    }
+                    
+                    // Limit to 11 digits (7 + 10 more)
+                    if (value.length > 11) {
+                        value = value.slice(0, 11);
+                    }
+                    
+                    // Format the number: +7 777 123 45 67
+                    let formatted = '';
+                    if (value.length >= 1) {
+                        formatted = '+7';
+                        if (value.length > 1) {
+                            formatted += ' ' + value.slice(1, 4);
+                        }
+                        if (value.length > 4) {
+                            formatted += ' ' + value.slice(4, 7);
+                        }
+                        if (value.length > 7) {
+                            formatted += ' ' + value.slice(7, 9);
+                        }
+                        if (value.length > 9) {
+                            formatted += ' ' + value.slice(9, 11);
+                        }
+                    }
+                    
+                    // Set the formatted value
+                    e.target.value = formatted;
+                    
+                    // Adjust cursor position for added formatting
+                    let newCursorPosition = cursorPosition;
+                    if (formatted.length > oldValue.length) {
+                        // Formatting was added, move cursor forward
+                        newCursorPosition = cursorPosition + (formatted.length - oldValue.length);
+                    }
+                    
+                    // Ensure cursor is not beyond the text length
+                    if (newCursorPosition > formatted.length) {
+                        newCursorPosition = formatted.length;
+                    }
+                    
+                    // Set cursor position
+                    setTimeout(() => {
+                        e.target.setSelectionRange(newCursorPosition, newCursorPosition);
+                    }, 0);
+                    
+                    isFormatting = false;
+                });
+                
+                // Handle paste events
+                phoneInput.addEventListener('paste', function(e) {
+                    e.preventDefault();
+                    let pastedText = (e.clipboardData || window.clipboardData).getData('text');
+                    let digits = pastedText.replace(/\D/g, '');
+                    
+                    if (digits.startsWith('8')) {
+                        digits = '7' + digits.slice(1);
+                    }
+                    if (!digits.startsWith('7') && digits.length > 0) {
+                        digits = '7' + digits;
+                    }
+                    if (digits.length > 11) {
+                        digits = digits.slice(0, 11);
+                    }
+                    
+                    phoneInput.value = digits;
+                    phoneInput.dispatchEvent(new Event('input'));
+                });
+                
+                // Handle keydown for better UX
+                phoneInput.addEventListener('keydown', function(e) {
+                    // Allow backspace, delete, tab, escape, enter
+                    if ([8, 9, 27, 13, 46].indexOf(e.keyCode) !== -1 ||
+                        // Allow Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+                        (e.keyCode === 65 && e.ctrlKey === true) ||
+                        (e.keyCode === 67 && e.ctrlKey === true) ||
+                        (e.keyCode === 86 && e.ctrlKey === true) ||
+                        (e.keyCode === 88 && e.ctrlKey === true) ||
+                        // Allow home, end, left, right
+                        (e.keyCode >= 35 && e.keyCode <= 39)) {
+                        return;
+                    }
+                    // Ensure that it is a number and stop the keypress
+                    if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                        e.preventDefault();
+                    }
+                });
+            }
+            
+            // SMS Code Input Auto-trigger
+            const smsInput = document.getElementById('smsCodeInput');
+            if (smsInput) {
+                smsInput.addEventListener('input', function(e) {
+                    // Only allow digits
+                    let value = e.target.value.replace(/\D/g, '');
+                    
+                    // Limit to 5 digits
+                    if (value.length > 5) {
+                        value = value.slice(0, 5);
+                    }
+                    
+                    e.target.value = value;
+                    
+                    // Auto-trigger verification when 5 digits entered
+                    if (value.length === 5) {
+                        setTimeout(() => {
+                            verifySMS();
+                        }, 300);
+                    }
+                });
+                
+                // Only allow numeric input
+                smsInput.addEventListener('keydown', function(e) {
+                    // Allow backspace, delete, tab, escape, enter
+                    if ([8, 9, 27, 13, 46].indexOf(e.keyCode) !== -1 ||
+                        // Allow Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+                        (e.keyCode === 65 && e.ctrlKey === true) ||
+                        (e.keyCode === 67 && e.ctrlKey === true) ||
+                        (e.keyCode === 86 && e.ctrlKey === true) ||
+                        (e.keyCode === 88 && e.ctrlKey === true) ||
+                        // Allow home, end, left, right
+                        (e.keyCode >= 35 && e.keyCode <= 39)) {
+                        return;
+                    }
+                    // Ensure that it is a number and stop the keypress
+                    if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                        e.preventDefault();
+                    }
+                });
+
+                // Handle paste for SMS input
+                smsInput.addEventListener('paste', function(e) {
+                    e.preventDefault();
+                    let pastedText = (e.clipboardData || window.clipboardData).getData('text');
+                    let digits = pastedText.replace(/\D/g, '');
+                    
+                    if (digits.length > 5) {
+                        digits = digits.slice(0, 5);
+                    }
+                    
+                    smsInput.value = digits;
+                    
+                    // Auto-trigger if 5 digits pasted
+                    if (digits.length === 5) {
+                        setTimeout(() => {
+                            verifySMS();
+                        }, 300);
+                    }
+                });
+            }
+        });
+
+        // Close modal on outside click
+        document.getElementById('registrationModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+    <script src="api.js"></script>
+</body>
+</html>

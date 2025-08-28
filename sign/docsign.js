@@ -396,10 +396,10 @@ function loadAndDisplayPdf(pdfUrl, fileName) {
     }
 
     const setViewerSrc = (url) => {
-        console.log('[DocSign] Setting viewer source to:', url);
         if (objectEl) objectEl.setAttribute('data', url);
         if (iframeEl) iframeEl.setAttribute('src', url);
     };
+
 
     // Always fetch the PDF fresh from the endpoint with cache-busting parameters
     fetch(cacheBustUrl, {
@@ -417,7 +417,6 @@ function loadAndDisplayPdf(pdfUrl, fileName) {
             return response.blob();
         })
         .then(function(blob) {
-            console.log('[DocSign] PDF blob created, size:', blob.size);
             const blobUrl = URL.createObjectURL(blob);
             setViewerSrc(blobUrl);
             if (downloadLink) {
@@ -427,11 +426,10 @@ function loadAndDisplayPdf(pdfUrl, fileName) {
             if (newWindowLink) {
                 newWindowLink.href = blobUrl;
             }
+
         })
         .catch(function(err) {
             console.warn('[DocSign] PDF fetch failed, falling back to direct URL:', err);
-            // As a last resort, try to show direct URL with cache-busting
-            setViewerSrc(cacheBustUrl);
         });
 }
 
