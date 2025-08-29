@@ -397,7 +397,8 @@ function loadAndDisplayPdf(pdfUrl, fileName) {
     fetch(pdfUrl, {
         method: 'GET',
         headers: {
-            'Accept': 'application/pdf'
+            'Accept': 'application/pdf',
+            'Cache-Control': 'no-cache, no-store, must-revalidate'
         }
     })
         .then(function(response) {
