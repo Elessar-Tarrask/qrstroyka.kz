@@ -389,14 +389,11 @@ function loadAndDisplayPdf(pdfUrl, fileName) {
     }
 
     const setViewerSrc = (url) => {
-        console.log('[DocSign] Setting viewer src:', url);
         if (objectEl) {
-            console.log('[DocSign] Setting viewer src object:', url);
             objectEl.setAttribute('data', url);
 
             // Add an onload error handler to fall back to iframe
             objectEl.onerror = function() {
-                console.log('[DocSign] Object tag failed, falling back to iframe');
                 if (iframeEl) {
                     iframeEl.style.display = 'block';
                     objectEl.style.display = 'none';
@@ -404,7 +401,6 @@ function loadAndDisplayPdf(pdfUrl, fileName) {
             };
         }
         if (iframeEl) {
-            console.log('[DocSign] Setting viewer src iframe:', url);
             iframeEl.setAttribute('src', url);
         }
     };
@@ -418,27 +414,22 @@ function loadAndDisplayPdf(pdfUrl, fileName) {
         }
     })
         .then(function(response) {
-            console.log('[DocSign] PDF fetch response:', response);
             if (!response.ok) throw new Error('PDF fetch error: ' + response.status);
             return response.blob();
         })
         .then(function(blob) {
-            console.log('[DocSign] PDF fetched successfully, creating blob URL:', blob);
             const blobUrl = URL.createObjectURL(blob);
             setViewerSrc(blobUrl);
             if (downloadLink) {
-                console.log('[DocSign] Setting download link:', blobUrl);
                 downloadLink.href = blobUrl;
                 downloadLink.setAttribute('download', fileName || 'document.pdf');
             }
             if (newWindowLink) {
-                console.log('[DocSign] Setting new window link:', blobUrl);
                 newWindowLink.href = blobUrl;
             }
 
         })
         .catch(function(err) {
-            console.log('[DocSign] PDF fetch failed, falling back to direct URL:', err);
             // As a last resort, try to show direct URL (may download depending on headers)
             setViewerSrc(pdfUrl);
         });
