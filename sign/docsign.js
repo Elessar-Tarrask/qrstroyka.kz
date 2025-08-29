@@ -388,22 +388,37 @@ function loadAndDisplayPdf(pdfUrl, fileName) {
         downloadLink.setAttribute('download', fileName || 'document.pdf');
     }
 
-    const setViewerSrc = (url) => {
+    function setViewerSrc(url) {
         if (objectEl) {
             objectEl.setAttribute('data', url);
 
-            // Add an onload error handler to fall back to iframe
+            // Если браузер не сможет отобразить object → включаем iframe
             objectEl.onerror = function() {
                 if (iframeEl) {
-                    iframeEl.style.display = 'block';
                     objectEl.style.display = 'none';
+                    iframeEl.style.display = 'block';
+                    iframeEl.setAttribute('src', url);
                 }
             };
+
+            // Таймаут-проверка (например, через 2 секунды)
+            setTimeout(() => {
+                // Если object пустой (нет содержимого), то fallback в iframe
+                if (objectEl.offsetHeight === 0 || objectEl.offsetWidth === 0) {
+                    if (iframeEl) {
+                        objectEl.style.display = 'none';
+                        iframeEl.style.display = 'block';
+                        iframeEl.setAttribute('src', url);
+                    }
+                }
+            }, 2000);
         }
+
         if (iframeEl) {
             iframeEl.setAttribute('src', url);
         }
-    };
+    }
+
 
     // Always fetch the PDF fresh from the endpoint (no caching)
     fetch(pdfUrl, {
