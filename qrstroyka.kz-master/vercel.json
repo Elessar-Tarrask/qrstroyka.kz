@@ -1,0 +1,64 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "**/*",
+        "use": "@vercel/static"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/.well-known/apple-app-site-association",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "dest": "/.well-known/apple-app-site-association"
+      },
+      {
+        "src": "/.well-known/assetlinks.json",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "dest": "/.well-known/assetlinks.json"
+      },
+      {
+        "src": "/order/.*",
+        "dest": "order/index.html"
+      },
+      {
+        "src": "/resume/.*",
+        "dest": "/index.html"
+      },
+      {
+        "src": "/equipment/.*",
+        "dest": "/index.html"
+      },
+      {
+        "src": "/company/.*",
+        "dest": "/index.html"
+      },
+      {
+        "src": "/sign/callback",
+        "dest": "/sign/callback.html"
+      },
+      {
+        "src": "/sign/success",
+        "dest": "/sign/success.html"
+      },
+      {
+        "src": "/sign/error",
+        "dest": "/sign/error.html"
+      },
+      {
+        "src": "/sign/document/.*",
+        "dest": "/sign/docsign.html"
+      },
+      {
+        "handle": "filesystem"
+      },
+      {
+        "src": "/(.*)",
+        "dest": "/$1"
+      }
+    ]
+}

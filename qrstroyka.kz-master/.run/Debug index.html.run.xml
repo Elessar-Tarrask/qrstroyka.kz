@@ -1,0 +1,6 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Debug index.html" type="JavascriptDebugType" factoryName="JavaScript Debug">
+    <url>http://localhost:63342/qrstroyka.kz/index.html</url>
+    <method v="2" />
+  </configuration>
+</component>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DatabaseToolSources">
+    <data-source name="localhost" uuid="dd234124-92f5-4332-b01e-22ca7718dcac" type="POSTGRES">
+      <base-info connect-type="DB_DEFAULT" product="PostgreSQL" version="16.10 (Debian 16.10-1.pgdg13+1)" major-version="16" minor-version="10" jdbc-name="PostgreSQL JDBC Driver" jdbc-version="42.7.3" jdbc-major-version="42" jdbc-minor-version="7" />
+      <user-name>admin</user-name>
+      <schema-mapping>
+        <introspection-scope>
+          <node negative="1">
+            <node kind="database" qname="postgres" operator="@">
+              <node kind="schema">
+                <name qname="information_schema" />
+                <name qname="pg_catalog" />
+                <name qname="pg_toast" />
+                <name qname="public" />
+              </node>
+            </node>
+          </node>
+        </introspection-scope>
+      </schema-mapping>
+      <choose-schema-mapping>
+        <introspection-scope>
+          <node negative="1">
+            <node kind="database" qname="mydb" operator="@">
+              <node kind="schema">
+                <name qname="public" />
+              </node>
+            </node>
+            <node kind="database" qname="postgres" operator="@">
+              <node kind="schema">
+                <name qname="public" />
+              </node>
+            </node>
+          </node>
+        </introspection-scope>
+      </choose-schema-mapping>
+      <url>jdbc:postgresql://localhost:5432/mydb</url>
+      <remarks />
+      <vm-options />
+      <driver-info id="postgresql" />
+      <ssh-properties enabled="false" />
+      <ssl-config enabled="false">
+        <uuid />
+        <caFile />
+        <clientCertificateFile />
+        <clientKeyFile />
+        <sslMode>REQUIRE</sslMode>
+      </ssl-config>
+    </data-source>
+  </component>
+</project>

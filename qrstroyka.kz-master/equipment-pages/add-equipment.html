@@ -1,0 +1,1748 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Stroyka.kz - Добавить спецтехнику</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: #f5f7fa;
+            color: #1d1d1f;
+            padding-bottom: 100px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 1rem 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .header-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .section-subtitle {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            background: #fafbfc;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            background: white;
+        }
+
+        .form-input.error {
+            border-color: #ef4444;
+        }
+
+        .dropdown-button {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            background: #fafbfc;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .dropdown-button:hover {
+            border-color: #4CAF50;
+            background: white;
+        }
+
+        .dropdown-button.error {
+            border-color: #ef4444;
+        }
+
+        .dropdown-button:disabled {
+            background: #f0f0f0;
+            color: #aaa;
+            border-color: #e1e5e9;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .dropdown-icon {
+            transition: transform 0.3s;
+        }
+
+        .dropdown-button.open .dropdown-icon {
+            transform: rotate(180deg);
+        }
+
+        .condition-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        .condition-btn {
+            padding: 0.8rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            background: #fafbfc;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .condition-btn:hover {
+            border-color: #4CAF50;
+            background: white;
+        }
+
+        .condition-btn.selected {
+            background: #4CAF50;
+            border-color: #4CAF50;
+            color: white;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.8rem;
+            background: #fafbfc;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .checkbox-group:hover {
+            background: #f1f3f4;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #4CAF50;
+        }
+
+        .switch-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            background: #fafbfc;
+            border-radius: 8px;
+        }
+
+        .switch {
+            position: relative;
+            width: 50px;
+            height: 26px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 26px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #4CAF50;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        .photo-upload {
+            border: 2px dashed #e1e5e9;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .photo-upload:hover {
+            border-color: #4CAF50;
+            background: #f8fff8;
+        }
+
+        .photo-upload.dragover {
+            border-color: #4CAF50;
+            background: #f0f9f0;
+        }
+
+        .photo-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .photo-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #f0f0f0;
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-remove {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 2rem;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+        }
+
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .error-message {
+            color: #ef4444;
+            font-size: 0.8rem;
+            margin-top: 0.3rem;
+            display: none;
+        }
+
+        .progress-bar {
+            background: #e1e5e9;
+            border-radius: 10px;
+            height: 8px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #4CAF50, #45a049);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            max-width: 400px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .modal-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .modal-item {
+            padding: 0.8rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-item:hover {
+            background: #f0f9f0;
+        }
+
+        .modal-item.selected {
+            background: #e8f5e8;
+            color: #4CAF50;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            background: #fafbfc;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            background: white;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            font-style: italic;
+        }
+
+        .loading-item {
+            text-align: center;
+            padding: 1rem;
+            color: #666;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #4CAF50;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .section {
+                padding: 1rem;
+            }
+            
+            .condition-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .photo-preview {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .header-content {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            
+            .header-title {
+                font-size: 1.1rem;
+                order: -1;
+                width: 100%;
+                text-align: center;
+                margin-bottom: 0.5rem;
+            }
+            
+            .back-btn {
+                position: absolute;
+                left: 1rem;
+                top: 1rem;
+            }
+            
+            .header-content > div {
+                position: absolute;
+                right: 1rem;
+                top: 1rem;
+            }
+            
+            .header-content > div > div button {
+                padding: 0.2rem 0.4rem !important;
+                font-size: 0.7rem !important;
+            }
+            
+            .logout-btn {
+                padding: 0.3rem 0.6rem !important;
+                font-size: 0.8rem !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <!-- <button class="back-btn" onclick="goBack()">
+                <span>←</span>
+                <span data-kk="Артқа" data-ru="Назад">Артқа</span>
+            </button> -->
+            <h1 class="header-title" data-kk="Спецтехника қосу" data-ru="Добавить спецтехнику">Спецтехника қосу</h1>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="display: flex; gap: 0.5rem;">
+                    <button onclick="changeLanguage('kk')" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 0.3rem 0.6rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem; transition: all 0.3s;" id="langKk">ҚАЗ</button>
+                    <button onclick="changeLanguage('ru')" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 0.3rem 0.6rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem; transition: all 0.3s;" id="langRu">РУС</button>
+                </div>
+                <button class="logout-btn" onclick="logout()">
+                    <span data-kk="Шығу" data-ru="Выйти">Шығу</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <!-- Основные параметры -->
+        <div class="section">
+            <h2 class="section-title" data-kk="Негізгі параметрлер" data-ru="Основные параметры">Негізгі параметрлер</h2>
+            
+            <div class="form-group">
+                <label class="form-label" data-kk="Спецтехника категориясы *" data-ru="Категория спецтехники *">Спецтехника категориясы *</label>
+                <button class="dropdown-button" id="categoryBtn" onclick="showCategoryModal()">
+                    <span data-kk="Категорияны таңдаңыз" data-ru="Выберите категорию">Категорияны таңдаңыз</span>
+                    <span class="dropdown-icon">▼</span>
+                </button>
+                <div class="error-message" id="categoryError"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" data-kk="Техника түрі *" data-ru="Тип техники *">Техника түрі *</label>
+                <button class="dropdown-button" id="subcategoryBtn" onclick="showSubcategoryModal()" disabled>
+                    <span data-kk="Техника түрін таңдаңыз" data-ru="Выберите тип техники">Техника түрін таңдаңыз</span>
+                    <span class="dropdown-icon">▼</span>
+                </button>
+                <div class="error-message" id="subcategoryError"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" data-kk="Марка" data-ru="Марка">Марка</label>
+                <button class="dropdown-button" id="modelBtn" onclick="showModelModal()" disabled>
+                    <span data-kk="Марканы таңдаңыз" data-ru="Выберите марку">Марканы таңдаңыз</span>
+                    <span class="dropdown-icon">▼</span>
+                </button>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" data-kk="Модель" data-ru="Модель">Модель</label>
+                <input type="text" class="form-input" id="modelExtended" placeholder="">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" data-kk="Шығару жылы" data-ru="Год выпуска">Шығару жылы</label>
+                <button class="dropdown-button" id="yearBtn" onclick="showYearModal()">
+                    <span data-kk="Жылды таңдаңыз" data-ru="Выберите год">Жылды таңдаңыз</span>
+                    <span class="dropdown-icon">▼</span>
+                </button>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" data-kk="Қозғалтқыш түрі" data-ru="Тип двигателя">Қозғалтқыш түрі</label>
+                <button class="dropdown-button" id="engineTypeBtn" onclick="showEngineTypeModal()">
+                    <span data-kk="Қозғалтқыш түрін таңдаңыз" data-ru="Выберите тип двигателя">Қозғалтқыш түрін таңдаңыз</span>
+                    <span class="dropdown-icon">▼</span>
+                </button>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" data-kk="Басқару" data-ru="Управление">Басқару</label>
+                <button class="dropdown-button" id="steeringBtn" onclick="showSteeringModal()">
+                    <span data-kk="Басқару түрін таңдаңыз" data-ru="Выберите тип управления">Басқару түрін таңдаңыз</span>
+                    <span class="dropdown-icon">▼</span>
+                </button>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" data-kk="Қозғалтқыш моделі" data-ru="Модель двигателя">Қозғалтқыш моделі</label>
+                <input type="text" class="form-input" id="engineModel" placeholder="">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" data-kk="Масса (кг)" data-ru="Масса (кг)">Масса (кг)</label>
+                <input type="number" class="form-input" id="weight" placeholder="">
+            </div>
+        </div>
+
+        <!-- Состояние -->
+        <div class="section">
+            <h2 class="section-title" data-kk="Жай-күйі *" data-ru="Состояние *">Жай-күйі *</h2>
+            <div class="condition-buttons" id="conditionButtons">
+                <!-- Will be populated by JavaScript -->
+            </div>
+            <div class="error-message" id="conditionError"></div>
+        </div>
+
+        <!-- Дополнительно -->
+        <div class="section">
+            <h2 class="section-title" data-kk="Қосымша" data-ru="Дополнительно">Қосымша</h2>
+            <p class="section-subtitle" data-kk="Міндетті емес" data-ru="Необязательно">Міндетті емес</p>
+            
+            <div class="form-group">
+                <label class="form-label" data-kk="Пікірлер мен ерекшеліктер" data-ru="Комментарии и особенности">Пікірлер мен ерекшеліктер</label>
+                <textarea class="form-input" id="comments" rows="4" placeholder=""></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" data-kk="Фото жүктеу" data-ru="Загрузить фото">Фото жүктеу</label>
+                <div class="photo-upload" id="photoUpload">
+                    <p data-kk="📷 Фото жүктеу үшін басыңыз немесе файлдарды осында апарыңыз" data-ru="📷 Нажмите для загрузки фото или перетащите файлы сюда">📷 Фото жүктеу үшін басыңыз немесе файлдарды осында апарыңыз</p>
+                </div>
+                <input type="file" id="photoInput" multiple accept="image/*" style="display: none;">
+                <div class="photo-preview" id="photoPreview"></div>
+            </div>
+        </div>
+
+        <!-- Условия -->
+        <div class="section">
+            <h2 class="section-title" data-kk="Шарттар" data-ru="Условия">Шарттар</h2>
+            
+            <div class="form-group">
+                <label class="form-label" data-kk="Жалға беру мерзімі" data-ru="Срок аренды">Жалға беру мерзімі</label>
+                <button class="dropdown-button" id="rentalPeriodBtn" onclick="showRentalPeriodModal()">
+                    <span data-kk="Мерзімді таңдаңыз" data-ru="Выберите срок">Мерзімді таңдаңыз</span>
+                    <span class="dropdown-icon">▼</span>
+                </button>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" data-kk="Минималды шығу (сағат)" data-ru="Минимальный выезд (часы)">Минималды шығу (сағат)</label>
+                <input type="number" class="form-input" id="minHours" placeholder="">
+            </div>
+
+            <div class="form-group">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="driverOperator" checked>
+                    <label data-kk="Жүргізуші-оператор" data-ru="Водитель-оператор">Жүргізуші-оператор</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="documentPackage">
+                    <label data-kk="Құжаттар пакеті" data-ru="Пакет документов">Құжаттар пакеті</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="regionTrips">
+                    <label data-kk="Аймақтарға шығу" data-ru="Выезд в регионы">Аймақтарға шығу</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Стоимость услуг -->
+        <div class="section">
+            <h2 class="section-title" data-kk="Қызмет құны" data-ru="Стоимость услуг">Қызмет құны</h2>
+            
+            <div class="form-group">
+                <label class="form-label" data-kk="Сағат үшін сома (₸)" data-ru="Сумма за час (₸)">Сағат үшін сома (₸)</label>
+                <input type="number" class="form-input" id="hourlyRate" placeholder="₸">
+            </div>
+
+            <div class="form-group">
+                <div class="switch-group">
+                    <span data-kk="Баға келісімді" data-ru="Цена договорная">Баға келісімді</span>
+                    <label class="switch">
+                        <input type="checkbox" id="negotiablePrice" onchange="togglePriceInput()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Контактная информация -->
+        <div class="section">
+            <h2 class="section-title" data-kk="Байланыс ақпараты" data-ru="Контактная информация">Байланыс ақпараты</h2>
+            
+            <div class="form-group">
+                <label class="form-label" data-kk="Мекенжай *" data-ru="Адрес *">Мекенжай *</label>
+                <button class="dropdown-button" id="addressBtn" onclick="showAddressModal()">
+                    <span data-kk="Мекенжайды көрсетіңіз" data-ru="Укажите адрес">Мекенжайды көрсетіңіз</span>
+                    <span class="dropdown-icon">▼</span>
+                </button>
+                <div class="error-message" id="addressError"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" data-kk="Телефон *" data-ru="Телефон *">Телефон *</label>
+                <input type="tel" class="form-input" id="phone" readonly>
+            </div>
+
+            <div class="form-group" id="additionalPhoneGroup" style="display: none;">
+                <label class="form-label" data-kk="Қосымша телефон" data-ru="Дополнительный телефон">Қосымша телефон</label>
+                <input type="tel" class="form-input" id="additionalPhone" placeholder="+7 777 123 45 67">
+            </div>
+
+            <div class="form-group">
+                <button type="button" class="form-input" id="addPhoneBtn" onclick="toggleAdditionalPhone()" style="background: transparent; color: #4CAF50; border-style: dashed; cursor: pointer;">
+                    <span data-kk="+ Телефон нөірін қосу" data-ru="+ Добавить номер телефона">+ Телефон нөмірін қосу</span>
+                </button>
+            </div>
+        </div>
+
+        <button class="submit-btn" id="submitBtn" onclick="submitForm()">
+            <span data-kk="Жарияны жариялау" data-ru="Опубликовать объявление">Жарияны жариялау</span>
+        </button>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal" id="categoryModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" data-kk="Категорияны таңдаңыз" data-ru="Выберите категорию">Категорияны таңдаңыз</h3>
+                <button class="close-modal" onclick="closeModal('categoryModal')">&times;</button>
+            </div>
+            <input type="text" class="search-input" id="categorySearch" placeholder="">
+            <div class="loading" id="categoryLoading">
+                <div class="spinner"></div>
+                <p data-kk="Жүктелуде..." data-ru="Загрузка...">Жүктелуде...</p>
+            </div>
+            <div class="modal-list" id="categoryList"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="subcategoryModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" data-kk="Техника түрін таңдаңыз" data-ru="Выберите тип техники">Техника түрін таңдаңыз</h3>
+                <button class="close-modal" onclick="closeModal('subcategoryModal')">&times;</button>
+            </div>
+            <input type="text" class="search-input" id="subcategorySearch" placeholder="">
+            <div class="loading" id="subcategoryLoading">
+                <div class="spinner"></div>
+                <p data-kk="Жүктелуде..." data-ru="Загрузка...">Жүктелуде...</p>
+            </div>
+            <div class="modal-list" id="subcategoryList"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="modelModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" data-kk="Марканы таңдаңыз" data-ru="Выберите марку">Марканы таңдаңыз</h3>
+                <button class="close-modal" onclick="closeModal('modelModal')">&times;</button>
+            </div>
+            <input type="text" class="search-input" id="modelSearch" placeholder="">
+            <div class="loading" id="modelLoading">
+                <div class="spinner"></div>
+                <p data-kk="Жүктелуде..." data-ru="Загрузка...">Жүктелуде...</p>
+            </div>
+            <div class="modal-list" id="modelList"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="yearModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" data-kk="Жылды таңдаңыз" data-ru="Выберите год">Жылды таңдаңыз</h3>
+                <button class="close-modal" onclick="closeModal('yearModal')">&times;</button>
+            </div>
+            <div class="modal-list" id="yearList"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="engineTypeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" data-kk="Қозғалтқыш түрін таңдаңыз" data-ru="Выберите тип двигателя">Қозғалтқыш түрін таңдаңыз</h3>
+                <button class="close-modal" onclick="closeModal('engineTypeModal')">&times;</button>
+            </div>
+            <div class="modal-list" id="engineTypeList"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="steeringModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" data-kk="Басқару түрін таңдаңыз" data-ru="Выберите тип управления">Басқару түрін таңдаңыз</h3>
+                <button class="close-modal" onclick="closeModal('steeringModal')">&times;</button>
+            </div>
+            <div class="modal-list" id="steeringList"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="rentalPeriodModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" data-kk="Мерзімді таңдаңыз" data-ru="Выберите срок">Мерзімді таңдаңыз</h3>
+                <button class="close-modal" onclick="closeModal('rentalPeriodModal')">&times;</button>
+            </div>
+            <div class="modal-list" id="rentalPeriodList"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="addressModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" data-kk="Мекенжайды таңдаңыз" data-ru="Выберите адрес">Мекенжайды таңдаңыз</h3>
+                <button class="close-modal" onclick="closeModal('addressModal')">&times;</button>
+            </div>
+            <input type="text" class="search-input" id="addressSearch" placeholder="">
+            <div class="loading" id="addressLoading">
+                <div class="spinner"></div>
+                <p data-kk="Жүктелуде..." data-ru="Загрузка...">Жүктелуде...</p>
+            </div>
+            <div class="modal-list" id="addressList"></div>
+        </div>
+    </div>
+
+    <!-- Additional modals will be added for other dropdowns -->
+
+    <!-- Success Modal -->
+    <div class="modal" id="successModal">
+        <div class="modal-content" style="text-align:center;">
+            <h2 style="color:#4CAF50;">✅ <span data-kk="Сәтті жарияланды!" data-ru="Успешно опубликовано!">Сәтті жарияланды!</span></h2>
+            <p data-kk="Сіз тағы бір техника қоса аласыз немесе қосымшаны жүктеп, сол арқылы жариялай аласыз." data-ru="Вы можете добавить еще одну технику или скачать приложение и добавить через него.">Сіз тағы бір техника қоса аласыз немесе қосымшаны жүктеп, сол арқылы жариялай аласыз.</p>
+            <div style="margin: 1em 0; color: #333; font-size: 1em;">
+                <span data-kk="Сіз мобильді қосымшада жарияланған техниканың ақпаратын өзгерте аласыз. Қосымшада сіз үшін қызықты болуы мүмкін көптеген функциялар бар!" data-ru="В мобильном приложении вы сможете редактировать информацию о созданной спецтехнике. В приложении также есть множество других функций, которые могут быть вам интересны!">
+                    В мобильном приложении вы сможете редактировать информацию о созданной спецтехнике. В приложении также есть множество других функций, которые могут быть вам интересны!
+                </span>
+            </div>
+            <div style="margin-top:2em;display:flex;gap:1em;justify-content:center;flex-wrap:wrap;">
+                <button onclick="addAnotherMachinery()" style="padding:0.7em 1.5em;border:none;border-radius:8px;background:#4CAF50;color:white;font-size:1em;cursor:pointer;">+ <span data-kk="Тағы қосу" data-ru="Добавить еще">Тағы қосу</span></button>
+                <div style="display:flex;gap:0.5em;align-items:center;">
+                    <a href="https://apps.apple.com/us/app/stroyka-kz/id6742178994" target="_blank" style="display:inline-flex;align-items:center;gap:0.5em;padding:0.7em 1.5em;border-radius:8px;background:#0070c9;color:white;font-size:1em;text-decoration:none;">
+                        <svg width="20" height="24" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.365 12.998c.02 2.18 1.94 2.91 1.96 2.92-.016.05-.31 1.07-1.02 2.12-.61.89-1.25 1.77-2.25 1.79-.98.02-1.3-.58-2.43-.58-1.13 0-1.49.56-2.43.6-.97.04-1.71-.96-2.33-1.85-1.27-1.84-2.24-5.2-.94-7.48.62-1.08 1.73-1.77 2.93-1.8.92-.02 1.79.62 2.43.62.64 0 1.62-.76 2.73-.65.47.02 1.8.19 2.65 1.44-.07.04-1.58.92-1.56 2.74zm-2.01-5.36c.51-.62.85-1.48.76-2.34-.74.03-1.63.49-2.16 1.11-.47.54-.88 1.41-.72 2.24.81.06 1.61-.41 2.12-1.01z" fill="#fff"/></svg>
+                        <span>App Store</span>
+                    </a>
+                    <a href="https://play.google.com/store/apps/details?id=kz.cmrhub" target="_blank" style="display:inline-flex;align-items:center;gap:0.5em;padding:0.7em 1.5em;border-radius:8px;background:#222;color:white;font-size:1em;text-decoration:none;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.654 2.978a1.5 1.5 0 0 1 1.7-.09l13.5 8.25a1.5 1.5 0 0 1 0 2.624l-13.5 8.25A1.5 1.5 0 0 1 3 20.25v-16.5a1.5 1.5 0 0 1 .654-1.272zm1.346 1.272v15.5l12.5-7.75-12.5-7.75z" fill="#fff"/></svg>
+                        <span>Google Play</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentLanguage = localStorage.getItem('stroyka_lang') || 'kk';
+        let userData = null;
+        let selectedData = {
+            category: null,
+            subcategory: null,
+            model: null,
+            year: null,
+            engineType: null,
+            steering: null,
+            condition: null,
+            rentalPeriod: null,
+            address: null
+        };
+        
+        let uploadedPhotos = [];
+        let formData = {};
+
+        function changeLanguage(lang) {
+            currentLanguage = lang;
+            localStorage.setItem('stroyka_lang', lang);
+            
+            // Update language buttons
+            document.getElementById('langKk').style.background = lang === 'kk' ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.2)';
+            document.getElementById('langKk').style.color = lang === 'kk' ? '#4CAF50' : 'white';
+            document.getElementById('langRu').style.background = lang === 'ru' ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.2)';
+            document.getElementById('langRu').style.color = lang === 'ru' ? '#4CAF50' : 'white';
+            
+            // Update text content
+            document.querySelectorAll('[data-kk][data-ru]').forEach(element => {
+                element.textContent = element.getAttribute('data-' + lang);
+            });
+            
+            // Update placeholders and other dynamic content
+            updateLanguageDependentContent();
+        }
+
+        function updateLanguageDependentContent() {
+            // Update condition buttons
+            if (document.getElementById('conditionButtons').children.length > 0) {
+                loadConditionTypes();
+            }
+            
+            // Update dropdown placeholders
+            if (!selectedData.category) {
+                document.querySelector('#categoryBtn span').textContent = currentLanguage === 'kk' ? 'Категорияны таңдаңыз' : 'Выберите категорию';
+            }
+            if (!selectedData.subcategory) {
+                document.querySelector('#subcategoryBtn span').textContent = currentLanguage === 'kk' ? 'Техника түрін таңдаңыз' : 'Выберите тип техники';
+            }
+            if (!selectedData.model) {
+                document.querySelector('#modelBtn span').textContent = currentLanguage === 'kk' ? 'Марканы таңдаңыз' : 'Выберите марку';
+            }
+            updateDropdownStates();
+        }
+
+        function updateDropdownStates() {
+            // Enable/disable subcategory button
+            const subcategoryBtn = document.getElementById('subcategoryBtn');
+            if (selectedData.category) {
+                subcategoryBtn.disabled = false;
+            } else {
+                subcategoryBtn.disabled = true;
+            }
+            // Enable/disable model button
+            const modelBtn = document.getElementById('modelBtn');
+            if (selectedData.subcategory) {
+                modelBtn.disabled = false;
+            } else {
+                modelBtn.disabled = true;
+            }
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            loadUserData();
+            initializeForm();
+            setupPhotoUpload();
+            
+            // Initialize language from localStorage if present
+            const storedLang = localStorage.getItem('stroyka_lang');
+            if (storedLang) {
+                currentLanguage = storedLang;
+            }
+            changeLanguage(currentLanguage);
+            updateDropdownStates();
+        });
+
+        function checkAuth() {
+            const storedAuth = localStorage.getItem('stroyka_user_auth');
+            if (!storedAuth) {
+                window.location.href = '../machinery.html';
+                return;
+            }
+
+            try {
+                userData = JSON.parse(storedAuth);
+                const twentyFourHours = 24 * 60 * 60 * 1000;
+                
+                if (!userData.isAuthenticated || 
+                    !userData.timestamp || 
+                    (Date.now() - userData.timestamp) > twentyFourHours) {
+                    localStorage.removeItem('stroyka_user_auth');
+                    window.location.href = '../machinery.html';
+                    return;
+                }
+                
+                // Set auth token for API calls
+                if (userData.accessToken) {
+                    apiService.setAuthToken(userData.accessToken);
+                }
+            } catch (e) {
+                localStorage.removeItem('stroyka_user_auth');
+                window.location.href = '../machinery.html';
+            }
+        }
+
+        function loadUserData() {
+            if (userData && userData.phone) {
+                const phoneInput = document.getElementById('phone');
+                phoneInput.value = formatPhone(userData.phone);
+            }
+        }
+
+        function formatPhone(phone) {
+            // Format phone as +7 777 123 45 67
+            if (phone.length === 11 && phone.startsWith('7')) {
+                return `+${phone.slice(0,1)} ${phone.slice(1,4)} ${phone.slice(4,7)} ${phone.slice(7,9)} ${phone.slice(9,11)}`;
+            }
+            return phone;
+        }
+
+        function initializeForm() {
+            // Load initial data
+            loadCategories();
+            loadConditionTypes();
+            loadEngineTypes();
+            loadSteeringTypes();
+            loadRentalPeriods();
+            updateProgress();
+        }
+
+        function setupPhotoUpload() {
+            const photoUpload = document.getElementById('photoUpload');
+            const photoInput = document.getElementById('photoInput');
+
+            photoUpload.addEventListener('click', () => photoInput.click());
+            photoUpload.addEventListener('dragover', handleDragOver);
+            photoUpload.addEventListener('drop', handleDrop);
+            photoInput.addEventListener('change', handleFileSelect);
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('dragover');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('dragover');
+            const files = Array.from(e.dataTransfer.files);
+            processFiles(files);
+        }
+
+        function handleFileSelect(e) {
+            const files = Array.from(e.target.files);
+            processFiles(files);
+        }
+
+        function processFiles(files) {
+            files.forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        uploadedPhotos.push({
+                            file: file,
+                            url: e.target.result
+                        });
+                        updatePhotoPreview();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        function updatePhotoPreview() {
+            const preview = document.getElementById('photoPreview');
+            preview.innerHTML = '';
+            
+            uploadedPhotos.forEach((photo, index) => {
+                const photoItem = document.createElement('div');
+                photoItem.className = 'photo-item';
+                photoItem.innerHTML = `
+                    <img src="${photo.url}" alt="Photo ${index + 1}">
+                    <button class="photo-remove" onclick="removePhoto(${index})">×</button>
+                `;
+                preview.appendChild(photoItem);
+            });
+        }
+
+        function removePhoto(index) {
+            uploadedPhotos.splice(index, 1);
+            updatePhotoPreview();
+        }
+
+        function togglePriceInput() {
+            const hourlyRate = document.getElementById('hourlyRate');
+            const negotiablePrice = document.getElementById('negotiablePrice');
+            if (negotiablePrice.checked) {
+                hourlyRate.disabled = true;
+                hourlyRate.value = '';
+            } else {
+                hourlyRate.disabled = false;
+            }
+        }
+
+        function toggleAdditionalPhone() {
+            const additionalPhoneGroup = document.getElementById('additionalPhoneGroup');
+            const addPhoneBtn = document.getElementById('addPhoneBtn');
+            
+            if (additionalPhoneGroup.style.display === 'none') {
+                additionalPhoneGroup.style.display = 'block';
+                addPhoneBtn.innerHTML = '<span data-kk="- Қосымша телефонды жою" data-ru="- Удалить дополнительный телефон">- Қосымша телефонды жою</span>';
+            } else {
+                additionalPhoneGroup.style.display = 'none';
+                addPhoneBtn.innerHTML = '<span data-kk="+ Телефон нөмірін қосу" data-ru="+ Добавить номер телефона">+ Телефон нөмірін қосу</span>';
+                document.getElementById('additionalPhone').value = '';
+            }
+        }
+
+        function updateProgress() {
+            const required = ['category', 'subcategory', 'condition', 'address'];
+            const completed = required.filter(field => selectedData[field]).length;
+            const progress = (completed / required.length) * 100;
+            
+            document.getElementById('progressFill').style.width = `${progress}%`;
+        }
+
+        function goBack() {
+            if (confirm(currentLanguage === 'kk' ? 'Барлық деректер жоғалады. Жалғастыру керек пе?' : 'Все данные будут потеряны. Продолжить?')) {
+                window.location.href = 'machinery.html';
+            }
+        }
+
+        function logout() {
+            if (confirm(currentLanguage === 'kk' ? 'Шынымен шығасыз ба?' : 'Действительно выйти?')) {
+                localStorage.removeItem('stroyka_user_auth');
+                window.location.href = 'machinery.html';
+            }
+        }
+
+        // API functions using real endpoints
+        async function loadCategories() {
+            try {
+                const categories = await apiService.getCategories();
+                window.categoriesData = categories;
+            } catch (error) {
+                console.error('Error loading categories:', error);
+                window.categoriesData = [];
+            }
+        }
+
+        async function loadConditionTypes() {
+            try {
+                if (!window._allConditionTypes) {
+                    const conditions = await apiService.getConditionTypes(currentLanguage);
+                    window._allConditionTypes = conditions.data || conditions;
+                }
+                const container = document.getElementById('conditionButtons');
+                container.innerHTML = '';
+                window._allConditionTypes.forEach(condition => {
+                    const button = document.createElement('button');
+                    button.className = 'condition-btn';
+                    button.textContent = condition.name;
+                    button.onclick = () => selectCondition(condition);
+                    container.appendChild(button);
+                });
+            } catch (error) {
+                console.error('Error loading condition types:', error);
+            }
+        }
+
+        function selectCondition(condition) {
+            // Update UI
+            document.querySelectorAll('.condition-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+            
+            selectedData.condition = condition;
+            updateProgress();
+        }
+
+        // Search variables for debouncing
+        let searchTimeouts = {};
+
+        // Modal functions with search
+        async function showCategoryModal() {
+            document.getElementById('categoryModal').classList.add('show');
+            const searchInput = document.getElementById('categorySearch');
+            const placeholder = currentLanguage === 'kk' ? 'Іздеу...' : 'Поиск...';
+            searchInput.placeholder = placeholder;
+            searchInput.value = '';
+            // Setup search functionality
+            clearTimeout(searchTimeouts.category);
+            // Fetch all categories once
+            if (!window._allCategories) {
+                window._allCategories = await apiService.getCategories();
+            }
+            function filterCategories(searchText) {
+                return apiService.filterBySearch(window._allCategories, searchText);
+            }
+            function doSearch() {
+                renderCategoryList(filterCategories(searchInput.value));
+            }
+            searchInput.oninput = apiService.debounce(doSearch, 300);
+            renderCategoryList(window._allCategories);
+            searchInput.focus();
+        }
+
+        function renderCategoryList(categories) {
+            const list = document.getElementById('categoryList');
+            
+            if (categories.length === 0) {
+                list.innerHTML = `<div class="no-results">${currentLanguage === 'kk' ? 'Ештеңе табылмады' : 'Ничего не найдено'}</div>`;
+                return;
+            }
+            
+            list.innerHTML = '';
+            categories.forEach(category => {
+                const item = document.createElement('div');
+                item.className = `modal-item ${selectedData.category?.id === category.id ? 'selected' : ''}`;
+                item.innerHTML = `
+                    <span>${category.name}</span>
+                    ${selectedData.category?.id === category.id ? '<span>✓</span>' : ''}
+                `;
+                item.onclick = () => selectCategory(category);
+                list.appendChild(item);
+            });
+        }
+
+        function selectCategory(category) {
+            selectedData.category = category;
+            document.querySelector('#categoryBtn span').textContent = category.name;
+            closeModal('categoryModal');
+            updateProgress();
+            // Reset dependent fields
+            selectedData.subcategory = null;
+            selectedData.model = null;
+            document.querySelector('#subcategoryBtn span').textContent = currentLanguage === 'kk' ? 'Техника түрін таңдаңыз' : 'Выберите тип техники';
+            document.querySelector('#modelBtn span').textContent = currentLanguage === 'kk' ? 'Марканы таңдаңыз' : 'Выберите марку';
+            updateDropdownStates();
+            // Clear cached subcategories and models for previous category
+            if (window._allSubcategories) {
+                window._allSubcategories = {};
+            }
+            if (window._allModels) {
+                window._allModels = {};
+            }
+            // Preload subcategories for the selected category
+            (async () => {
+                if (!window._allSubcategories) window._allSubcategories = {};
+                window._allSubcategories[category.id] = await apiService.getSubcategories(category.id);
+            })();
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+        }
+
+        // Subcategory modal functions
+        async function showSubcategoryModal() {
+            if (!selectedData.category) {
+                alert(currentLanguage === 'kk' ? 'Алдымен категорияны таңдаңыз' : 'Сначала выберите категорию');
+                return;
+            }
+            document.getElementById('subcategoryModal').classList.add('show');
+            const searchInput = document.getElementById('subcategorySearch');
+            const placeholder = currentLanguage === 'kk' ? 'Іздеу...' : 'Поиск...';
+            searchInput.placeholder = placeholder;
+            searchInput.value = '';
+            // Fetch all subcategories for selected category once
+            if (!window._allSubcategories) {
+                window._allSubcategories = {};
+            }
+            if (!window._allSubcategories[selectedData.category.id]) {
+                window._allSubcategories[selectedData.category.id] = await apiService.getSubcategories(selectedData.category.id);
+            }
+            const allSubcategories = window._allSubcategories[selectedData.category.id];
+            function filterSubcategories(searchText) {
+                return apiService.filterBySearch(allSubcategories, searchText);
+            }
+            function doSearch() {
+                renderSubcategoryList(filterSubcategories(searchInput.value));
+            }
+            searchInput.oninput = apiService.debounce(doSearch, 300);
+            renderSubcategoryList(allSubcategories);
+            searchInput.focus();
+        }
+
+        function renderSubcategoryList(subcategories) {
+            const list = document.getElementById('subcategoryList');
+            
+            if (subcategories.length === 0) {
+                list.innerHTML = `<div class="no-results">${currentLanguage === 'kk' ? 'Ештеңе табылмады' : 'Ничего не найдено'}</div>`;
+                return;
+            }
+            
+            list.innerHTML = '';
+            subcategories.forEach(subcategory => {
+                const item = document.createElement('div');
+                item.className = `modal-item ${selectedData.subcategory?.id === subcategory.id ? 'selected' : ''}`;
+                item.innerHTML = `
+                    <span>${subcategory.name}</span>
+                    ${selectedData.subcategory?.id === subcategory.id ? '<span>✓</span>' : ''}
+                `;
+                item.onclick = () => selectSubcategory(subcategory);
+                list.appendChild(item);
+            });
+        }
+
+        function selectSubcategory(subcategory) {
+            selectedData.subcategory = subcategory;
+            document.querySelector('#subcategoryBtn span').textContent = subcategory.name;
+            closeModal('subcategoryModal');
+            updateProgress();
+            // Store payload for future use (dynamic fields)
+            window.subcategoryPayload = subcategory.payload || [];
+            // Reset model
+            selectedData.model = null;
+            document.querySelector('#modelBtn span').textContent = currentLanguage === 'kk' ? 'Марканы таңдаңыз' : 'Выберите марку';
+            updateDropdownStates();
+            // Clear cached models for previous subcategory
+            if (window._allModels) {
+                window._allModels = {};
+            }
+            // Preload models for the selected subcategory
+            (async () => {
+                if (!window._allModels) window._allModels = {};
+                window._allModels[subcategory.id] = await apiService.getModels(subcategory.id);
+            })();
+        }
+
+        // Model/Brand modal functions
+        async function showModelModal() {
+            if (!selectedData.subcategory) {
+                alert(currentLanguage === 'kk' ? 'Алдымен техника түрін таңдаңыз' : 'Сначала выберите тип техники');
+                return;
+            }
+            document.getElementById('modelModal').classList.add('show');
+            const searchInput = document.getElementById('modelSearch');
+            const placeholder = currentLanguage === 'kk' ? 'Марка іздеу...' : 'Поиск марки...';
+            searchInput.placeholder = placeholder;
+            searchInput.value = '';
+            // Fetch all models for selected subcategory once
+            if (!window._allModels) {
+                window._allModels = {};
+            }
+            if (!window._allModels[selectedData.subcategory.id]) {
+                window._allModels[selectedData.subcategory.id] = await apiService.getModels(selectedData.subcategory.id);
+            }
+            const allModels = Array.isArray(window._allModels[selectedData.subcategory.id]) ? window._allModels[selectedData.subcategory.id] : (window._allModels[selectedData.subcategory.id].data || []);
+            function filterModels(searchText) {
+                return apiService.filterBySearch(allModels, searchText);
+            }
+            function doSearch() {
+                renderModelList(filterModels(searchInput.value));
+            }
+            searchInput.oninput = apiService.debounce(doSearch, 300);
+            renderModelList(allModels);
+            searchInput.focus();
+        }
+
+        function renderModelList(models) {
+            const list = document.getElementById('modelList');
+            
+            if (models.length === 0) {
+                list.innerHTML = `<div class="no-results">${currentLanguage === 'kk' ? 'Ештеңе табылмады' : 'Ничего не найдено'}</div>`;
+                return;
+            }
+            
+            list.innerHTML = '';
+            models.forEach(model => {
+                const item = document.createElement('div');
+                item.className = `modal-item ${selectedData.model?.id === model.id ? 'selected' : ''}`;
+                item.innerHTML = `
+                    <span>${model.name}</span>
+                    ${selectedData.model?.id === model.id ? '<span>✓</span>' : ''}
+                `;
+                item.onclick = () => selectModel(model);
+                list.appendChild(item);
+            });
+        }
+
+        function selectModel(model) {
+            selectedData.model = model;
+            document.querySelector('#modelBtn span').textContent = model.name;
+            closeModal('modelModal');
+        }
+
+        // Year modal functions  
+        async function showYearModal() {
+            document.getElementById('yearModal').classList.add('show');
+            const years = await apiService.getYears();
+            renderYearList(years);
+        }
+
+        function renderYearList(years) {
+            const list = document.getElementById('yearList');
+            list.innerHTML = '';
+            
+            years.forEach(year => {
+                const item = document.createElement('div');
+                item.className = `modal-item ${selectedData.year?.code === year.code ? 'selected' : ''}`;
+                item.innerHTML = `
+                    <span>${year.name}</span>
+                    ${selectedData.year?.code === year.code ? '<span>✓</span>' : ''}
+                `;
+                item.onclick = () => selectYear(year);
+                list.appendChild(item);
+            });
+        }
+
+        function selectYear(year) {
+            selectedData.year = year;
+            document.querySelector('#yearBtn span').textContent = year.name;
+            closeModal('yearModal');
+        }
+
+        // Engine type modal functions
+        async function showEngineTypeModal() {
+            document.getElementById('engineTypeModal').classList.add('show');
+            if (!window._allEngineTypes) {
+                const engineTypesData = await apiService.getEngineTypes(currentLanguage);
+                window._allEngineTypes = engineTypesData.data || engineTypesData;
+            }
+            renderEngineTypeList(window._allEngineTypes);
+        }
+
+        function renderEngineTypeList(engineTypes) {
+            const list = document.getElementById('engineTypeList');
+            list.innerHTML = '';
+            engineTypes.forEach(engineType => {
+                const item = document.createElement('div');
+                item.className = `modal-item ${selectedData.engineType?.code === engineType.code ? 'selected' : ''}`;
+                item.innerHTML = `
+                    <span>${engineType.name}</span>
+                    ${selectedData.engineType?.code === engineType.code ? '<span>✓</span>' : ''}
+                `;
+                item.onclick = () => selectEngineType(engineType);
+                list.appendChild(item);
+            });
+        }
+
+        function selectEngineType(engineType) {
+            selectedData.engineType = engineType;
+            document.querySelector('#engineTypeBtn span').textContent = engineType.name;
+            closeModal('engineTypeModal');
+        }
+
+        // Steering modal functions
+        async function showSteeringModal() {
+            document.getElementById('steeringModal').classList.add('show');
+            if (!window._allSteeringTypes) {
+                const steeringTypesData = await apiService.getSteeringTypes(currentLanguage);
+                window._allSteeringTypes = steeringTypesData.data || steeringTypesData;
+            }
+            renderSteeringList(window._allSteeringTypes);
+        }
+
+        function renderSteeringList(steeringTypes) {
+            const list = document.getElementById('steeringList');
+            list.innerHTML = '';
+            steeringTypes.forEach(steeringType => {
+                const item = document.createElement('div');
+                item.className = `modal-item ${selectedData.steering?.code === steeringType.code ? 'selected' : ''}`;
+                item.innerHTML = `
+                    <span>${steeringType.name}</span>
+                    ${selectedData.steering?.code === steeringType.code ? '<span>✓</span>' : ''}
+                `;
+                item.onclick = () => selectSteering(steeringType);
+                list.appendChild(item);
+            });
+        }
+
+        function selectSteering(steeringType) {
+            selectedData.steering = steeringType;
+            document.querySelector('#steeringBtn span').textContent = steeringType.name;
+            closeModal('steeringModal');
+        }
+
+        // Rental period modal functions
+        async function showRentalPeriodModal() {
+            document.getElementById('rentalPeriodModal').classList.add('show');
+            if (!window._allRentalPeriods) {
+                const rentalPeriodsData = await apiService.getRentalPeriods(currentLanguage);
+                window._allRentalPeriods = rentalPeriodsData.data || rentalPeriodsData;
+            }
+            renderRentalPeriodList(window._allRentalPeriods);
+        }
+
+        function renderRentalPeriodList(rentalPeriods) {
+            const list = document.getElementById('rentalPeriodList');
+            list.innerHTML = '';
+            rentalPeriods.forEach(period => {
+                const item = document.createElement('div');
+                item.className = `modal-item ${selectedData.rentalPeriod?.code === period.code ? 'selected' : ''}`;
+                item.innerHTML = `
+                    <span>${period.name}</span>
+                    ${selectedData.rentalPeriod?.code === period.code ? '<span>✓</span>' : ''}
+                `;
+                item.onclick = () => selectRentalPeriod(period);
+                list.appendChild(item);
+            });
+        }
+
+        function selectRentalPeriod(period) {
+            selectedData.rentalPeriod = period;
+            document.querySelector('#rentalPeriodBtn span').textContent = period.name;
+            closeModal('rentalPeriodModal');
+        }
+
+        // Address modal functions
+        async function showAddressModal() {
+            document.getElementById('addressModal').classList.add('show');
+            const searchInput = document.getElementById('addressSearch');
+            const placeholder = currentLanguage === 'kk' ? 'Қала немесе аймақ іздеу...' : 'Поиск города или региона...';
+            searchInput.placeholder = placeholder;
+            searchInput.value = '';
+            // Fetch all addresses once
+            if (!window._allAddresses) {
+                window._allAddresses = await apiService.getAddresses(currentLanguage);
+            }
+            // Flatten the nested katoChildren structure
+            function flattenAddresses(addresses) {
+                let flat = [];
+                for (const addr of addresses) {
+                    flat.push({ code: addr.code, name: addr.name });
+                    if (Array.isArray(addr.katoChildren)) {
+                        flat = flat.concat(flattenAddresses(addr.katoChildren));
+                    }
+                }
+                return flat;
+            }
+            window._flatAddresses = flattenAddresses(window._allAddresses);
+            function filterAddresses(searchText) {
+                return apiService.filterBySearch(window._flatAddresses, searchText);
+            }
+            function doSearch() {
+                renderAddressList(filterAddresses(searchInput.value));
+            }
+            searchInput.oninput = apiService.debounce(doSearch, 300);
+            renderAddressList(window._flatAddresses);
+            searchInput.focus();
+        }
+
+        function renderAddressList(cities) {
+            const list = document.getElementById('addressList');
+            
+            if (cities.length === 0) {
+                list.innerHTML = `<div class="no-results">${currentLanguage === 'kk' ? 'Ештеңе табылмады' : 'Ничего не найдено'}</div>`;
+                return;
+            }
+            
+            list.innerHTML = '';
+            cities.forEach(city => {
+                const item = document.createElement('div');
+                item.className = `modal-item ${selectedData.address?.code === city.code ? 'selected' : ''}`;
+                item.innerHTML = `
+                    <span>${city.name}</span>
+                    ${selectedData.address?.code === city.code ? '<span>✓</span>' : ''}
+                `;
+                item.onclick = () => selectAddress(city);
+                list.appendChild(item);
+            });
+        }
+
+        function selectAddress(city) {
+            selectedData.address = city;
+            document.querySelector('#addressBtn span').textContent = city.name;
+            closeModal('addressModal');
+            updateProgress();
+        }
+
+        // API loading functions
+        async function loadEngineTypes() {
+            try {
+                return await apiService.getEngineTypes(currentLanguage);
+            } catch (error) {
+                console.error('Error loading engine types:', error);
+                return [];
+            }
+        }
+
+        async function loadSteeringTypes() {
+            try {
+                return await apiService.getSteeringTypes(currentLanguage);
+            } catch (error) {
+                console.error('Error loading steering types:', error);
+                return [];
+            }
+        }
+
+        async function loadRentalPeriods() {
+            try {
+                return await apiService.getRentalPeriods(currentLanguage);
+            } catch (error) {
+                console.error('Error loading rental periods:', error);
+                return [];
+            }
+        }
+
+        function submitForm() {
+            // Validate required fields
+            const errors = validateForm();
+            if (errors.length > 0) {
+                showErrors(errors);
+                return;
+            }
+
+            // Show loading
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<div class="spinner" style="width: 20px; height: 20px; margin: 0 auto;"></div>';
+
+            // Collect form data and submit
+            collectFormData();
+            publishEquipment();
+        }
+
+        function validateForm() {
+            const errors = [];
+            
+            if (!selectedData.category) errors.push('category');
+            if (!selectedData.subcategory) errors.push('subcategory');
+            if (!selectedData.condition) errors.push('condition');
+            if (!selectedData.address) errors.push('address');
+            
+            return errors;
+        }
+
+        function showErrors(errors) {
+            errors.forEach(field => {
+                const errorElement = document.getElementById(field + 'Error');
+                const inputElement = document.getElementById(field + 'Btn') || document.getElementById(field);
+                
+                if (errorElement) {
+                    errorElement.style.display = 'block';
+                    errorElement.textContent = currentLanguage === 'kk' ? 'Бұл өрісті толтыру қажет' : 'Это поле обязательно для заполнения';
+                }
+                
+                if (inputElement) {
+                    inputElement.classList.add('error');
+                }
+            });
+        }
+
+        function collectFormData() {
+            formData = {
+                category: selectedData.category,
+                subcategory: selectedData.subcategory,
+                model: selectedData.model,
+                modelExtended: document.getElementById('modelExtended').value,
+                year: selectedData.year,
+                engineType: selectedData.engineType,
+                steering: selectedData.steering,
+                engineModel: document.getElementById('engineModel').value,
+                weight: document.getElementById('weight').value,
+                condition: selectedData.condition,
+                comments: document.getElementById('comments').value,
+                rentalPeriod: selectedData.rentalPeriod,
+                minHours: document.getElementById('minHours').value,
+                driverOperator: document.getElementById('driverOperator').checked,
+                documentPackage: document.getElementById('documentPackage').checked,
+                regionTrips: document.getElementById('regionTrips').checked,
+                hourlyRate: document.getElementById('negotiablePrice').checked ? null : (document.getElementById('hourlyRate').value.replace(/\D/g, '') || null),
+                negotiablePrice: document.getElementById('negotiablePrice').checked,
+                address: selectedData.address,
+                phone: userData.phone,
+                additionalPhone: document.getElementById('additionalPhone').value,
+                photos: uploadedPhotos
+            };
+        }
+
+        async function publishEquipment() {
+            try {
+                // Use API service to publish equipment
+                const result = await apiService.publishEquipment(formData);
+                console.log('Equipment published successfully:', result);
+                // Show success modal
+                showSuccessModal();
+            } catch (error) {
+                console.error('Error publishing equipment:', error);
+                alert(currentLanguage === 'kk' ? 'Қате орын алды' : 'Произошла ошибка');
+                // Reset submit button
+                const submitBtn = document.getElementById('submitBtn');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<span data-kk="Жарияны жариялау" data-ru="Опубликовать объявление">Жарияны жариялау</span>';
+            }
+        }
+        function showSuccessModal() {
+            document.getElementById('successModal').classList.add('show');
+            // Remove spinner and re-enable submit button
+            const submitBtn = document.getElementById('submitBtn');
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<span data-kk="Жарияны жариялау" data-ru="Опубликовать объявление">Жарияны жариялау</span>';
+            }
+        }
+        function addAnotherMachinery() {
+            document.getElementById('successModal').classList.remove('show');
+            // Reset the form (reload page for simplicity)
+            window.location.reload();
+        }
+
+        // Hourly rate formatting
+        const hourlyRateInput = document.getElementById('hourlyRate');
+        if (hourlyRateInput) {
+            hourlyRateInput.type = 'text'; // allow formatting
+            hourlyRateInput.addEventListener('input', function(e) {
+                let value = this.value.replace(/\D/g, '');
+                if (value) {
+                    this.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+                } else {
+                    this.value = '';
+                }
+            });
+            hourlyRateInput.addEventListener('blur', function(e) {
+                let value = this.value.replace(/\D/g, '');
+                if (value) {
+                    this.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+                }
+            });
+        }
+    </script>
+    <script src="api.js"></script>
+</body>
+</html> 

@@ -1,0 +1,13 @@
+[
+    {
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "kz.cmrhub",
+        "sha256_cert_fingerprints": [
+          "A4:17:86:B4:F3:E9:A7:53:3E:31:E4:B4:F2:FB:20:7E:9D:99:66:EE:CC:E2:26:F4:2A:37:65:A5:C3:E7:11:9D"
+        ]
+      }
+    }
+  ]
+  

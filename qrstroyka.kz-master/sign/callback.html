@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- API URLs are now configured through env.js -->
+    <title>Stroyka.kz - Авторизация</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: #f5f7fa;
+            color: #1d1d1f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .container {
+            text-align: center;
+            padding: 2rem;
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            background-color: #fff;
+            border-radius: 16px;
+            padding: 0.8rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            line-height: 1.2;
+            color: #333;
+        }
+
+        .status-message {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4CAF50;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-container {
+            background: #ffebee;
+            border: 1px solid #ffcdd2;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            text-align: left;
+        }
+
+        .error-title {
+            color: #c62828;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .error-description {
+            color: #d32f2f;
+            font-size: 0.9rem;
+        }
+
+        .success-container {
+            background: #e8f5e8;
+            border: 1px solid #c8e6c9;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            text-align: left;
+        }
+
+        .success-title {
+            color: #2e7d32;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .success-description {
+            color: #388e3c;
+            font-size: 0.9rem;
+        }
+
+        .redirect-message {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 1rem;
+        }
+
+        /* Safe area insets for modern mobile browsers */
+        @supports (padding: max(0px)) {
+            body {
+                padding-left: max(1rem, env(safe-area-inset-left));
+                padding-right: max(1rem, env(safe-area-inset-right));
+                padding-bottom: max(1rem, env(safe-area-inset-bottom));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="../logo.png" alt="Стройка.kз" onerror="this.style.display='none'">
+        </div>
+        <h1>Авторизация</h1>
+        <div id="content">
+            <div class="loading">
+                <div class="spinner"></div>
+                <div class="status-message">Обработка авторизации...</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script>
+        class CallbackHandler {
+            constructor() {
+                this.apiBaseUrl = getApiBaseUrl();
+                this.init();
+            }
+
+            async init() {
+                try {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const code = urlParams.get('code');
+                    const state = urlParams.get('state');
+                    const scope = urlParams.get('scope');
+                    const error = urlParams.get('error');
+                    const errorDescription = urlParams.get('error_description');
+
+                    if (error) {
+                        this.handleError(error, errorDescription, state, scope);
+                    } else if (code) {
+                        await this.handleSuccess(code, state, scope);
+                    } else {
+                        this.showError('Отсутствуют необходимые параметры авторизации');
+                        
+                        // Send error report for missing parameters
+                        this.sendErrorReport('MISSING_PARAMETERS', 'No code or error parameters found', null, null);
+                    }
+                } catch (error) {
+                    console.error('Callback processing error:', error);
+                    this.showError('Произошла ошибка при обработке авторизации');
+                }
+            }
+
+            async handleSuccess(code, state, scope) {
+                try {
+                    this.updateStatus('Проверка авторизации...');
+                    
+                    const response = await this.callAuthCallback(code, state);
+                    
+                    if (response.signatoryId) {
+                        this.updateStatus('Авторизация успешна!');
+                        this.showSuccess('Авторизация прошла успешно', response);
+                        
+                        // Store user data
+                        this.storeAuthData(response);
+                        
+                        // Redirect to success page with signatoryId
+                        setTimeout(() => {
+                            window.location.href = `/sign/success?signatoryId=${encodeURIComponent(response.signatoryId)}`;
+                        }, 2000);
+                    } else {
+                        throw new Error('Неверный ответ от сервера: отсутствует signatoryId');
+                    }
+                } catch (error) {
+                    console.error('Auth callback error:', error);
+                    this.showError(`Ошибка авторизации: ${error.message}`);
+                    
+                    // Send error report for API call failures
+                    this.sendErrorReport('API_CALL_FAILED', error.message, state, scope);
+                }
+            }
+
+            handleError(error, errorDescription, state, scope) {
+                const errorInfo = {
+                    error: error,
+                    errorDescription: errorDescription,
+                    state: state,
+                    scope: scope
+                };
+                
+                this.showError('Ошибка авторизации', errorInfo);
+                
+                // Store error info for error page
+                sessionStorage.setItem('authError', JSON.stringify(errorInfo));
+                
+                // Send error report to Telegram
+                this.sendErrorReport(error, errorDescription, state, scope);
+                
+                // Redirect to error page
+                setTimeout(() => {
+                    window.location.href = '/sign/error';
+                }, 3000);
+            }
+
+            async sendErrorReport(error, errorDescription, state, scope) {
+                try {
+                    const errorText = `AITU Sign Process Error:
+Error: ${error}
+Description: ${errorDescription || 'No description'}
+State: ${state || 'No state'}
+Scope: ${scope || 'No scope'}
+URL: ${window.location.href}
+User Agent: ${navigator.userAgent}
+Timestamp: ${new Date().toISOString()}`;
+
+                    const response = await fetch(getNotificationApiUrl('/api/v1/sms/send'), {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            recipient: 'AITU-SIGN-PROCESS',
+                            text: errorText
+                        })
+                    });
+
+                    if (response.ok) {
+                        console.log('Error report sent successfully');
+                    } else {
+                        console.error('Failed to send error report:', response.status);
+                    }
+                } catch (reportError) {
+                    console.error('Error sending error report:', reportError);
+                }
+            }
+
+            async callAuthCallback(code, state) {
+                const url = getApiUrl('/api/v1/aitu/callback') + `?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state)}`;
+                
+                console.log('Calling API endpoint:', url);
+                console.log('Code:', code);
+                console.log('State:', state);
+                
+                try {
+                    const response = await fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json'
+                        },
+                        mode: 'cors',
+                        credentials: 'omit'
+                    });
+
+                    console.log('Response status:', response.status);
+                    console.log('Response headers:', response.headers);
+
+                                    if (!response.ok) {
+                    let errorMessage;
+                    try {
+                        const errorData = await response.json();
+                        console.error('API Error Response:', errorData);
+                        
+                        // Handle the specific error format
+                        if (errorData.message) {
+                            errorMessage = errorData.message;
+                        } else if (errorData.error) {
+                            errorMessage = errorData.error;
+                        } else {
+                            errorMessage = `HTTP ${response.status}: ${JSON.stringify(errorData)}`;
+                        }
+                    } catch (parseError) {
+                        // If JSON parsing fails, try to get text
+                        const errorText = await response.text();
+                        console.error('API Error Response (text):', errorText);
+                        errorMessage = `HTTP ${response.status}: ${errorText}`;
+                    }
+                    
+                    throw new Error(errorMessage);
+                }
+
+                    const data = await response.json();
+                    console.log('API Success Response:', data);
+                    return data;
+                } catch (error) {
+                    console.error('Fetch error details:', error);
+                    console.error('Error name:', error.name);
+                    console.error('Error message:', error.message);
+                    
+                    // Provide more specific error messages
+                    if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+                        throw new Error(`Не удалось подключиться к серверу. Проверьте URL API: ${url}`);
+                    }
+                    
+                    throw error;
+                }
+            }
+
+            updateStatus(message) {
+                const statusElement = document.querySelector('.status-message');
+                if (statusElement) {
+                    statusElement.textContent = message;
+                }
+            }
+
+            showSuccess(title, data) {
+                const content = document.getElementById('content');
+                content.innerHTML = `
+                    <div class="success-container">
+                        <div class="success-title">${title}</div>
+                        <div class="success-description">
+                            Токен получен успешно. Перенаправление...
+                        </div>
+                    </div>
+                    <div class="redirect-message">
+                        Вы будете перенаправлены через несколько секунд
+                    </div>
+                `;
+            }
+
+            showError(title, errorInfo = null) {
+                const content = document.getElementById('content');
+                let errorHtml = `
+                    <div class="error-container">
+                        <div class="error-title">${title}</div>
+                `;
+
+                if (errorInfo) {
+                    if (errorInfo.error) {
+                        errorHtml += `<div class="error-description">Тип ошибки: ${errorInfo.error}</div>`;
+                    }
+                    if (errorInfo.errorDescription) {
+                        errorHtml += `<div class="error-description">Описание: ${errorInfo.errorDescription}</div>`;
+                    }
+                    if (errorInfo.state) {
+                        errorHtml += `<div class="error-description">State: ${errorInfo.state}</div>`;
+                    }
+                    if (errorInfo.scope) {
+                        errorHtml += `<div class="error-description">Scope: ${errorInfo.scope}</div>`;
+                    }
+                }
+
+                errorHtml += `
+                    </div>
+                    <div class="redirect-message">
+                        Вы будете перенаправлены на страницу ошибки
+                    </div>
+                `;
+
+                content.innerHTML = errorHtml;
+            }
+
+            storeAuthData(authResponse) {
+                // Store authentication data in localStorage
+                const authData = {
+                    signatoryId: authResponse.signatoryId,
+                    scope: authResponse.scope,
+                    user_data: authResponse.user_data,
+                    phone: authResponse.phone,
+                    iin: authResponse.iin,
+                    bin: authResponse.bin,
+                    timestamp: Date.now()
+                };
+
+                localStorage.setItem('authData', JSON.stringify(authData));
+            }
+        }
+
+        // Initialize callback handler when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new CallbackHandler();
+        });
+    </script>
+</body>
+</html> 

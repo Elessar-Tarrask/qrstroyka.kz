@@ -1,0 +1,17 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "2UHQM4HPK9.kz.cmrhub",
+        "paths": [
+          "/order/*",
+          "/resume/*",
+          "/equipment/*",
+          "/company/*",
+          "/sign/document/*"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,6 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Debug sign/success.html" type="JavascriptDebugType" factoryName="JavaScript Debug">
+    <url>http://localhost:63342/qrstroyka.kz/sign/success.html</url>
+    <method v="2" />
+  </configuration>
+</component>
