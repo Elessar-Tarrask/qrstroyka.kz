@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stroyka.kz - Заказы</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f5f5f7;
+            margin: 0;
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .orders-container {
+            background: #fff;
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.8rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #01875f;
+            color: #fff;
+        }
+
+        tr:hover {
+            background: #f9f9f9;
+        }
+
+        .divider {
+            height: 1px;
+            background: #ddd;
+            margin: 1.5rem 0;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background: #01875f;
+            color: #fff;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .back-button:hover {
+            background: #016b4f;
+        }
+    </style>
+</head>
+<body>
+<div class="orders-container">
+    <h1>Список заказов</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Название</th>
+            <th>Email</th>
+            <th>Статус</th>
+        </tr>
+        </thead>
+        <tbody id="ordersTableBody">
+        <tr><td colspan="4">Загрузка...</td></tr>
+        </tbody>
+    </table>
+    <div class="divider"></div>
+    <a href="index.html" class="back-button">Назад</a>
+</div>
+
+<!-- Подключаем твой JS -->
+<script src="order.js"></script>
+</body>
+</html>

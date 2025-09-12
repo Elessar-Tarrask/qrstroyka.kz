@@ -23,7 +23,7 @@
       },
       {
         "src": "/order/.*",
-        "dest": "/index.html"
+        "dest": "/order/order.html"
       },
       {
         "src": "/resume/.*",
