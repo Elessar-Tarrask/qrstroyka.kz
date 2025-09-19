@@ -7,12 +7,12 @@
 const DEFAULT_DOCSIGN_CONFIG = {
     // API Base URL - can be overridden by environment variables
     //API_BASE_URL: 'http://localhost:8080',
-    API_BASE_URL: 'https://cmr.api.stroyka.kz',
-    
+    API_BASE_URL: 'http://localhost:8080',
+
     // Endpoints
     SIGNATORY_ENDPOINT: '/rest/api/v1/aitu/sign-applications/by-signatory/',
-    SIGNING_ENDPOINT: '/rest/api/v1/aitu/signable-pdf/',
-    
+    SIGNING_ENDPOINT: '/rest/api/v1/aitu/signable/',
+
     // Timeouts
     REQUEST_TIMEOUT: 30000, // 30 seconds
 };
@@ -39,7 +39,7 @@ function getDocSignApiBaseUrl() {
     if (typeof window !== 'undefined' && window.API_BASE_URL) {
         return window.API_BASE_URL;
     }
-    
+
     // Check if it's set via meta tag
     let metaTagContent = null;
     if (typeof document !== 'undefined') {
@@ -51,7 +51,7 @@ function getDocSignApiBaseUrl() {
     if (metaTagContent) {
         return metaTagContent;
     }
-    
+
     // Return default
     const cfg = getDocSignConfig();
     return cfg.API_BASE_URL;
@@ -71,7 +71,7 @@ function getDocSignApiUrl(endpoint) {
 // Helper to get PDF endpoint for sign application
 function getFilesApiPdfUrl(signApplicationId) {
     // Endpoint as per backend controller mapping
-    return getDocSignApiUrl(`/rest/api/v1/files/sign-applications/${signApplicationId}/pdf`);
+    return getDocSignApiUrl(`/rest/api/v1/files/sign-applications/${signApplicationId}/file`);
 }
 
 // Normalize any provided URL or path to an absolute URL.
@@ -238,7 +238,7 @@ async function fetchSignatoryData(signatoryId) {
 // Function to format date
 function formatDate(dateString) {
     if (!dateString) return 'Не указано';
-    
+
     try {
         const date = new Date(dateString);
         return date.toLocaleString('ru-RU', {
@@ -373,80 +373,89 @@ function getSignStateClass(signState) {
     return classMap[signState] || 'pending';
 }
 
-// PDF caching functions removed - PDFs are now always fetched fresh from endpoints
+// File viewing functions - now supports any file type via Google Docs viewer
 
-function loadAndDisplayPdf(pdfUrl, fileName) {
-    const objectEl = document.getElementById('pdfObject');
-    const iframeEl = document.getElementById('pdfFrame');
+function loadAndDisplayDocument(fileApiUrl, fileName) {
+    const documentViewer = document.getElementById('documentViewer');
     const downloadLink = document.getElementById('downloadPdfLink');
     const newWindowLink = document.getElementById('openInNewWindowLink');
 
-    // Set initial fallback links to direct URL
-    if (newWindowLink) newWindowLink.href = pdfUrl;
-    if (downloadLink) {
-        downloadLink.href = pdfUrl;
-        downloadLink.setAttribute('download', fileName || 'document.pdf');
-    }
-
-    function setViewerSrc(url) {
-        if (objectEl) {
-            objectEl.setAttribute('data', url);
-
-            // Если браузер не сможет отобразить object → включаем iframe
-            objectEl.onerror = function() {
-                if (iframeEl) {
-                    objectEl.style.display = 'none';
-                    iframeEl.style.display = 'block';
-                    iframeEl.setAttribute('src', url);
-                }
-            };
-
-            // Таймаут-проверка (например, через 2 секунды)
-            setTimeout(() => {
-                // Если object пустой (нет содержимого), то fallback в iframe
-                if (objectEl.offsetHeight === 0 || objectEl.offsetWidth === 0) {
-                    if (iframeEl) {
-                        objectEl.style.display = 'none';
-                        iframeEl.style.display = 'block';
-                        iframeEl.setAttribute('src', url);
-                    }
-                }
-            }, 2000);
-        }
-
-        if (iframeEl) {
-            iframeEl.setAttribute('src', url);
-        }
-    }
-
-
-    // Always fetch the PDF fresh from the endpoint (no caching)
-    fetch(pdfUrl, {
+    // Fetch the file metadata from the new JSON API
+    fetch(fileApiUrl, {
         method: 'GET',
         headers: {
-            'Accept': 'application/pdf',
+            'Accept': 'application/json',
             'Cache-Control': 'no-cache, no-store, must-revalidate'
         }
     })
         .then(function(response) {
-            if (!response.ok) throw new Error('PDF fetch error: ' + response.status);
-            return response.blob();
+            if (!response.ok) throw new Error('File fetch error: ' + response.status);
+            return response.json();
         })
-        .then(function(blob) {
-            const blobUrl = URL.createObjectURL(blob);
-            setViewerSrc(blobUrl);
+        .then(function(data) {
+            const { fileUrl, fileName: responseFileName, contentType, originalFileUri } = data;
+            const displayName = fileName || responseFileName || 'document';
+            
+            // Set download link to signed file and new window to original file
             if (downloadLink) {
-                downloadLink.href = blobUrl;
-                downloadLink.setAttribute('download', fileName || 'document.pdf');
+                downloadLink.href = fileUrl; // This will be the signed file (PKC27)
+                downloadLink.setAttribute('download', displayName);
             }
             if (newWindowLink) {
-                newWindowLink.href = blobUrl;
+                // Use original file URI for viewing in new window
+                newWindowLink.href = originalFileUri || fileUrl;
             }
 
+            // Use Google Docs viewer for document display with original file URI
+            const viewerFileUrl = originalFileUri || fileUrl; // Use original file for viewing
+            const encodedFileUrl = encodeURIComponent(viewerFileUrl);
+            const googleDocsViewerUrl = `https://docs.google.com/viewer?url=${encodedFileUrl}&embedded=true`;
+
+            if (documentViewer) {
+                documentViewer.setAttribute('src', googleDocsViewerUrl);
+
+                // Fallback error handler
+                documentViewer.onerror = function() {
+                    // If Google Docs viewer fails, try direct original file URL
+                    documentViewer.setAttribute('src', originalFileUri || fileUrl);
+                };
+                
+                // Additional timeout fallback
+                setTimeout(() => {
+                    if (documentViewer.offsetHeight === 0 || documentViewer.offsetWidth === 0) {
+                        documentViewer.setAttribute('src', originalFileUri || fileUrl);
+                    }
+                }, 3000);
+            }
+
+            // Store file info for debugging and potential QR code handling (PDF only)
+            if (typeof window !== 'undefined') {
+                window.DEBUG_DocSign = window.DEBUG_DocSign || {};
+                window.DEBUG_DocSign.currentFile = {
+                    fileUrl, // This is the signed file (PKC27) for download
+                    originalFileUri, // This is the original file for viewing
+                    fileName: displayName,
+                    contentType,
+                    isPdf: contentType === 'application/pdf',
+                    googleDocsUrl: googleDocsViewerUrl,
+                    viewerUrl: viewerFileUrl // URL used for viewing (original file)
+                };
+            }
         })
         .catch(function(err) {
-            // As a last resort, try to show direct URL (may download depending on headers)
-            setViewerSrc(pdfUrl);
+            console.error('Error loading document:', err);
+            // Fallback: try to construct direct file URL
+            if (downloadLink) {
+                downloadLink.href = fileApiUrl;
+                downloadLink.setAttribute('download', fileName || 'document');
+            }
+            if (newWindowLink) {
+                newWindowLink.href = fileApiUrl;
+            }
+            if (documentViewer) {
+                // Try direct API URL as last resort for viewing
+                documentViewer.setAttribute('src', fileApiUrl);
+            }
         });
 }
 
@@ -458,34 +467,34 @@ function renderDocumentSigningPage(data) {
     if (!signatoryId) {
         signatoryId = "0198990b-c489-70b5-bba0-4bf6058bb068";
     }
-    
+
     // Find current signer - the one whose ID matches the signatoryId in URL
     const currentSigner = data.signers.find(signer => signer.id === signatoryId);
     const isCurrentUserSigning = currentSigner !== undefined;
-    
+
     // Get file info (defensive in case backend omits it)
     const fileInfo = (data && data.signApplicationFile) || {};
-    
+
     // Sort signers - main signer first, then others
     const sortedSigners = [...data.signers].sort((a, b) => {
         if (a.isMainSigner && !b.isMainSigner) return -1;
         if (!a.isMainSigner && b.isMainSigner) return 1;
         return 0;
     });
-    
+
     // Create HTML content
     let html = `
         <div class="signers-section">
             <h3>${t('signers')}</h3>
             <div class="signers-list">
     `;
-    
+
     sortedSigners.forEach(signer => {
         const signerInfo = getSignerInfo(signer);
         const isCurrentSigner = signer.id === signatoryId;
         const signStateClass = getSignStateClass(signer.signState);
         const signStateText = getSignStateText(signer.signState);
-        
+
         html += `
             <div class="signer-item ${isCurrentSigner ? 'current-signer' : ''} ${signStateClass}">
                 <div class="signer-header">
@@ -501,11 +510,11 @@ function renderDocumentSigningPage(data) {
             </div>
         `;
     });
-    
+
     html += `
             </div>
         </div>
-        
+
         <div class="document-info">
             ${isCurrentUserSigning && currentSigner.signState === 'PENDING' ? `
                 <div class="sign-button-container">
@@ -517,9 +526,8 @@ function renderDocumentSigningPage(data) {
                 <div class="file-name">${fileInfo.fileName || t('notSpecified')}</div>
                 <div class="file-date">${t('created')}: ${formatDate(data.createdDate)}</div>
             </div>
-            <div class="pdf-viewer">
-                <object id="pdfObject" type="application/pdf" width="100%" height="600"></object>
-                <iframe id="pdfFrame" src="" width="100%" height="600" frameborder="0" style ="display: none"></iframe>
+            <div class="document-viewer">
+                <iframe id="documentViewer" src="" width="100%" height="600" frameborder="0"></iframe>
             </div>
             <div class="pdf-fallback">
                 <a id="openInNewWindowLink" class="download-link" target="_blank" rel="noopener">${t('openInNewWindow')}</a>
@@ -528,7 +536,7 @@ function renderDocumentSigningPage(data) {
                 <a id="downloadPdfLink" class="download-link">${t('downloadDoc')}</a>
             </div>
         </div>
-        
+
         <div class="action-section">
             ${isCurrentUserSigning && currentSigner.signState === 'PENDING' ? `
                 <div class="sign-action">
@@ -551,7 +559,7 @@ function renderDocumentSigningPage(data) {
             ` : ''}
         </div>
     `;
-    
+
     container.innerHTML = html;
 
     // Prefer signApplicationId from URL query; then from payload; fall back to direct fileRef URLs only if needed
@@ -565,12 +573,12 @@ function renderDocumentSigningPage(data) {
         if (typeof window !== 'undefined') {
             window.DEBUG_DocSign = window.DEBUG_DocSign || {};
             window.DEBUG_DocSign.state = { signAppIdFromQuery, signAppIdFromData, chosenSignAppId: signAppId, apiPdfUrl };
-            window.DEBUG_DocSign.loadPdfFor = function(id) {
+            window.DEBUG_DocSign.loadDocumentFor = function(id) {
                 const u = resolveDocSignUrl(getFilesApiPdfUrl(id));
-                loadAndDisplayPdf(u, fileInfo && fileInfo.fileName);
+                loadAndDisplayDocument(u, fileInfo && fileInfo.fileName);
             };
         }
-        loadAndDisplayPdf(apiPdfUrl, fileInfo && fileInfo.fileName);
+        loadAndDisplayDocument(apiPdfUrl, fileInfo && fileInfo.fileName);
     } else {
         const rawPdfUrl = (fileInfo && (fileInfo.fileRefWithQr || fileInfo.fileRef)) || null;
         if (rawPdfUrl) {
@@ -580,32 +588,32 @@ function renderDocumentSigningPage(data) {
                 if (typeof window !== 'undefined') {
                     window.DEBUG_DocSign = window.DEBUG_DocSign || {};
                     window.DEBUG_DocSign.state = { signAppIdFromQuery, signAppIdFromData, chosenSignAppId: uuidFromRaw, derivedFrom: 'fileRef', rawPdfUrl, apiPdfUrl: inlineUrl };
-                    window.DEBUG_DocSign.loadPdfFor = function(id) {
+                    window.DEBUG_DocSign.loadDocumentFor = function(id) {
                         const u = resolveDocSignUrl(getFilesApiPdfUrl(id));
-                        loadAndDisplayPdf(u, fileInfo && fileInfo.fileName);
+                        loadAndDisplayDocument(u, fileInfo && fileInfo.fileName);
                     };
                 }
-                loadAndDisplayPdf(inlineUrl, fileInfo && fileInfo.fileName);
+                loadAndDisplayDocument(inlineUrl, fileInfo && fileInfo.fileName);
             } else {
                 const absPdfUrl = resolveDocSignUrl(rawPdfUrl);
                 if (typeof window !== 'undefined') {
                     window.DEBUG_DocSign = window.DEBUG_DocSign || {};
                     window.DEBUG_DocSign.state = { signAppIdFromQuery, signAppIdFromData, chosenSignAppId: null, rawPdfUrl, absPdfUrl };
-                    window.DEBUG_DocSign.loadPdfFor = function(id) {
+                    window.DEBUG_DocSign.loadDocumentFor = function(id) {
                         const u = resolveDocSignUrl(getFilesApiPdfUrl(id));
-                        loadAndDisplayPdf(u, fileInfo && fileInfo.fileName);
+                        loadAndDisplayDocument(u, fileInfo && fileInfo.fileName);
                     };
                 }
-                loadAndDisplayPdf(absPdfUrl, fileInfo && fileInfo.fileName);
+                loadAndDisplayDocument(absPdfUrl, fileInfo && fileInfo.fileName);
             }
         } else {
-            console.warn('[DocSign] No PDF URL or signApplicationId available to load PDF');
+            console.warn('[DocSign] No file URL or signApplicationId available to load document');
             if (typeof window !== 'undefined') {
                 window.DEBUG_DocSign = window.DEBUG_DocSign || {};
                 window.DEBUG_DocSign.state = { signAppIdFromQuery, signAppIdFromData, chosenSignAppId: null };
-                window.DEBUG_DocSign.loadPdfFor = function(id) {
+                window.DEBUG_DocSign.loadDocumentFor = function(id) {
                     const u = resolveDocSignUrl(getFilesApiPdfUrl(id));
-                    loadAndDisplayPdf(u, fileInfo && fileInfo.fileName);
+                    loadAndDisplayDocument(u, fileInfo && fileInfo.fileName);
                 };
             }
         }
@@ -644,7 +652,7 @@ async function initiateSigning(signatoryId) {
             signButton.disabled = true;
             signButton.textContent = t('preparingSignature');
         }
-        
+
         // Call the signing endpoint
         const url = getDocSignApiUrl(_cfg().SIGNING_ENDPOINT + signatoryId + '/process');
 
@@ -668,11 +676,11 @@ async function initiateSigning(signatoryId) {
         } else {
             throw new Error(t('signLinkNotReceived'));
         }
-        
+
     } catch (error) {
         console.error('Error initiating signing:', error);
         alert(t('signingError'));
-        
+
         // Reset button state
         const signButton = document.querySelector('.sign-button');
         if (signButton) {
@@ -690,7 +698,7 @@ function initializeLanguageButtons() {
             switchLanguage(btn.dataset.lang);
         });
     });
-    
+
     // Set initial active state
     const activeButton = document.querySelector(`[data-lang="${currentLanguage}"]`);
     if (activeButton) {
@@ -721,27 +729,27 @@ async function initializeDocumentSigning() {
             const apiPdfUrl = resolveDocSignUrl(getFilesApiPdfUrl(signAppIdFromQuery));
             if (typeof window !== 'undefined') {
                 window.DEBUG_DocSign = window.DEBUG_DocSign || {};
-                window.DEBUG_DocSign.earlyPdf = { signApplicationId: signAppIdFromQuery, url: apiPdfUrl, at: new Date().toISOString() };
-                window.DEBUG_DocSign.loadPdfFor = function(id) {
+                window.DEBUG_DocSign.earlyDocument = { signApplicationId: signAppIdFromQuery, url: apiPdfUrl, at: new Date().toISOString() };
+                window.DEBUG_DocSign.loadDocumentFor = function(id) {
                     const u = resolveDocSignUrl(getFilesApiPdfUrl(id));
-                    loadAndDisplayPdf(u);
+                    loadAndDisplayDocument(u);
                 };
             }
-            // This will fetch the PDF and log the Blob in console; viewer will be set once available or fallback silently
-            loadAndDisplayPdf(apiPdfUrl);
+            // This will fetch the document and display it; viewer will be set once available or fallback silently
+            loadAndDisplayDocument(apiPdfUrl);
         }
-        
+
         let signatoryId = getSignatoryIdFromPath();
         if (!signatoryId) {
             signatoryId = "0198990b-c489-70b5-bba0-4bf6058bb068";
         }
 
         updateEndpointInfo(signatoryId);
-        
+
         const data = await fetchSignatoryData(signatoryId);
         renderDocumentSigningPage(data);
         initializeLanguageButtons();
-        
+
     } catch (error) {
         console.error('Error initializing document signing:', error);
         showError(t('loadError'));
