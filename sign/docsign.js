@@ -11,7 +11,7 @@ const DEFAULT_DOCSIGN_CONFIG = {
 
     // Endpoints
     SIGNATORY_ENDPOINT: '/rest/api/v1/aitu/sign-applications/by-signatory/',
-    SIGNING_ENDPOINT: '/rest/api/v1/aitu/signable/',
+    SIGNING_ENDPOINT: '/rest/api/v1/aitu/signable-pdf/',
 
     // Timeouts
     REQUEST_TIMEOUT: 30000, // 30 seconds
@@ -396,9 +396,9 @@ function loadAndDisplayDocument(fileApiUrl, fileName) {
             const { fileUrl, fileName: responseFileName, contentType, originalFileUri } = data;
             const displayName = fileName || responseFileName || 'document';
             
-            // Set download link to signed file and new window to original file
+            // Set download link to original file and new window to original file
             if (downloadLink) {
-                downloadLink.href = fileUrl; // This will be the signed file (PKC27)
+                downloadLink.href = originalFileUri || fileUrl; // This will be the original unsigned file
                 downloadLink.setAttribute('download', displayName);
             }
             if (newWindowLink) {
