@@ -6,59 +6,62 @@
         "use": "@vercel/static"
       }
     ],
-    "routes": [
+    "rewrites": [
       {
-        "src": "/.well-known/apple-app-site-association",
-        "headers": {
-          "Content-Type": "application/json"
-        },
-        "dest": "/.well-known/apple-app-site-association"
+        "source": "/order/(.*)",
+        "destination": "/order/order.html"
       },
       {
-        "src": "/.well-known/assetlinks.json",
-        "headers": {
-          "Content-Type": "application/json"
-        },
-        "dest": "/.well-known/assetlinks.json"
+        "source": "/resume/(.*)",
+        "destination": "/index.html"
       },
       {
-        "src": "/order/.*",
-        "dest": "/index.html"
+        "source": "/equipment/(.*)",
+        "destination": "/index.html"
       },
       {
-        "src": "/resume/.*",
-        "dest": "/index.html"
+        "source": "/company/(.*)",
+        "destination": "/index.html"
       },
       {
-        "src": "/equipment/.*",
-        "dest": "/index.html"
+        "source": "/cv/(.*)",
+        "destination": "/index.html"
       },
       {
-        "src": "/company/.*",
-        "dest": "/index.html"
+        "source": "/sign/callback",
+        "destination": "/sign/callback.html"
       },
       {
-        "src": "/sign/callback",
-        "dest": "/sign/callback.html"
+        "source": "/sign/success",
+        "destination": "/sign/success.html"
       },
       {
-        "src": "/sign/success",
-        "dest": "/sign/success.html"
+        "source": "/sign/error",
+        "destination": "/sign/error.html"
       },
       {
-        "src": "/sign/error",
-        "dest": "/sign/error.html"
+        "source": "/sign/document/(.*)",
+        "destination": "/sign/docsign.html"
+      }
+    ],
+    "headers": [
+      {
+        "source": "/.well-known/apple-app-site-association",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ]
       },
       {
-        "src": "/sign/document/.*",
-        "dest": "/sign/docsign.html"
-      },
-      {
-        "handle": "filesystem"
-      },
-      {
-        "src": "/(.*)",
-        "dest": "/$1"
+        "source": "/.well-known/assetlinks.json",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ]
       }
     ]
 }
