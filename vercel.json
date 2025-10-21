@@ -70,6 +70,22 @@
       "dest": "/sign/docsign.html"
     },
     {
+      "src": "/order-cmr/order\\.(js|html)$",
+      "dest": "/order-cmr/$1"
+    },
+    {
+      "src": "/order-cmr/create-order\\.(js|html)$",
+      "dest": "/order-cmr/$1"
+    },
+    {
+      "src": "/order-cmr/api\\.js$",
+      "dest": "/order-cmr/api.js"
+    },
+    {
+      "src": "/order-cmr/([^/]+)$",
+      "dest": "/order-cmr/order.html"
+    },
+    {
       "handle": "filesystem"
     },
     {

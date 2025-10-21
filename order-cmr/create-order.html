@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Stroyka.kz - Заказ қосу</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: #f5f7fa;
+            color: #1d1d1f;
+            padding-bottom: 100px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            color: white;
+            padding: 1rem 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .header-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .section-subtitle {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            background: #fafbfc;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #2196F3;
+            background: white;
+        }
+
+        .form-input.error {
+            border-color: #ef4444;
+        }
+
+        .dropdown-button {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            background: #fafbfc;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .dropdown-button:hover {
+            border-color: #2196F3;
+            background: white;
+        }
+
+        .dropdown-button.error {
+            border-color: #ef4444;
+        }
+
+        .dropdown-button:disabled {
+            background: #f0f0f0;
+            color: #aaa;
+            border-color: #e1e5e9;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .dropdown-icon {
+            transition: transform 0.3s;
+        }
+
+        .dropdown-button.open .dropdown-icon {
+            transform: rotate(180deg);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.8rem;
+            background: #fafbfc;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .checkbox-group:hover {
+            background: #f1f3f4;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #2196F3;
+        }
+
+        .switch-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            background: #fafbfc;
+            border-radius: 8px;
+        }
+
+        .switch {
+            position: relative;
+            width: 50px;
+            height: 26px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 26px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        .photo-upload {
+            border: 2px dashed #e1e5e9;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .photo-upload:hover {
+            border-color: #2196F3;
+            background: #f8f9ff;
+        }
+
+        .photo-upload.dragover {
+            border-color: #2196F3;
+            background: #f0f4ff;
+        }
+
+        .photo-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .photo-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #f0f0f0;
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-remove {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 2rem;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+        }
+
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .error-message {
+            color: #ef4444;
+            font-size: 0.8rem;
+            margin-top: 0.3rem;
+            display: none;
+        }
+
+        .progress-bar {
+            background: #e1e5e9;
+            border-radius: 10px;
+            height: 8px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #2196F3, #1976D2);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            max-width: 400px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .modal-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .modal-item {
+            padding: 0.8rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-item:hover {
+            background: #f0f4ff;
+        }
+
+        .modal-item.selected {
+            background: #e3f2fd;
+            color: #2196F3;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            background: #fafbfc;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #2196F3;
+            background: white;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            font-style: italic;
+        }
+
+        .loading-item {
+            text-align: center;
+            padding: 1rem;
+            color: #666;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #2196F3;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .section {
+                padding: 1rem;
+            }
+            
+            .header-content {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            
+            .header-title {
+                font-size: 1.1rem;
+                order: -1;
+                width: 100%;
+                text-align: center;
+                margin-bottom: 0.5rem;
+            }
+            
+            .back-btn {
+                position: absolute;
+                left: 1rem;
+                top: 1rem;
+            }
+            
+            .header-content > div {
+                position: absolute;
+                right: 1rem;
+                top: 1rem;
+            }
+            
+            .header-content > div > div button {
+                padding: 0.2rem 0.4rem !important;
+                font-size: 0.7rem !important;
+            }
+            
+            .logout-btn {
+                padding: 0.3rem 0.6rem !important;
+                font-size: 0.8rem !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1 class="header-title" data-kk="Заказ қосу" data-ru="Создать заказ">Заказ қосу</h1>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="display: flex; gap: 0.5rem;">
+                    <button onclick="changeLanguage('kk')" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 0.3rem 0.6rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem; transition: all 0.3s;" id="langKk">ҚАЗ</button>
+                    <button onclick="changeLanguage('ru')" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 0.3rem 0.6rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem; transition: all 0.3s;" id="langRu">РУС</button>
+                </div>
+                <button class="logout-btn" onclick="logout()">
+                    <span data-kk="Шығу" data-ru="Выйти">Шығу</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <!-- Основные параметры -->
+        <div class="section">
+            <h2 class="section-title" data-kk="Негізгі параметрлер" data-ru="Основные параметры">Негізгі параметрлер</h2>
+            
+            <div class="form-group">
+                <label class="form-label" data-kk="Жұмыс түрі *" data-ru="Тип работы *">Жұмыс түрі *</label>
+                <button class="dropdown-button" id="workTypeBtn" onclick="showWorkTypeModal()">
+                    <span data-kk="Жұмыс түрін таңдаңыз" data-ru="Выберите тип работы">Жұмыс түрін таңдаңыз</span>
+                    <span class="dropdown-icon">▼</span>
+                </button>
+                <div class="error-message" id="workTypeError"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" data-kk="Заказ атауы *" data-ru="Название заказа *">Заказ атауы *</label>
+                <input type="text" class="form-input" id="orderName" placeholder="">
+                <div class="error-message" id="orderNameError"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" data-kk="Жоспарланған басталу күні *" data-ru="Планируемая дата начала *">Жоспарланған басталу күні *</label>
+                <input type="date" class="form-input" id="planStartDate">
+                <div class="error-message" id="planStartDateError"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" data-kk="Жоспарланған аяқталу күні *" data-ru="Планируемая дата окончания *">Жоспарланған аяқталу күні *</label>
+                <input type="date" class="form-input" id="planEndDate">
+                <div class="error-message" id="planEndDateError"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" data-kk="Заказ сомасы (₸) *" data-ru="Сумма заказа (₸) *">Заказ сомасы (₸) *</label>
+                <input type="number" class="form-input" id="orderAmount" placeholder="₸">
+                <div class="error-message" id="orderAmountError"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" data-kk="Жобаның қысқаша сипаттамасы" data-ru="Краткое описание проекта">Жобаның қысқаша сипаттамасы</label>
+                <textarea class="form-input" id="description" rows="4" maxlength="5000" placeholder=""></textarea>
+                <div style="text-align: right; font-size: 0.8rem; color: #666; margin-top: 0.3rem;">
+                    <span id="descriptionCounter">0</span>/5000
+                </div>
+            </div>
+        </div>
+
+        <!-- Дополнительно -->
+        <div class="section">
+            <h2 class="section-title" data-kk="Қосымша" data-ru="Дополнительно">Қосымша</h2>
+            <p class="section-subtitle" data-kk="Міндетті емес" data-ru="Необязательно">Міндетті емес</p>
+            
+            <div class="form-group">
+                <label class="form-label" data-kk="Тілектер мен ерекшеліктер" data-ru="Пожелания и особенности">Тілектер мен ерекшеліктер</label>
+                <textarea class="form-input" id="additionalInfo" rows="4" maxlength="5000" placeholder=""></textarea>
+                <div style="text-align: right; font-size: 0.8rem; color: #666; margin-top: 0.3rem;">
+                    <span id="additionalInfoCounter">0</span>/5000
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" data-kk="Файлдар жүктеу" data-ru="Загрузить файлы">Файлдар жүктеу</label>
+                <div class="photo-upload" id="fileUpload">
+                    <p data-kk="📁 Файлдар жүктеу үшін басыңыз немесе файлдарды осында апарыңыз" data-ru="📁 Нажмите для загрузки файлов или перетащите файлы сюда">📁 Файлдар жүктеу үшін басыңыз немесе файлдарды осында апарыңыз</p>
+                </div>
+                <input type="file" id="fileInput" multiple style="display: none;">
+                <div class="photo-preview" id="filePreview"></div>
+            </div>
+        </div>
+
+        <!-- Условия -->
+        <div class="section">
+            <h2 class="section-title" data-kk="Шарттар" data-ru="Условия">Шарттар</h2>
+            
+            <div class="form-group">
+                <div class="switch-group">
+                    <span data-kk="Баға келісімді" data-ru="Цена договорная">Баға келісімді</span>
+                    <label class="switch">
+                        <input type="checkbox" id="negotiable">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="switch-group">
+                    <span data-kk="Аванс сақтандыру" data-ru="Авансовое страхование">Аванс сақтандыру</span>
+                    <label class="switch">
+                        <input type="checkbox" id="advanceInsurance" onchange="toggleAdvanceFields()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group" id="advancePercentageGroup" style="display: none;">
+                <label class="form-label" data-kk="Аванс пайызы (%)" data-ru="Процент аванса (%)">Аванс пайызы (%)</label>
+                <input type="number" class="form-input" id="advancePercentage" placeholder="0-100" min="0" max="100" step="0.01" oninput="calculateAdvanceAmount()">
+                <div style="margin-top: 0.5rem; padding: 0.8rem; background: #f0f4ff; border-radius: 8px; color: #333;">
+                    <strong data-kk="Аванс сомасы:" data-ru="Сумма аванса:">Аванс сомасы:</strong>
+                    <span id="advanceAmountDisplay" style="font-weight: 600; color: #2196F3;">0 ₸</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="switch-group">
+                    <span data-kk="Профиль жасырын" data-ru="Профиль скрыт">Профиль жасырын</span>
+                    <label class="switch">
+                        <input type="checkbox" id="profileHidden" disabled>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="switch-group">
+                    <span data-kk="Жарияланған" data-ru="Опубликовано">Жарияланған</span>
+                    <label class="switch">
+                        <input type="checkbox" id="published" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Контактная информация -->
+        <div class="section">
+            <h2 class="section-title" data-kk="Байланыс ақпараты" data-ru="Контактная информация">Байланыс ақпараты</h2>
+            
+            <div class="form-group">
+                <label class="form-label" data-kk="Мекенжай *" data-ru="Адрес *">Мекенжай *</label>
+                <button class="dropdown-button" id="addressBtn" onclick="showAddressModal()">
+                    <span data-kk="Мекенжайды көрсетіңіз" data-ru="Укажите адрес">Мекенжайды көрсетіңіз</span>
+                    <span class="dropdown-icon">▼</span>
+                </button>
+                <div class="error-message" id="addressError"></div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" data-kk="Телефон *" data-ru="Телефон *">Телефон *</label>
+                <input type="tel" class="form-input" id="phone" readonly>
+            </div>
+        </div>
+
+        <button class="submit-btn" id="submitBtn" onclick="submitForm()">
+            <span data-kk="Заказ жасау" data-ru="Создать заказ">Заказ жасау</span>
+        </button>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal" id="workTypeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" data-kk="Жұмыс түрін таңдаңыз" data-ru="Выберите тип работы">Жұмыс түрін таңдаңыз</h3>
+                <button class="close-modal" onclick="closeModal('workTypeModal')">&times;</button>
+            </div>
+            <input type="text" class="search-input" id="workTypeSearch" placeholder="">
+            <div class="loading" id="workTypeLoading">
+                <div class="spinner"></div>
+                <p data-kk="Жүктелуде..." data-ru="Загрузка...">Жүктелуде...</p>
+            </div>
+            <div class="modal-list" id="workTypeList"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="addressModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" data-kk="Мекенжайды таңдаңыз" data-ru="Выберите адрес">Мекенжайды таңдаңыз</h3>
+                <button class="close-modal" onclick="closeModal('addressModal')">&times;</button>
+            </div>
+            <input type="text" class="search-input" id="addressSearch" placeholder="">
+            <div class="loading" id="addressLoading">
+                <div class="spinner"></div>
+                <p data-kk="Жүктелуде..." data-ru="Загрузка...">Жүктелуде...</p>
+            </div>
+            <div class="modal-list" id="addressList"></div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal" id="successModal">
+        <div class="modal-content" style="text-align:center;">
+            <h2 style="color:#2196F3;">✅ <span data-kk="Сәтті жасалды!" data-ru="Успешно создано!">Сәтті жасалды!</span></h2>
+            <p data-kk="Сіз тағы бір заказ қоса аласыз немесе қосымшаны жүктеп, сол арқылы жариялай аласыз." data-ru="Вы можете добавить еще один заказ или скачать приложение и добавить через него.">Сіз тағы бір заказ қоса аласыз немесе қосымшаны жүктеп, сол арқылы жариялай аласыз.</p>
+            <div style="margin: 1em 0; color: #333; font-size: 1em;">
+                <span data-kk="Сіз мобильді қосымшада жарияланған заказдың ақпаратын өзгерте аласыз. Қосымшада сіз үшін қызықты болуы мүмкін көптеген функциялар бар!" data-ru="В мобильном приложении вы сможете редактировать информацию о созданном заказе. В приложении также есть множество других функций, которые могут быть вам интересны!">
+                    В мобильном приложении вы сможете редактировать информацию о созданном заказе. В приложении также есть множество других функций, которые могут быть вам интересны!
+                </span>
+            </div>
+            <div style="margin-top:2em;display:flex;gap:1em;justify-content:center;flex-wrap:wrap;">
+                <button onclick="addAnotherOrder()" style="padding:0.7em 1.5em;border:none;border-radius:8px;background:#2196F3;color:white;font-size:1em;cursor:pointer;">+ <span data-kk="Тағы қосу" data-ru="Добавить еще">Тағы қосу</span></button>
+                <div style="display:flex;gap:0.5em;align-items:center;">
+                    <a href="https://apps.apple.com/us/app/stroyka-kz/id6742178994" target="_blank" style="display:inline-flex;align-items:center;gap:0.5em;padding:0.7em 1.5em;border-radius:8px;background:#0070c9;color:white;font-size:1em;text-decoration:none;">
+                        <svg width="20" height="24" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.365 12.998c.02 2.18 1.94 2.91 1.96 2.92-.016.05-.31 1.07-1.02 2.12-.61.89-1.25 1.77-2.25 1.79-.98.02-1.3-.58-2.43-.58-1.13 0-1.49.56-2.43.6-.97.04-1.71-.96-2.33-1.85-1.27-1.84-2.24-5.2-.94-7.48.62-1.08 1.73-1.77 2.93-1.8.92-.02 1.79.62 2.43.62.64 0 1.62-.76 2.73-.65.47.02 1.8.19 2.65 1.44-.07.04-1.58.92-1.56 2.74zm-2.01-5.36c.51-.62.85-1.48.76-2.34-.74.03-1.63.49-2.16 1.11-.47.54-.88 1.41-.72 2.24.81.06 1.61-.41 2.12-1.01z" fill="#fff"/></svg>
+                        <span>App Store</span>
+                    </a>
+                    <a href="https://play.google.com/store/apps/details?id=kz.cmrhub" target="_blank" style="display:inline-flex;align-items:center;gap:0.5em;padding:0.7em 1.5em;border-radius:8px;background:#222;color:white;font-size:1em;text-decoration:none;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.654 2.978a1.5 1.5 0 0 1 1.7-.09l13.5 8.25a1.5 1.5 0 0 1 0 2.624l-13.5 8.25A1.5 1.5 0 0 1 3 20.25v-16.5a1.5 1.5 0 0 1 .654-1.272zm1.346 1.272v15.5l12.5-7.75-12.5-7.75z" fill="#fff"/></svg>
+                        <span>Google Play</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentLanguage = localStorage.getItem('stroyka_lang') || 'kk';
+        let userData = null;
+        let selectedData = {
+            workType: null,
+            address: null
+        };
+        
+        let uploadedFiles = [];
+        let formData = {};
+
+        function changeLanguage(lang) {
+            currentLanguage = lang;
+            localStorage.setItem('stroyka_lang', lang);
+            
+            // Update language buttons
+            document.getElementById('langKk').style.background = lang === 'kk' ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.2)';
+            document.getElementById('langKk').style.color = lang === 'kk' ? '#2196F3' : 'white';
+            document.getElementById('langRu').style.background = lang === 'ru' ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.2)';
+            document.getElementById('langRu').style.color = lang === 'ru' ? '#2196F3' : 'white';
+            
+            // Update text content
+            document.querySelectorAll('[data-kk][data-ru]').forEach(element => {
+                element.textContent = element.getAttribute('data-' + lang);
+            });
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            loadUserData();
+            initializeForm();
+            setupFileUpload();
+            
+            // Initialize language from localStorage if present
+            const storedLang = localStorage.getItem('stroyka_lang');
+            if (storedLang) {
+                currentLanguage = storedLang;
+            }
+            changeLanguage(currentLanguage);
+        });
+
+        function checkAuth() {
+            const storedAuth = localStorage.getItem('stroyka_user_auth');
+            if (!storedAuth) {
+                window.location.href = '../order-cmr/order.html';
+                return;
+            }
+
+            try {
+                userData = JSON.parse(storedAuth);
+                const twentyFourHours = 24 * 60 * 60 * 1000;
+                
+                if (!userData.isAuthenticated || 
+                    !userData.timestamp || 
+                    (Date.now() - userData.timestamp) > twentyFourHours) {
+                    localStorage.removeItem('stroyka_user_auth');
+                    window.location.href = '../order-cmr/order.html';
+                    return;
+                }
+                
+                // Set auth token for API calls
+                if (userData.accessToken) {
+                    apiService.setAuthToken(userData.accessToken);
+                }
+            } catch (e) {
+                localStorage.removeItem('stroyka_user_auth');
+                window.location.href = '../order-cmr/order.html';
+            }
+        }
+
+        function loadUserData() {
+            if (userData && userData.phone) {
+                const phoneInput = document.getElementById('phone');
+                phoneInput.value = formatPhone(userData.phone);
+            }
+        }
+
+        function formatPhone(phone) {
+            // Format phone as +7 777 123 45 67
+            if (phone.length === 11 && phone.startsWith('7')) {
+                return `+${phone.slice(0,1)} ${phone.slice(1,4)} ${phone.slice(4,7)} ${phone.slice(7,9)} ${phone.slice(9,11)}`;
+            }
+            return phone;
+        }
+
+        function initializeForm() {
+            // Load initial data
+            loadWorkTypes();
+            updateProgress();
+            setupCharacterCounters();
+        }
+
+        function setupCharacterCounters() {
+            // Description counter
+            const descriptionInput = document.getElementById('description');
+            const descriptionCounter = document.getElementById('descriptionCounter');
+            
+            descriptionInput.addEventListener('input', function() {
+                const length = this.value.length;
+                descriptionCounter.textContent = length;
+                if (length > 5000) {
+                    this.value = this.value.substring(0, 5000);
+                    descriptionCounter.textContent = 5000;
+                }
+            });
+
+            // Additional info counter
+            const additionalInfoInput = document.getElementById('additionalInfo');
+            const additionalInfoCounter = document.getElementById('additionalInfoCounter');
+            
+            additionalInfoInput.addEventListener('input', function() {
+                const length = this.value.length;
+                additionalInfoCounter.textContent = length;
+                if (length > 5000) {
+                    this.value = this.value.substring(0, 5000);
+                    additionalInfoCounter.textContent = 5000;
+                }
+            });
+        }
+
+        function toggleAdvanceFields() {
+            const advanceInsurance = document.getElementById('advanceInsurance');
+            const advancePercentageGroup = document.getElementById('advancePercentageGroup');
+            
+            if (advanceInsurance.checked) {
+                advancePercentageGroup.style.display = 'block';
+            } else {
+                advancePercentageGroup.style.display = 'none';
+                document.getElementById('advancePercentage').value = '';
+                document.getElementById('advanceAmountDisplay').textContent = '0 ₸';
+            }
+        }
+
+        function calculateAdvanceAmount() {
+            const orderAmount = parseFloat(document.getElementById('orderAmount').value) || 0;
+            const advancePercentage = parseFloat(document.getElementById('advancePercentage').value) || 0;
+            
+            // Ensure percentage is between 0 and 100
+            if (advancePercentage < 0) {
+                document.getElementById('advancePercentage').value = 0;
+                return;
+            }
+            if (advancePercentage > 100) {
+                document.getElementById('advancePercentage').value = 100;
+            }
+            
+            // Calculate advance amount
+            const advanceAmount = (orderAmount * advancePercentage) / 100;
+            
+            // Format with spaces as thousand separator
+            const formattedAmount = advanceAmount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+            
+            document.getElementById('advanceAmountDisplay').textContent = formattedAmount + ' ₸';
+        }
+
+        // Also recalculate advance when order amount changes
+        document.addEventListener('DOMContentLoaded', function() {
+            const orderAmountInput = document.getElementById('orderAmount');
+            if (orderAmountInput) {
+                orderAmountInput.addEventListener('input', calculateAdvanceAmount);
+            }
+        });
+
+        function setupFileUpload() {
+            const fileUpload = document.getElementById('fileUpload');
+            const fileInput = document.getElementById('fileInput');
+
+            fileUpload.addEventListener('click', () => fileInput.click());
+            fileUpload.addEventListener('dragover', handleDragOver);
+            fileUpload.addEventListener('drop', handleDrop);
+            fileInput.addEventListener('change', handleFileSelect);
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('dragover');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('dragover');
+            const files = Array.from(e.dataTransfer.files);
+            processFiles(files);
+        }
+
+        function handleFileSelect(e) {
+            const files = Array.from(e.target.files);
+            processFiles(files);
+        }
+
+        function processFiles(files) {
+            files.forEach(file => {
+                uploadedFiles.push({
+                    file: file,
+                    name: file.name
+                });
+                updateFilePreview();
+            });
+        }
+
+        function updateFilePreview() {
+            const preview = document.getElementById('filePreview');
+            preview.innerHTML = '';
+            
+            uploadedFiles.forEach((fileItem, index) => {
+                const file = fileItem.file;
+                const isImage = file.type.startsWith('image/');
+                
+                const fileItemDiv = document.createElement('div');
+                fileItemDiv.className = 'photo-item';
+                
+                if (isImage) {
+                    // Show image preview
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        fileItemDiv.innerHTML = `
+                            <img src="${e.target.result}" alt="${file.name}" style="width: 100%; height: 100%; object-fit: cover;">
+                            <button class="photo-remove" onclick="removeFile(${index})">×</button>
+                        `;
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    // Show file icon
+                    fileItemDiv.innerHTML = `
+                        <div style="padding: 1rem; text-align: center; display: flex; flex-direction: column; justify-content: center; height: 100%;">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">📄</div>
+                            <div style="font-size: 0.8rem; word-break: break-all;">${file.name}</div>
+                        </div>
+                        <button class="photo-remove" onclick="removeFile(${index})">×</button>
+                    `;
+                }
+                
+                preview.appendChild(fileItemDiv);
+            });
+        }
+
+        function removeFile(index) {
+            uploadedFiles.splice(index, 1);
+            updateFilePreview();
+        }
+
+        function updateProgress() {
+            const required = ['workType', 'address'];
+            const completed = required.filter(field => selectedData[field]).length;
+            const progress = (completed / required.length) * 100;
+            
+            document.getElementById('progressFill').style.width = `${progress}%`;
+        }
+
+        function logout() {
+            if (confirm(currentLanguage === 'kk' ? 'Шынымен шығасыз ба?' : 'Действительно выйти?')) {
+                localStorage.removeItem('stroyka_user_auth');
+                window.location.href = '../order-cmr/order.html';
+            }
+        }
+
+        // API functions
+        async function loadWorkTypes() {
+            try {
+                const workTypes = await apiService.getWorkTypes();
+                window.workTypesData = workTypes;
+            } catch (error) {
+                console.error('Error loading work types:', error);
+                window.workTypesData = [];
+            }
+        }
+
+        // Search variables for debouncing
+        let searchTimeouts = {};
+
+        // Modal functions with search
+        async function showWorkTypeModal() {
+            document.getElementById('workTypeModal').classList.add('show');
+            const searchInput = document.getElementById('workTypeSearch');
+            const placeholder = currentLanguage === 'kk' ? 'Іздеу...' : 'Поиск...';
+            searchInput.placeholder = placeholder;
+            searchInput.value = '';
+            
+            // Setup search functionality
+            clearTimeout(searchTimeouts.workType);
+            
+            // Fetch all work types once
+            if (!window._allWorkTypes) {
+                window._allWorkTypes = await apiService.getWorkTypes();
+            }
+            
+            function filterWorkTypes(searchText) {
+                return apiService.filterBySearch(window._allWorkTypes, searchText);
+            }
+            
+            function doSearch() {
+                renderWorkTypeList(filterWorkTypes(searchInput.value));
+            }
+            
+            searchInput.oninput = apiService.debounce(doSearch, 300);
+            renderWorkTypeList(window._allWorkTypes);
+            searchInput.focus();
+        }
+
+        function renderWorkTypeList(workTypes) {
+            const list = document.getElementById('workTypeList');
+            
+            if (workTypes.length === 0) {
+                list.innerHTML = `<div class="no-results">${currentLanguage === 'kk' ? 'Ештеңе табылмады' : 'Ничего не найдено'}</div>`;
+                return;
+            }
+            
+            list.innerHTML = '';
+            workTypes.forEach(workType => {
+                const item = document.createElement('div');
+                item.className = `modal-item ${selectedData.workType?.id === workType.id ? 'selected' : ''}`;
+                item.innerHTML = `
+                    <span>${workType.name}</span>
+                    ${selectedData.workType?.id === workType.id ? '<span>✓</span>' : ''}
+                `;
+                item.onclick = () => selectWorkType(workType);
+                list.appendChild(item);
+            });
+        }
+
+        function selectWorkType(workType) {
+            selectedData.workType = workType;
+            document.querySelector('#workTypeBtn span').textContent = workType.name;
+            closeModal('workTypeModal');
+            updateProgress();
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+        }
+
+        // Address modal functions
+        async function showAddressModal() {
+            document.getElementById('addressModal').classList.add('show');
+            const searchInput = document.getElementById('addressSearch');
+            const placeholder = currentLanguage === 'kk' ? 'Қала немесе аймақ іздеу...' : 'Поиск города или региона...';
+            searchInput.placeholder = placeholder;
+            searchInput.value = '';
+            
+            // Fetch all addresses once
+            if (!window._allAddresses) {
+                window._allAddresses = await apiService.getAddresses(currentLanguage);
+            }
+            
+            // Flatten the nested katoChildren structure
+            function flattenAddresses(addresses) {
+                let flat = [];
+                for (const addr of addresses) {
+                    flat.push({ code: addr.code, name: addr.name });
+                    if (Array.isArray(addr.katoChildren)) {
+                        flat = flat.concat(flattenAddresses(addr.katoChildren));
+                    }
+                }
+                return flat;
+            }
+            window._flatAddresses = flattenAddresses(window._allAddresses);
+            
+            function filterAddresses(searchText) {
+                return apiService.filterBySearch(window._flatAddresses, searchText);
+            }
+            
+            function doSearch() {
+                renderAddressList(filterAddresses(searchInput.value));
+            }
+            
+            searchInput.oninput = apiService.debounce(doSearch, 300);
+            renderAddressList(window._flatAddresses);
+            searchInput.focus();
+        }
+
+        function renderAddressList(cities) {
+            const list = document.getElementById('addressList');
+            
+            if (cities.length === 0) {
+                list.innerHTML = `<div class="no-results">${currentLanguage === 'kk' ? 'Ештеңе табылмады' : 'Ничего не найдено'}</div>`;
+                return;
+            }
+            
+            list.innerHTML = '';
+            cities.forEach(city => {
+                const item = document.createElement('div');
+                item.className = `modal-item ${selectedData.address?.code === city.code ? 'selected' : ''}`;
+                item.innerHTML = `
+                    <span>${city.name}</span>
+                    ${selectedData.address?.code === city.code ? '<span>✓</span>' : ''}
+                `;
+                item.onclick = () => selectAddress(city);
+                list.appendChild(item);
+            });
+        }
+
+        function selectAddress(city) {
+            selectedData.address = city;
+            document.querySelector('#addressBtn span').textContent = city.name;
+            closeModal('addressModal');
+            updateProgress();
+        }
+
+        function submitForm() {
+            // Validate required fields
+            const errors = validateForm();
+            if (errors.length > 0) {
+                showErrors(errors);
+                return;
+            }
+
+            // Show loading
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<div class="spinner" style="width: 20px; height: 20px; margin: 0 auto;"></div>';
+
+            // Collect form data and submit
+            collectFormData();
+            createOrder();
+        }
+
+        function validateForm() {
+            const errors = [];
+            
+            if (!selectedData.workType) errors.push('workType');
+            if (!document.getElementById('orderName').value.trim()) errors.push('orderName');
+            if (!document.getElementById('planStartDate').value) errors.push('planStartDate');
+            if (!document.getElementById('planEndDate').value) errors.push('planEndDate');
+            if (!document.getElementById('orderAmount').value) errors.push('orderAmount');
+            if (!selectedData.address) errors.push('address');
+            
+            return errors;
+        }
+
+        function showErrors(errors) {
+            errors.forEach(field => {
+                const errorElement = document.getElementById(field + 'Error');
+                const inputElement = document.getElementById(field + 'Btn') || document.getElementById(field);
+                
+                if (errorElement) {
+                    errorElement.style.display = 'block';
+                    errorElement.textContent = currentLanguage === 'kk' ? 'Бұл өрісті толтыру қажет' : 'Это поле обязательно для заполнения';
+                }
+                
+                if (inputElement) {
+                    inputElement.classList.add('error');
+                }
+            });
+        }
+
+        function collectFormData() {
+            const orderAmount = parseFloat(document.getElementById('orderAmount').value);
+            const advancePercentage = parseFloat(document.getElementById('advancePercentage').value) || 0;
+            const advanceAmount = (orderAmount * advancePercentage) / 100;
+            
+            formData = {
+                workType: selectedData.workType,
+                orderName: document.getElementById('orderName').value.trim(),
+                planStartDate: document.getElementById('planStartDate').value,
+                planEndDate: document.getElementById('planEndDate').value,
+                orderAmount: orderAmount,
+                description: document.getElementById('description').value.trim(),
+                additionalInfo: document.getElementById('additionalInfo').value.trim(),
+                address: selectedData.address,
+                phone: userData.phone,
+                files: uploadedFiles,
+                negotiable: document.getElementById('negotiable').checked,
+                advanceInsurance: document.getElementById('advanceInsurance').checked,
+                advancePercentage: advancePercentage,
+                advanceAmount: advanceAmount,
+                profileHidden: false,
+                published: document.getElementById('published').checked
+            };
+        }
+
+        async function createOrder() {
+            try {
+                // Use API service to create order
+                const result = await apiService.createOrder(formData);
+                console.log('Order created successfully:', result);
+                // Show success modal
+                showSuccessModal();
+            } catch (error) {
+                console.error('Error creating order:', error);
+                alert(currentLanguage === 'kk' ? 'Қате орын алды' : 'Произошла ошибка');
+                // Reset submit button
+                const submitBtn = document.getElementById('submitBtn');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<span data-kk="Заказ жасау" data-ru="Создать заказ">Заказ жасау</span>';
+            }
+        }
+
+        function showSuccessModal() {
+            document.getElementById('successModal').classList.add('show');
+            // Remove spinner and re-enable submit button
+            const submitBtn = document.getElementById('submitBtn');
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<span data-kk="Заказ жасау" data-ru="Создать заказ">Заказ жасау</span>';
+            }
+        }
+
+        function addAnotherOrder() {
+            document.getElementById('successModal').classList.remove('show');
+            // Reset the form (reload page for simplicity)
+            window.location.reload();
+        }
+    </script>
+    <script src="api.js"></script>
+</body>
+</html>
