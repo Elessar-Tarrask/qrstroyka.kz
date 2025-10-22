@@ -695,6 +695,20 @@
                     <label data-kk="Телефон нөміріңіз" data-ru="Ваш номер телефона">Телефон нөміріңіз</label>
                     <input type="tel" id="phoneInput" placeholder="+7 777 123 45 67" maxlength="16">
                 </div>
+
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span data-kk="ИИН/БИН нөміріңіз" data-ru="Ваш ИИН/БИН номер">ИИН/БИН нөміріңіз</span>
+                        <span style="background: #e3f2fd; color: #2196F3; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600;" data-kk="Міндетті емес" data-ru="Необязательно">Міндетті емес</span>
+                    </label>
+                    <input type="text" id="iinBinInput" placeholder="123456789012" maxlength="12" inputmode="numeric">
+                    <div style="font-size: 0.85rem; color: #666; margin-top: 0.3rem;">
+                        <span data-kk="ЖК/ЖСН үшін - 12 сан, БСН үшін - 12 сан" data-ru="Для ИП/ФЛ - 12 цифр, для ТОО - 12 цифр">Для ИП/ФЛ - 12 цифр, для ТОО - 12 цифр</span>
+                    </div>
+                    <div style="font-size: 0.85rem; color: #2196F3; margin-top: 0.5rem; padding: 0.6rem; background: #f0f7ff; border-radius: 6px; border-left: 3px solid #2196F3;">
+                        <span data-kk="💡 Бұл өріс міндетті емес. ЖК/ЖСН болсаңыз, бос қалдыруға болады." data-ru="💡 Это поле необязательное. Если вы ИП/ФЛ, можете оставить пустым.">💡 Это поле необязательное. Если вы ИП/ФЛ, можете оставить пустым.</span>
+                    </div>
+                </div>
                 
                 <div class="form-group">
                     <div class="checkbox-group">
@@ -915,10 +929,17 @@
 
         async function registerAndSendSMS() {
             const phoneRaw = document.getElementById('phoneInput').value.replace(/\D/g, '');
+            const iinBinRaw = document.getElementById('iinBinInput').value.replace(/\D/g, '');
             const agreement = document.getElementById('agreementCheck').checked;
             
             if (!phoneRaw || phoneRaw.length !== 11 || !phoneRaw.startsWith('7')) {
                 showError(1, currentLanguage === 'kk' ? 'Дұрыс телефон нөмірін енгізіңіз' : 'Введите корректный номер телефона');
+                return;
+            }
+            
+            // If IIN/BIN is provided, validate it
+            if (iinBinRaw && iinBinRaw.length !== 12) {
+                showError(1, currentLanguage === 'kk' ? 'ИИН/БИН 12 саннан тұруы керек' : 'ИИН/БИН должен состоять из 12 цифр');
                 return;
             }
             
@@ -933,7 +954,14 @@
             
             try {
                 // Step 1: Register user
-                const registerData = await apiService.registerUser(userPhone, true);
+                // If IIN/BIN is provided, use company registration endpoint
+                // Otherwise, use regular user registration endpoint
+                let registerData;
+                if (iinBinRaw) {
+                    registerData = await apiService.registerCompany(userPhone, iinBinRaw, true);
+                } else {
+                    registerData = await apiService.registerUser(userPhone, true);
+                }
                 
                 // Step 2: Send SMS immediately after registration
                 await apiService.sendSMS(userPhone);
@@ -1112,6 +1140,56 @@
                 return; // User is authenticated, will be redirected
             }
             
+            // IIN/BIN Input formatting
+            const iinBinInput = document.getElementById('iinBinInput');
+            if (iinBinInput) {
+                iinBinInput.addEventListener('input', function(e) {
+                    // Only allow digits
+                    let value = e.target.value.replace(/\D/g, '');
+                    
+                    // Limit to 12 digits
+                    if (value.length > 12) {
+                        value = value.slice(0, 12);
+                    }
+                    
+                    e.target.value = value;
+                });
+                
+                // Only allow numeric input
+                iinBinInput.addEventListener('keydown', function(e) {
+                    // Allow backspace, delete, tab, escape, enter
+                    if ([8, 9, 27, 13, 46].indexOf(e.keyCode) !== -1 ||
+                        // Allow Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X (Windows/Linux)
+                        (e.keyCode === 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+                        (e.keyCode === 67 && (e.ctrlKey === true || e.metaKey === true)) ||
+                        (e.keyCode === 86 && (e.ctrlKey === true || e.metaKey === true)) ||
+                        (e.keyCode === 88 && (e.ctrlKey === true || e.metaKey === true)) ||
+                        // Allow home, end, left, right
+                        (e.keyCode >= 35 && e.keyCode <= 39)) {
+                        return;
+                    }
+                    // Ensure that it is a number and stop the keypress
+                    if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                        e.preventDefault();
+                    }
+                });
+
+                // Handle paste for IIN/BIN input
+                iinBinInput.addEventListener('paste', function(e) {
+                    e.preventDefault();
+                    let pastedText = (e.clipboardData || window.clipboardData).getData('text');
+                    let digits = pastedText.replace(/\D/g, '');
+                    
+                    if (digits.length > 12) {
+                        digits = digits.slice(0, 12);
+                    }
+                    
+                    iinBinInput.value = digits;
+                    // Trigger input event to ensure any validation runs
+                    iinBinInput.dispatchEvent(new Event('input', { bubbles: true }));
+                });
+            }
+
             const phoneInput = document.getElementById('phoneInput');
             if (phoneInput) {
                 let isFormatting = false;
@@ -1188,15 +1266,16 @@
                     }
                     
                     phoneInput.value = digits;
-                    phoneInput.dispatchEvent(new Event('input'));
+                    phoneInput.dispatchEvent(new Event('input', { bubbles: true }));
                 });
                 
                 phoneInput.addEventListener('keydown', function(e) {
                     if ([8, 9, 27, 13, 46].indexOf(e.keyCode) !== -1 ||
-                        (e.keyCode === 65 && e.ctrlKey === true) ||
-                        (e.keyCode === 67 && e.ctrlKey === true) ||
-                        (e.keyCode === 86 && e.ctrlKey === true) ||
-                        (e.keyCode === 88 && e.ctrlKey === true) ||
+                        // Allow Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X (Windows/Linux) and Cmd+A, Cmd+C, Cmd+V, Cmd+X (Mac)
+                        (e.keyCode === 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+                        (e.keyCode === 67 && (e.ctrlKey === true || e.metaKey === true)) ||
+                        (e.keyCode === 86 && (e.ctrlKey === true || e.metaKey === true)) ||
+                        (e.keyCode === 88 && (e.ctrlKey === true || e.metaKey === true)) ||
                         (e.keyCode >= 35 && e.keyCode <= 39)) {
                         return;
                     }
