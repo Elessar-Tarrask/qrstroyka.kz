@@ -588,6 +588,26 @@
         return 'Не указана';
     }
 
+    function translateTripReadiness(value) {
+        const translations = {
+            'READY': 'Готов',
+            'SOMETIME': 'Иногда',
+            'NOT_READY': 'Не готов'
+        };
+        return translations[value] || value;
+    }
+
+    function translateBusyness(value) {
+        const translations = {
+            'PARTIAL': 'Частичная занятость',
+            'PROJECT': 'Проектная работа',
+            'FULL': 'Полная занятость',
+            'INTERNSHIP': 'Стажировка',
+            'REMOTE': 'Удаленная работа'
+        };
+        return translations[value] || value;
+    }
+
     function showLoading() {
         const deepLinkContent = document.getElementById('deepLinkContent');
         deepLinkContent.innerHTML = `
@@ -651,7 +671,7 @@
         }).join('') : '';
 
         const driverLicenses = Array.isArray(resume.driverLicenses) ? resume.driverLicenses.map(d => d.category).join(', ') : '';
-        const busynesses = Array.isArray(resume.busynesses) ? resume.busynesses.join(', ') : '';
+        const busynesses = Array.isArray(resume.busynesses) ? resume.busynesses.map(b => translateBusyness(b)).join(', ') : '';
         const socials = Array.isArray(resume.socialNetworks) ? resume.socialNetworks.map(s => s.name || s.socialNetworkType).join(', ') : '';
 
         // Profile photo/logo section
@@ -686,7 +706,7 @@
                 <div class="order-details">
                     <div class="details-title">Дополнительно</div>
                     ${resume.relocationReadiness ? `<div class="detail-row"><span class="detail-label">Готов к переезду</span><span class="detail-value">Да</span></div>` : ''}
-                    ${resume.tripReadiness ? `<div class="detail-row"><span class="detail-label">Готовность к командировкам</span><span class="detail-value">${resume.tripReadiness}</span></div>` : ''}
+                    ${resume.tripReadiness ? `<div class="detail-row"><span class="detail-label">Готовность к командировкам</span><span class="detail-value">${translateTripReadiness(resume.tripReadiness)}</span></div>` : ''}
                     ${busynesses ? `<div class="detail-row"><span class="detail-label">Занятость</span><span class="detail-value">${busynesses}</span></div>` : ''}
                     ${driverLicenses ? `<div class="detail-row"><span class="detail-label">Вод. удостоверение</span><span class="detail-value">${driverLicenses}</span></div>` : ''}
                      ${socials ? `<div class="detail-row"><span class="detail-label">Соц. сети</span><span class="detail-value"><a href="#" onclick="showDownloadModal(); return false;" style="color: #007AFF; font-style: italic; text-decoration: underline; cursor: pointer; font-size: 0.95rem;">Чтобы посмотреть скачайте приложение!</a></span></div>` : ''}
