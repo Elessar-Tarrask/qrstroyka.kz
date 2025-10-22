@@ -105,6 +105,21 @@ class ApiService {
     }
 
     /**
+     * Register company (LLP/IE) with IIN/BIN
+     */
+    async registerCompany(phone, iinBin, agreement = true) {
+        const url = `${CMR_API_BASE_URL}/rest/api/v1/register`;
+        return await this.makeRequest(url, {
+            method: 'POST',
+            body: JSON.stringify({
+                login: phone,
+                iinBin: iinBin,
+                agreement: agreement
+            })
+        });
+    }
+
+    /**
      * Send SMS verification code
      */
     async sendSMS(phone) {
