@@ -46,6 +46,14 @@
       "dest": "/equipment/equipment.html"
     },
     {
+      "src": "/equipment-order/equipment-order\\.(js|html)$",
+      "dest": "/equipment-order/$1.js"
+    },
+    {
+      "src": "/equipment-order/([^/]+)$",
+      "dest": "/equipment-order/equipment-order.html"
+    },
+    {
       "src": "/company/company\\.(js|html)$",
       "dest": "/company/$1.js"
     },
