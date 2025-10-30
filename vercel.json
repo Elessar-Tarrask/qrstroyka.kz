@@ -23,7 +23,7 @@
     },
     {
       "src": "/order/order\\.(js|html)$",
-      "dest": "/order/$1.js"
+      "dest": "/order/order.$1"
     },
     {
       "src": "/order/([^/]+)$",
@@ -31,7 +31,7 @@
     },
     {
       "src": "/resume/resume\\.(js|html)$",
-      "dest": "/resume/$1.js"
+      "dest": "/resume/resume.$1"
     },
     {
       "src": "/resume/([^/]+)$",
@@ -39,7 +39,7 @@
     },
     {
       "src": "/equipment/equipment\\.(js|html)$",
-      "dest": "/equipment/$1.js"
+      "dest": "/equipment/equipment.$1"
     },
     {
       "src": "/equipment/([^/]+)$",
@@ -47,7 +47,7 @@
     },
     {
       "src": "/equipment-order/equipment-order\\.(js|html)$",
-      "dest": "/equipment-order/$1.js"
+      "dest": "/equipment-order/equipment-order.$1"
     },
     {
       "src": "/equipment-order/([^/]+)$",
@@ -55,7 +55,7 @@
     },
     {
       "src": "/company/company\\.(js|html)$",
-      "dest": "/company/$1.js"
+      "dest": "/company/company.$1"
     },
     {
       "src": "/company/([^/]+)$",
@@ -79,11 +79,11 @@
     },
     {
       "src": "/order-cmr/order\\.(js|html)$",
-      "dest": "/order-cmr/$1"
+      "dest": "/order-cmr/order.$1"
     },
     {
       "src": "/order-cmr/create-order\\.(js|html)$",
-      "dest": "/order-cmr/$1"
+      "dest": "/order-cmr/create-order.$1"
     },
     {
       "src": "/order-cmr/api\\.js$",
