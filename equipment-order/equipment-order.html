@@ -495,180 +495,6 @@
              height: 24px;
              margin-right: 10px;
          }
-
-         /* Equipment Photos Styles */
-         .equipment-photos {
-             margin-bottom: 1.5rem;
-             position: relative;
-         }
-
-          .photos-container {
-              width: 100%;
-              position: relative;
-          }
-
-          .equipment-photo {
-              width: 100%;
-              height: 200px;
-              border-radius: 12px;
-              object-fit: cover;
-              box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-              cursor: pointer;
-              transition: transform 0.2s;
-          }
-
-          .equipment-photo:hover {
-              transform: scale(1.02);
-          }
-
-          .photo-count-badge {
-              position: absolute;
-              bottom: 0.8rem;
-              right: 0.8rem;
-              background: rgba(0,0,0,0.7);
-              color: white;
-              padding: 0.3rem 0.7rem;
-              border-radius: 20px;
-              font-size: 0.8rem;
-              font-weight: 500;
-              backdrop-filter: blur(10px);
-              pointer-events: none;
-          }
-
-          /* Photo Modal Styles */
-          .photo-modal {
-              display: none;
-              position: fixed;
-              top: 0;
-              left: 0;
-              width: 100%;
-              height: 100%;
-              background: rgba(0,0,0,0.4);
-              backdrop-filter: blur(5px);
-              z-index: 2000;
-              align-items: center;
-              justify-content: center;
-              padding: 1rem;
-          }
-
-          .photo-modal.show {
-              display: flex;
-          }
-
-          .photo-modal-content {
-              position: relative;
-              max-width: 90vw;
-              max-height: 90vh;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-          }
-
-          .photo-modal-image {
-              max-width: 100%;
-              max-height: 100%;
-              border-radius: 8px;
-              box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-          }
-
-          .photo-modal-close {
-              position: absolute;
-              top: 0.5rem;
-              right: 0.5rem;
-              background: #fff;
-              border: none;
-              font-size: 1.2rem;
-              cursor: pointer;
-              color: #333;
-              width: 35px;
-              height: 35px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              border-radius: 50%;
-              transition: all 0.2s;
-              box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-              z-index: 10;
-          }
-
-          .photo-modal-close:hover {
-              background: #f0f0f0;
-              transform: scale(1.05);
-          }
-
-          .photo-modal-close:active {
-              transform: scale(0.95);
-              background: #e0e0e0;
-          }
-
-          .photo-nav-button {
-              position: absolute;
-              top: 50%;
-              transform: translateY(-50%);
-              background: #fff;
-              border: none;
-              font-size: 1.3rem;
-              cursor: pointer;
-              color: #333;
-              width: 45px;
-              height: 45px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              border-radius: 50%;
-              transition: all 0.2s;
-              box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-              font-weight: bold;
-          }
-
-          .photo-nav-button:hover {
-              transform: translateY(-50%) scale(1.05);
-              background: #f0f0f0;
-              box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-          }
-
-          .photo-nav-button:active {
-              transform: translateY(-50%) scale(0.95);
-              background: #e0e0e0;
-          }
-
-          .photo-nav-button.prev {
-              left: -1.4rem;
-              padding-right: 2px; /* Adjust for better centering */
-          }
-
-          .photo-nav-button.next {
-              right: -1.4rem;
-              padding-left: 2px; /* Adjust for better centering */
-          }  
-
-          @media (max-width: 768px) {
-              .photo-nav-button.prev {
-                  left: -1rem;
-              }
-              .photo-nav-button.next {
-                  right: -1rem;
-              }
-              .photo-nav-button {
-                  width: 40px;
-                  height: 40px;
-                  font-size: 1.1rem;
-              }
-          }
-
-          .photo-counter {
-              position: absolute;
-              bottom: -2.5rem;
-              left: 50%;
-              transform: translateX(-50%);
-              background: #fff;
-              padding: 0.4rem 1rem;
-              border-radius: 20px;
-              font-size: 0.9rem;
-              color: #333;
-              font-weight: 500;
-              box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-          }
     </style>
 </head>
 <body>
@@ -723,17 +549,6 @@
     </div>
  </div>
  
- <!-- Photo Modal -->
- <div class="photo-modal" id="photoModal">
-     <div class="photo-modal-content">
-         <button class="photo-modal-close" onclick="closePhotoModal()">&times;</button>
-         <img id="photoModalImage" class="photo-modal-image" src="" alt="Фото техники">
-         <button class="photo-nav-button prev" id="photoPrevBtn" onclick="showPrevPhoto()">&#8249;</button>
-         <button class="photo-nav-button next" id="photoNextBtn" onclick="showNextPhoto()">&#8250;</button>
-         <div class="photo-counter" id="photoCounter">1 / 1</div>
-     </div>
- </div>
- 
  <script src="equipment-order.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', async function() {
@@ -745,9 +560,9 @@
         console.log('Current pathname:', path);
         console.log('Full URL:', window.location.href);
 
-        // Extract equipment reg number from URL path
-        const equipmentPattern = /^\/equipment\/([^\/]+)$/;
-        const match = path.match(equipmentPattern);
+        // Extract equipment-order reg number from URL path
+        const equipmentOrderPattern = /^\/equipment-order\/([^\/]+)$/;
+        const match = path.match(equipmentOrderPattern);
 
         console.log('Regex match result:', match);
 
@@ -756,15 +571,15 @@
             defaultContent.style.display = 'none';
 
             // Show loading spinner
-            showLoading();
+            showLoadingOrder();
 
             try {
-                // Fetch equipment data from API
-                const equipmentData = await equipmentAPI.getEquipmentByRegNumber(regNumber);
-                displayEquipmentData(equipmentData);
+                // Fetch equipment order data from API
+                const orderData = await equipmentOrderAPI.getOrderByRegNumber(regNumber);
+                displayEquipmentOrderData(orderData);
             } catch (error) {
-                console.error('Error fetching equipment:', error);
-                showError('Не удалось загрузить данные оборудования. Проверьте подключение к интернету.');
+                console.error('Error fetching equipment order:', error);
+                showErrorOrder('Не удалось загрузить данные заказа. Проверьте подключение к интернету.');
             }
         } else {
             // Show default deep link content for other types
@@ -772,17 +587,17 @@
         }
     });
 
-    function showLoading() {
+    function showLoadingOrder() {
         const deepLinkContent = document.getElementById('deepLinkContent');
         deepLinkContent.innerHTML = `
                 <div class="loading-spinner">
                     <div class="spinner"></div>
-                    <p>Загружаем данные оборудования и техники...</p>
+                    <p>Загружаем данные заказа...</p>
                 </div>
             `;
     }
 
-    function showError(message) {
+    function showErrorOrder(message) {
         const deepLinkContent = document.getElementById('deepLinkContent');
         deepLinkContent.innerHTML = `
                 <div class="error-message">
@@ -790,168 +605,77 @@
                 </div>
                 <div class="deep-link-container">
                     <div class="deep-link-message">
-                        Скачайте приложение для просмотра оборудования и техники
+                        Скачайте приложение для просмотра заказа на технику
                     </div>
                     <p style="color: #666; margin-bottom: 1.5rem;">
-                        Для полного доступа к оборудованию и техники скачайте мобильное приложение Stroyka.kz
+                        Для полного доступа к заказам скачайте мобильное приложение Stroyka.kz
                     </p>
                 </div>
             `;
     }
 
-    function displayEquipmentData(equipment) {
+    function displayEquipmentOrderData(order) {
         const deepLinkContent = document.getElementById('deepLinkContent');
-
-        // Build equipment title
-        const equipmentTitle = [
-            equipment.machineryModel?.name,
-            equipment.machineryModelExtended
-        ].filter(Boolean).join(' ');
-
-        // Build categories
-        const categories = [
-            equipment.machineryCategory?.name,
-            equipment.machinerySubCategory?.name
-        ].filter(Boolean);
-
-        // Build characteristics
-        const characteristics = [];
-        if (equipment.machineryManufactureYear) characteristics.push(`${equipment.machineryManufactureYear} г.`);
-        if (equipment.engineType?.name) characteristics.push(equipment.engineType.name);
-        if (equipment.machineryCondition?.name) characteristics.push(`состояние: ${equipment.machineryCondition.name}`);
-        if (equipment.steering?.name) characteristics.push(`управление: ${equipment.steering.name}`);
-
-        // Build rental features
-        const rentalFeatures = [];
-        if (equipment.isDriver) rentalFeatures.push('С водителем');
-        if (equipment.hasDocs) rentalFeatures.push('Документы');
-        if (equipment.canTravelOut) rentalFeatures.push('Выезд за город');
-        if (equipment.rentalPeriod?.name) rentalFeatures.push(equipment.rentalPeriod.name);
-
-         // Build photos - show only first photo with counter, but store all for modal
-         const photoCount = Array.isArray(equipment.photos) ? equipment.photos.length : 0;
-         const photos = photoCount > 0 
-             ? `<img src="${equipment.photos[0].url}" alt="Фото техники" class="equipment-photo" onclick="openPhotoModal(0)" onerror="this.style.display='none'">
-               ${photoCount > 1 ? `<div class="photo-count-badge">${photoCount} фото</div>` : ''}`
-             : '';
-         
-         // Store all photos globally for modal access
-         window.currentEquipmentPhotos = equipment.photos || [];
-
-        // Get first phone initial for avatar
-        const phoneInitial = Array.isArray(equipment.phones) && equipment.phones.length > 0 
-            ? equipment.phones[0][0].toUpperCase() 
-            : 'T';
-
+        const category = order.categories?.category?.name || '';
+        const subcategory = order.categories?.subcategory?.name || '';
+        const categoriesHtml = (category || subcategory) ? `
+            <div class="order-categories">
+                ${category ? `<div class="category-pill">${category}</div>` : ''}
+                ${subcategory ? `<div class="category-pill">${subcategory}</div>` : ''}
+            </div>` : '';
         deepLinkContent.innerHTML = `
             <div class="order-container">
-                <!-- Equipment Header -->
                 <div class="order-header">
-                    <div class="order-amount" style="color: #1d1d1f; font-size: 1.3rem;">${equipmentTitle || 'Техника'}</div>
-                </div>
-
-                <!-- Equipment Photos -->
-                ${photos ? `
-                <div class="equipment-photos">
-                    <div class="photos-container">
-                        ${photos}
+                    <div>
+                        <div class="order-amount">${order.orderAmount || '-'}${order.negotiable ? ' <span style="font-size:0.95rem;color:#2AAF54;font-weight:600;">(Договорная)</span>' : ''}</div>
+                        <div class="order-type">${order.name || ''}</div>
+                    </div>
+                    <div style="min-width:90px;text-align:right;">
+                        <span style="font-size:0.93rem;color:#888;">#${order.regNumber || ''}</span><br>
+                        <span style="font-size:0.83rem;color:#bababa;">${order.viewCount ? `👁 ${order.viewCount}` : ''}</span>
                     </div>
                 </div>
-                ` : ''}
-
-                <!-- Equipment Categories -->
-                ${categories.length > 0 ? `
-                <div class="order-categories" style="margin-bottom: 1.5rem;">
-                    ${categories.map(cat => `<div class="category-pill">${cat}</div>`).join('')}
-                </div>
-                ` : ''}
-
-                <!-- Characteristics -->
-                ${characteristics.length > 0 ? `
-                <div class="order-categories" style="margin-bottom: 1.5rem;">
-                    ${characteristics.map(char => `<div class="category-pill" style="background-color: #fff3cd; color: #856404;">${char}</div>`).join('')}
-                </div>
-                ` : ''}
-
-                <!-- Description -->
-                ${equipment.comment ? `
-                <div class="order-description">
-                    <div class="description-title">Описание</div>
-                    <div class="description-text" style="white-space: pre-wrap;">${equipment.comment}</div>
-                </div>
-                ` : ''}
-
-                <!-- Equipment Details -->
+                ${categoriesHtml}
                 <div class="order-details">
-                    <div class="details-title">Детали техники</div>
-                    
-                    ${equipment.address?.name ? `
+                    <div class="details-title">Детали заказа</div>
                     <div class="detail-row">
-                        <span class="detail-label">Местоположение</span>
-                        <span class="detail-value">${equipment.address.name}</span>
+                        <span class="detail-label">Город</span>
+                        <span class="detail-value">${order.address?.name || '-'}</span>
                     </div>
-                    ` : ''}
-                    
-                    ${equipment.hourCharge ? `
                     <div class="detail-row">
-                        <span class="detail-label">Стоимость час</span>
-                        <span class="detail-value">${equipment.hourCharge} ₸</span>
+                        <span class="detail-label">Планируемый срок</span>
+                        <span class="detail-value">${order.plannedDate || '-'}</span>
                     </div>
-                    ` : ''}
-                    
-                    ${equipment.minimalTime ? `
                     <div class="detail-row">
-                        <span class="detail-label">Мин. время аренды</span>
-                        <span class="detail-value">${equipment.minimalTime}</span>
+                        <span class="detail-label">Аванс</span>
+                        <span class="detail-value">${order.advanceAmount || '-'}</span>
                     </div>
-                    ` : ''}
-                    
-                    ${equipment.engineModel ? `
                     <div class="detail-row">
-                        <span class="detail-label">Модель двигателя</span>
-                        <span class="detail-value">${equipment.engineModel}</span>
+                        <span class="detail-label">Дата создания</span>
+                        <span class="detail-value">${order.createdDate || '-'}</span>
                     </div>
-                    ` : ''}
-                    
-                    ${equipment.createdDate ? `
-                    <div class="detail-row">
-                        <span class="detail-label">Дата публикации</span>
-                        <span class="detail-value">${new Date(equipment.createdDate).toLocaleDateString('ru-RU')}</span>
-                    </div>
-                    ` : ''}
                 </div>
-
-                <!-- Rental Features -->
-                ${rentalFeatures.length > 0 ? `
                 <div class="order-details">
-                    <div class="details-title">Условия аренды</div>
-                    ${rentalFeatures.map(feature => `
+                    <div class="details-title">Описание</div>
+                    <div class="description-text">${order.description || '-'}</div>
+                </div>
+                <div class="order-details">
+                    <div class="details-title">Заказчик</div>
+                    <div class="detail-row" style="align-items:flex-start;flex-direction:column;gap:5px;">
+                        <span class="detail-label">Имя:</span>
+                        <span class="detail-value">${order.userInfo?.name || '-'}</span>
+                    </div>
                     <div class="detail-row">
-                        <span class="detail-label">${feature}</span>
-                        <span class="detail-value">✓</span>
-                    </div>
-                    `).join('')}
-                </div>
-                ` : ''}
-
-                <!-- Contact Info -->
-                ${Array.isArray(equipment.phones) && equipment.phones.length > 0 ? `
-                <div class="contact-info">
-                    <div class="user-info">
-                        <div class="user-avatar">${phoneInitial}</div>
-                        <div class="user-details">
-                            <h4>Владелец техники</h4>
-                            <p><a href="#" onclick="showDownloadModal(); return false;" style="color: #007AFF; font-style: italic; text-decoration: underline; cursor: pointer; font-size: 0.8rem;">чтобы связаться скачайте приложение!</a></p>
-                        </div>
+                        <span class="detail-label">Телефон:</span>
+                        <span class="detail-value"><a href="#" onclick="showDownloadModal(); return false;" style="color: #007AFF; font-style: italic; text-decoration: underline; cursor: pointer; font-size: 0.9rem;">скачайте приложение чтобы увидеть</a></span>
                     </div>
                 </div>
-                ` : ''}
             </div>
         `;
     }
 
     function openInApp(regNumber) {
-        const deepLinkUrl = `stroyka://equipment/${regNumber || window.location.pathname.split('/').pop()}`;
+        const deepLinkUrl = `stroyka://equipment-order/${regNumber || window.location.pathname.split('/').pop()}`;
         window.location.href = deepLinkUrl;
     }
 
@@ -966,89 +690,9 @@
      // Close modals when clicking outside
      document.addEventListener('click', function(event) {
          const downloadModal = document.getElementById('downloadModal');
-         const photoModal = document.getElementById('photoModal');
          
          if (event.target === downloadModal) {
              closeDownloadModal();
-         }
-         if (event.target === photoModal) {
-             closePhotoModal();
-         }
-     });
-
-     // Photo Modal Variables
-     let currentPhotoIndex = 0;
-     let currentPhotos = [];
-
-     function openPhotoModal(photoIndex) {
-         currentPhotoIndex = photoIndex;
-         currentPhotos = window.currentEquipmentPhotos || [];
-         
-         if (currentPhotos.length === 0) return;
-         
-         const modal = document.getElementById('photoModal');
-         const image = document.getElementById('photoModalImage');
-         const counter = document.getElementById('photoCounter');
-         const prevBtn = document.getElementById('photoPrevBtn');
-         const nextBtn = document.getElementById('photoNextBtn');
-         
-         // Set image
-         image.src = currentPhotos[currentPhotoIndex].url;
-         
-         // Update counter
-         counter.textContent = `${currentPhotoIndex + 1} / ${currentPhotos.length}`;
-         
-         // Show/hide navigation buttons
-         prevBtn.style.display = currentPhotos.length > 1 ? 'flex' : 'none';
-         nextBtn.style.display = currentPhotos.length > 1 ? 'flex' : 'none';
-         counter.style.display = currentPhotos.length > 1 ? 'block' : 'none';
-         
-         modal.classList.add('show');
-     }
-
-     function closePhotoModal() {
-         document.getElementById('photoModal').classList.remove('show');
-     }
-
-     function showPrevPhoto() {
-         if (currentPhotos.length <= 1) return;
-         
-         currentPhotoIndex = currentPhotoIndex > 0 ? currentPhotoIndex - 1 : currentPhotos.length - 1;
-         
-         const image = document.getElementById('photoModalImage');
-         const counter = document.getElementById('photoCounter');
-         
-         image.src = currentPhotos[currentPhotoIndex].url;
-         counter.textContent = `${currentPhotoIndex + 1} / ${currentPhotos.length}`;
-     }
-
-     function showNextPhoto() {
-         if (currentPhotos.length <= 1) return;
-         
-         currentPhotoIndex = currentPhotoIndex < currentPhotos.length - 1 ? currentPhotoIndex + 1 : 0;
-         
-         const image = document.getElementById('photoModalImage');
-         const counter = document.getElementById('photoCounter');
-         
-         image.src = currentPhotos[currentPhotoIndex].url;
-         counter.textContent = `${currentPhotoIndex + 1} / ${currentPhotos.length}`;
-     }
-
-     // Keyboard navigation for photo modal
-     document.addEventListener('keydown', function(event) {
-         const photoModal = document.getElementById('photoModal');
-         if (!photoModal.classList.contains('show')) return;
-         
-         switch(event.key) {
-             case 'Escape':
-                 closePhotoModal();
-                 break;
-             case 'ArrowLeft':
-                 showPrevPhoto();
-                 break;
-             case 'ArrowRight':
-                 showNextPhoto();
-                 break;
          }
      });
 </script>
