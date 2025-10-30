@@ -1,6 +1,6 @@
 // API Configuration
 const DEFAULT_EQUIPMENT_ORDER_CONFIG = {
-    API_BASE_URL: 'http://38.107.235.75:8080',
+    API_BASE_URL: 'https://cmr.api.stroyka.kz',
     ORDER_ENDPOINT: '/rest/api/v1/order/special-machinery/reg/',
     REQUEST_TIMEOUT: 30000,
 };
