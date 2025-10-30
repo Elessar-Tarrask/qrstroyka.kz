@@ -9,6 +9,7 @@
           "/resume/*",
           "/equipment/*",
           "/company/*",
+          "/equipment-order/*",
           "/sign/document/*"
         ]
       }
