@@ -1,5 +1,11 @@
 {
   "version": 2,
+  "builds": [
+    {
+      "src": "**/*",
+      "use": "@vercel/static"
+    }
+  ],
   "routes": [
     {
       "src": "/.well-known/apple-app-site-association",
@@ -21,7 +27,7 @@
     },
     {
       "src": "/order/([^/]+)$",
-      "dest": "/api/og-order?id=$1"
+      "dest": "/order/order.html"
     },
     {
       "src": "/resume/resume\\.(js|html)$",
@@ -29,7 +35,7 @@
     },
     {
       "src": "/resume/([^/]+)$",
-      "dest": "/api/og-resume?id=$1"
+      "dest": "/resume/resume.html"
     },
     {
       "src": "/equipment/equipment\\.(js|html)$",
@@ -45,7 +51,7 @@
     },
     {
       "src": "/equipment-order/([^/]+)$",
-      "dest": "/api/og-equipment-order?id=$1"
+      "dest": "/equipment-order/equipment-order.html"
     },
     {
       "src": "/company/company\\.(js|html)$",
@@ -53,7 +59,7 @@
     },
     {
       "src": "/company/([^/]+)$",
-      "dest": "/api/og-company?id=$1"
+      "dest": "/company/company.html"
     },
     {
       "src": "/sign/callback",
