@@ -1,0 +1,10 @@
+{
+  "name": "qrstroyka-kz",
+  "version": "1.0.0",
+  "description": "Stroyka.kz deep link pages with dynamic Open Graph meta tags",
+  "private": true,
+  "engines": {
+    "node": ">=18.x"
+  }
+}
+

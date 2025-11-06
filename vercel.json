@@ -27,7 +27,7 @@
     },
     {
       "src": "/order/([^/]+)$",
-      "dest": "/order/order.html"
+      "dest": "/api/og-order?id=$1"
     },
     {
       "src": "/resume/resume\\.(js|html)$",
@@ -35,7 +35,7 @@
     },
     {
       "src": "/resume/([^/]+)$",
-      "dest": "/resume/resume.html"
+      "dest": "/api/og-resume?id=$1"
     },
     {
       "src": "/equipment/equipment\\.(js|html)$",
@@ -51,7 +51,7 @@
     },
     {
       "src": "/equipment-order/([^/]+)$",
-      "dest": "/equipment-order/equipment-order.html"
+      "dest": "/api/og-equipment-order?id=$1"
     },
     {
       "src": "/company/company\\.(js|html)$",
@@ -59,7 +59,7 @@
     },
     {
       "src": "/company/([^/]+)$",
-      "dest": "/company/company.html"
+      "dest": "/api/og-company?id=$1"
     },
     {
       "src": "/sign/callback",
