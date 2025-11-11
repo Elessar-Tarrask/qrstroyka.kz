@@ -242,6 +242,126 @@
             transform: none;
         }
 
+        .ai-reader-section {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border: 2px solid #e8f5ff;
+        }
+
+        .ai-reader-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ai-reader-icon {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+
+        .ai-upload-area {
+            border: 2px dashed #667eea;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
+        }
+
+        .ai-upload-area:hover {
+            border-color: #5a67d8;
+            background: linear-gradient(135deg, #f0f7ff 0%, #e8f4ff 100%);
+            transform: translateY(-2px);
+        }
+
+        .ai-upload-area.processing {
+            border-color: #ffa500;
+            background: linear-gradient(135deg, #fff8e1 0%, #fff3cd 100%);
+        }
+
+        .ai-upload-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 1rem;
+            background: #667eea;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .ai-upload-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .ai-upload-subtext {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .ai-processing {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            padding: 2rem;
+        }
+
+        .ai-processing.show {
+            display: flex;
+        }
+
+        .ai-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .ai-processing-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #667eea;
+        }
+
+        .ai-populated {
+            background-color: #fff9c4 !important;
+            border-color: #fbbf24 !important;
+            color: #92400e !important; /* Dark brown text for good contrast on yellow */
+        }
+
+        .btn-selector.ai-populated {
+            background-color: #fff9c4 !important;
+            border-color: #fbbf24 !important;
+            color: #92400e !important; /* Override white text from selected state */
+        }
+
+        .ai-populated-label::after {
+            content: " ✨";
+            color: #f59e0b;
+        }
+
         .spinner {
             width: 20px;
             height: 20px;
@@ -446,7 +566,7 @@
             .form-row {
                 grid-template-columns: 1fr;
             }
-            
+
             .container {
                 padding: 1rem 0.5rem;
             }
@@ -454,603 +574,626 @@
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="header-content">
-            <button class="back-btn" onclick="goBack()">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
-                </svg>
-                <span data-kk="Артқа" data-ru="Назад">Артқа</span>
-            </button>
-            <h1 class="header-title" data-kk="Резюме жасау" data-ru="Создание резюме">Резюме жасау</h1>
-            <button class="logout-btn" onclick="logout()" data-kk="Шығу" data-ru="Выйти">Шығу</button>
-        </div>
-    </div>
-
-    <div class="container">
-        <!-- Personal Information Section -->
-        <div class="section">
-            <h2 class="section-title" data-kk="Жеке ақпарат" data-ru="Личная информация">Жеке ақпарат</h2>
-            
-            <!-- User Photo Upload -->
-            <div class="form-group">
-                <label data-kk="Фото" data-ru="Фото">Фото</label>
-                <div class="file-upload-container">
-                    <div class="photo-preview" id="photoPreview" style="display: none;">
-                        <img id="photoImage" style="width: 150px; height: 150px; object-fit: cover; border-radius: 8px; border: 2px solid #e1e5e9;">
-                        <button type="button" class="remove-photo-btn" onclick="removePhoto()">×</button>
-                    </div>
-                    <div class="file-upload-area" id="photoUploadArea">
-                        <input type="file" id="userPhoto" accept="image/*" style="display: none;" onchange="handlePhotoUpload(event)">
-                        <div class="upload-placeholder" onclick="document.getElementById('userPhoto').click()">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="#ccc">
-                                <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1H5C3.89 1 3 1.89 3 3V21C3 22.1 3.89 23 5 23H19C20.1 23 21 22.1 21 21V9H21ZM19 21H5V19L8 16L11 19L14 16L19 21Z"/>
-                            </svg>
-                            <p data-kk="Фото жүктеу үшін басыңыз" data-ru="Нажмите для загрузки фото">Фото жүктеу үшін басыңыз</p>
-                            <span data-kk="JPG, PNG форматы" data-ru="Формат JPG, PNG">JPG, PNG форматы</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label data-kk="Аты" data-ru="Имя">Аты</label>
-                    <input type="text" id="firstName" placeholder="Аскар">
-                    <div class="error-message" id="firstNameError"></div>
-                </div>
-                <div class="form-group">
-                    <label data-kk="Тегі" data-ru="Фамилия">Тегі</label>
-                    <input type="text" id="surName" placeholder="Назарбаев">
-                    <div class="error-message" id="surNameError"></div>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label data-kk="Әкесінің аты" data-ru="Отчество">Әкесінің аты</label>
-                    <input type="text" id="middleName" placeholder="Нұрсұлтанұлы">
-                </div>
-                <div class="form-group">
-                    <label data-kk="Телефон" data-ru="Телефон">Телефон</label>
-                    <input type="tel" id="phoneNumber" readonly>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label data-kk="Email" data-ru="Email">Email</label>
-                    <input type="email" id="email" placeholder="askar@example.com">
-                    <div class="error-message" id="emailError"></div>
-                </div>
-                <div class="form-group">
-                    <label data-kk="Қала" data-ru="Город">Қала</label>
-                    <button type="button" class="btn-selector" id="cityBtn" onclick="selectCity()">
-                        <span data-kk="Қаланы таңдаңыз" data-ru="Выберите город">Қаланы таңдаңыз</span>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M7 10l5 5 5-5z"/>
-                        </svg>
-                    </button>
-                    <div class="error-message" id="cityError"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Work Preferences Section -->
-        <div class="section">
-            <h2 class="section-title" data-kk="Жұмыс туралы ақпарат" data-ru="Информация о работе">Жұмыс туралы ақпарат</h2>
-            <div class="form-group">
-                <label data-kk="Мамандықтар" data-ru="Профессии">Мамандықтар</label>
-                <button type="button" class="btn-selector" id="professionsBtn" onclick="selectProfessions()">
-                    <span data-kk="Мамандықтарды таңдаңыз" data-ru="Выберите профессии">Мамандықтарды таңдаңыз</span>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M7 10l5 5 5-5z"/>
-                    </svg>
-                </button>
-                <div class="error-message" id="professionsError"></div>
-            </div>
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label data-kk="Күтілетін жалақы (бастап)" data-ru="Ожидаемая зарплата (от)">Күтілетін жалақы (бастап)</label>
-                    <input type="number" id="expectedSalaryStart" placeholder="50000" min="0">
-                </div>
-                <div class="form-group">
-                    <label data-kk="Күтілетін жалақы (дейін)" data-ru="Ожидаемая зарплата (до)">Күтілетін жалақы (дейін)</label>
-                    <input type="number" id="expectedSalaryEnd" placeholder="100000" min="0">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label data-kk="Жұмыс кестесі" data-ru="График работы">Жұмыс кестесі</label>
-                <button type="button" class="btn-selector" id="workScheduleBtn" onclick="selectWorkSchedule()">
-                    <span data-kk="Жұмыс кестесін таңдаңыз" data-ru="Выберите график работы">Жұмыс кестесін таңдаңыз</span>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M7 10l5 5 5-5z"/>
-                    </svg>
-                </button>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label data-kk="Іссапарға дайындық" data-ru="Готовность к командировкам">Іссапарға дайындық</label>
-                    <select id="tripReadiness">
-                        <option value="" data-kk="Таңдаңыз" data-ru="Выберите">Таңдаңыз</option>
-                        <option value="READY" data-kk="Дайын" data-ru="Готов">Дайын</option>
-                        <option value="SOMETIME" data-kk="Кейде" data-ru="Иногда">Кейде</option>
-                        <option value="NOT_READY" data-kk="Дайын емес" data-ru="Не готов">Дайын емес</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label data-kk="Занятость" data-ru="Занятость">Занятость</label>
-                    <button type="button" class="btn-selector" id="busynessBtn" onclick="selectBusyness()">
-                        <span data-kk="Занятостын таңдаңыз" data-ru="Выберите занятость">Занятостын таңдаңыз</span>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M7 10l5 5 5-5z"/>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-
-            <div class="checkbox-group">
-                <input type="checkbox" id="relocationReadiness">
-                <label for="relocationReadiness" data-kk="Қоныс аударуға дайын" data-ru="Готов к переезду">Қоныс аударуға дайын</label>
-            </div>
-            
-            <div class="checkbox-group">
-                <input type="checkbox" id="workPermit">
-                <label for="workPermit" data-kk="Жұмыс рұқсаты бар" data-ru="Есть разрешение на работу">Жұмыс рұқсаты бар</label>
-            </div>
-        </div>
-
-        <!-- Education Section -->
-        <div class="section">
-            <h2 class="section-title" data-kk="Білім" data-ru="Образование">Білім</h2>
-            <div id="educationContainer">
-                <!-- Education items will be added here -->
-            </div>
-            <button type="button" class="add-btn" onclick="addEducation()" data-kk="Білім қосу" data-ru="Добавить образование">Білім қосу</button>
-        </div>
-
-        <!-- Additional Courses Section -->
-        <div class="section">
-            <h2 class="section-title" data-kk="Қосымша курстар" data-ru="Дополнительные курсы">Қосымша курстар</h2>
-            <div id="coursesContainer">
-                <!-- Course items will be added here -->
-            </div>
-            <button type="button" class="add-btn" onclick="addCourse()" data-kk="Курс қосу" data-ru="Добавить курс">Курс қосу</button>
-        </div>
-
-        <!-- Work Experience Section -->
-        <div class="section">
-            <h2 class="section-title" data-kk="Жұмыс тәжірибесі" data-ru="Опыт работы">Жұмыс тәжірибесі</h2>
-            <div id="workExperienceContainer">
-                <!-- Work experience items will be added here -->
-            </div>
-            <button type="button" class="add-btn" onclick="addWorkExperience()" data-kk="Тәжірибе қосу" data-ru="Добавить опыт">Тәжірибе қосу</button>
-        </div>
-
-        <!-- Skills Section -->
-        <div class="section">
-            <h2 class="section-title" data-kk="Дағдылар" data-ru="Навыки">Дағдылар</h2>
-            <div class="form-group">
-                <button type="button" class="btn-selector" id="skillsBtn" onclick="selectSkills()">
-                    <span data-kk="Дағдыларды таңдаңыз" data-ru="Выберите навыки">Дағдыларды таңдаңыз</span>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M7 10l5 5 5-5z"/>
-                    </svg>
-                </button>
-            </div>
-        </div>
-
-        <!-- Additional Information Section -->
-        <div class="section">
-            <h2 class="section-title" data-kk="Қосымша ақпарат" data-ru="Дополнительная информация">Қосымша ақпарат</h2>
-            
-            <div class="form-group">
-                <label data-kk="Өзім туралы" data-ru="О себе">Өзім туралы</label>
-                <textarea id="additionalInfo" rows="4" placeholder="Сіздің мамандығыңыз, тәжірибеңіз және мақсаттарыңыз туралы айтып беріңіз..."></textarea>
-            </div>
-
-            <!-- Social Networks -->
-            <div class="form-group">
-                <label data-kk="Әлеуметтік желілер" data-ru="Социальные сети">Әлеуметтік желілер</label>
-                <div id="socialNetworksContainer">
-                    <!-- Social network items will be added here -->
-                </div>
-                <button type="button" class="add-btn" onclick="addSocialNetwork()" data-kk="Әлеуметтік желі қосу" data-ru="Добавить соц. сеть">Әлеуметтік желі қосу</button>
-            </div>
-
-            <div class="checkbox-group">
-                <input type="checkbox" id="hasDriverLicense" onchange="handleDriverLicenseChange()">
-                <label for="hasDriverLicense" data-kk="Жүргізуші куәлігі бар" data-ru="Есть водительские права">Жүргізуші куәлігі бар</label>
-            </div>
-            <div id="driverLicenseCategories" style="display: none; margin-top: 0.5rem;">
-                <label data-kk="Категориялар" data-ru="Категории">Категориялар:</label>
-                <div id="selectedCategories" style="color: #2d5a32; font-weight: 500; margin-top: 0.25rem;"></div>
-                <button type="button" class="btn-outline" onclick="showDriverLicenseModal()" style="margin-top: 0.5rem; padding: 0.5rem 1rem;" data-kk="Категорияларды таңдау" data-ru="Выбрать категории">Категорияларды таңдау</button>
-            </div>
-
-            <div class="checkbox-group">
-                <input type="checkbox" id="bargain">
-                <label for="bargain" data-kk="Жалақы туралы келіссөздер мүмкін" data-ru="Возможны переговоры по зарплате">Жалақы туралы келіссөздер мүмкін</label>
-            </div>
-
-            <div class="checkbox-group">
-                <input type="checkbox" id="advance">
-                <label for="advance" data-kk="Аванс қажет" data-ru="Требуется аванс">Аванс қажет</label>
-            </div>
-        </div>
-
-        <button type="button" class="submit-btn" id="submitBtn" onclick="submitCV()">
-            <span data-kk="Резюме жасау" data-ru="Создать резюме">Резюме жасау</span>
+<div class="header">
+    <div class="header-content">
+        <button class="back-btn" onclick="goBack()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+            </svg>
+            <span data-kk="Артқа" data-ru="Назад">Артқа</span>
         </button>
+        <h1 class="header-title" data-kk="Резюме жасау" data-ru="Создание резюме">Резюме жасау</h1>
+        <button class="logout-btn" onclick="logout()" data-kk="Шығу" data-ru="Выйти">Шығу</button>
     </div>
+</div>
 
-    <!-- Success Modal -->
-    <div class="modal" id="successModal">
-        <div class="modal-content">
-            <div class="success-icon">✓</div>
-            <h3 data-kk="Резюме сәтті жасалды!" data-ru="Резюме успешно создано!">Резюме сәтті жасалды!</h3>
-            <p data-kk="Сіздің резюмеңіз жарияланды және жұмыс берушілер көре алады" data-ru="Ваше резюме опубликовано и доступно работодателям">Сіздің резюмеңіз жарияланды және жұмыс берушілер көре алады</p>
-            <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
-                <button class="btn-outline" onclick="createAnother()" data-kk="Жаңа резюме" data-ru="Новое резюме">Жаңа резюме</button>
-                <button class="btn" onclick="goToMain()" data-kk="Басты бетке" data-ru="На главную">Басты бетке</button>
+<div class="container">
+    <!-- AI Resume Reader Section -->
+    <div class="ai-reader-section">
+        <h2 class="ai-reader-title">
+            <div class="ai-reader-icon">AI</div>
+            <span data-kk="AI резюме оқушысы" data-ru="AI читатель резюме">AI резюме оқушысы</span>
+        </h2>
+
+        <div class="ai-upload-area" id="aiUploadArea" onclick="triggerAIFileUpload()">
+            <input type="file" id="aiResumeFile" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" style="display: none;" onchange="handleAIResumeUpload(event)">
+            <div class="ai-upload-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                </svg>
+            </div>
+            <div class="ai-upload-text" data-kk="Резюме файлын жүктеңіз" data-ru="Загрузите файл резюме">Резюме файлын жүктеңіз</div>
+            <div class="ai-upload-subtext" data-kk="PDF, DOC, DOCX, JPG, PNG форматтары қолдау көрсетіледі" data-ru="Поддерживаются форматы PDF, DOC, DOCX, JPG, PNG">PDF, DOC, DOCX, JPG, PNG форматтары қолдау көрсетіледі</div>
+        </div>
+
+        <div class="ai-processing" id="aiProcessing">
+            <div class="ai-spinner"></div>
+            <div class="ai-processing-text" data-kk="AI резюмені талдап жатыр..." data-ru="AI анализирует резюме...">AI резюмені талдап жатыр...</div>
+        </div>
+    </div>
+    <!-- Personal Information Section -->
+    <div class="section">
+        <h2 class="section-title" data-kk="Жеке ақпарат" data-ru="Личная информация">Жеке ақпарат</h2>
+
+        <!-- User Photo Upload -->
+        <div class="form-group">
+            <label data-kk="Фото" data-ru="Фото">Фото</label>
+            <div class="file-upload-container">
+                <div class="photo-preview" id="photoPreview" style="display: none;">
+                    <img id="photoImage" style="width: 150px; height: 150px; object-fit: cover; border-radius: 8px; border: 2px solid #e1e5e9;">
+                    <button type="button" class="remove-photo-btn" onclick="removePhoto()">×</button>
+                </div>
+                <div class="file-upload-area" id="photoUploadArea">
+                    <input type="file" id="userPhoto" accept="image/*" style="display: none;" onchange="handlePhotoUpload(event)">
+                    <div class="upload-placeholder" onclick="document.getElementById('userPhoto').click()">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="#ccc">
+                            <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1H5C3.89 1 3 1.89 3 3V21C3 22.1 3.89 23 5 23H19C20.1 23 21 22.1 21 21V9H21ZM19 21H5V19L8 16L11 19L14 16L19 21Z"/>
+                        </svg>
+                        <p data-kk="Фото жүктеу үшін басыңыз" data-ru="Нажмите для загрузки фото">Фото жүктеу үшін басыңыз</p>
+                        <span data-kk="JPG, PNG форматы" data-ru="Формат JPG, PNG">JPG, PNG форматы</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label data-kk="Аты" data-ru="Имя">Аты</label>
+                <input type="text" id="firstName" placeholder="Аскар">
+                <div class="error-message" id="firstNameError"></div>
+            </div>
+            <div class="form-group">
+                <label data-kk="Тегі" data-ru="Фамилия">Тегі</label>
+                <input type="text" id="surName" placeholder="Назарбаев">
+                <div class="error-message" id="surNameError"></div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label data-kk="Әкесінің аты" data-ru="Отчество">Әкесінің аты</label>
+                <input type="text" id="middleName" placeholder="Нұрсұлтанұлы">
+            </div>
+            <div class="form-group">
+                <label data-kk="Телефон" data-ru="Телефон">Телефон</label>
+                <input type="tel" id="phoneNumber" readonly>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label data-kk="Email" data-ru="Email">Email</label>
+                <input type="email" id="email" placeholder="askar@example.com">
+                <div class="error-message" id="emailError"></div>
+            </div>
+            <div class="form-group">
+                <label data-kk="Қала" data-ru="Город">Қала</label>
+                <button type="button" class="btn-selector" id="cityBtn" onclick="selectCity()">
+                    <span data-kk="Қаланы таңдаңыз" data-ru="Выберите город">Қаланы таңдаңыз</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M7 10l5 5 5-5z"/>
+                    </svg>
+                </button>
+                <div class="error-message" id="cityError"></div>
             </div>
         </div>
     </div>
 
-    <script>
-        let currentLanguage = 'kk';
-        let userData = {};
-        let selectedData = {
-            city: null,
-            professions: [],
-            skills: [],
-            workSchedule: [],
-            tripReadiness: null,
-            busyness: []
-        };
-        let educationItems = [];
-        let workExperienceItems = [];
-        let courseItems = [];
-        let socialNetworkItems = [];
-        let userImageFile = null;
-        let selectedDriverLicenses = [];
+    <!-- Work Preferences Section -->
+    <div class="section">
+        <h2 class="section-title" data-kk="Жұмыс туралы ақпарат" data-ru="Информация о работе">Жұмыс туралы ақпарат</h2>
+        <div class="form-group">
+            <label data-kk="Мамандықтар" data-ru="Профессии">Мамандықтар</label>
+            <button type="button" class="btn-selector" id="professionsBtn" onclick="selectProfessions()">
+                <span data-kk="Мамандықтарды таңдаңыз" data-ru="Выберите профессии">Мамандықтарды таңдаңыз</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M7 10l5 5 5-5z"/>
+                </svg>
+            </button>
+            <div class="error-message" id="professionsError"></div>
+        </div>
 
-        // Dictionary data will be loaded from API
-        let cities = [];
-        let professions = [];
-        let skills = [];
-        let workScheduleOptions = [];
-        let universities = [];
-        let specialties = [];
-        let educationTypes = [];
-        let vehicleCategories = [];
+        <div class="form-row">
+            <div class="form-group">
+                <label data-kk="Күтілетін жалақы (бастап)" data-ru="Ожидаемая зарплата (от)">Күтілетін жалақы (бастап)</label>
+                <input type="number" id="expectedSalaryStart" placeholder="50000" min="0">
+            </div>
+            <div class="form-group">
+                <label data-kk="Күтілетін жалақы (дейін)" data-ru="Ожидаемая зарплата (до)">Күтілетін жалақы (дейін)</label>
+                <input type="number" id="expectedSalaryEnd" placeholder="100000" min="0">
+            </div>
+        </div>
 
-        // Initialize page
-        document.addEventListener('DOMContentLoaded', function() {
-            checkAuthentication();
-            loadUserData();
-            loadLanguage();
-            loadDictionaries();
-            initializeModalHandlers();
+        <div class="form-group">
+            <label data-kk="Жұмыс кестесі" data-ru="График работы">Жұмыс кестесі</label>
+            <button type="button" class="btn-selector" id="workScheduleBtn" onclick="selectWorkSchedule()">
+                <span data-kk="Жұмыс кестесін таңдаңыз" data-ru="Выберите график работы">Жұмыс кестесін таңдаңыз</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M7 10l5 5 5-5z"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label data-kk="Іссапарға дайындық" data-ru="Готовность к командировкам">Іссапарға дайындық</label>
+                <select id="tripReadiness">
+                    <option value="" data-kk="Таңдаңыз" data-ru="Выберите">Таңдаңыз</option>
+                    <option value="READY" data-kk="Дайын" data-ru="Готов">Дайын</option>
+                    <option value="SOMETIME" data-kk="Кейде" data-ru="Иногда">Кейде</option>
+                    <option value="NOT_READY" data-kk="Дайын емес" data-ru="Не готов">Дайын емес</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label data-kk="Занятость" data-ru="Занятость">Занятость</label>
+                <button type="button" class="btn-selector" id="busynessBtn" onclick="selectBusyness()">
+                    <span data-kk="Занятостын таңдаңыз" data-ru="Выберите занятость">Занятостын таңдаңыз</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M7 10l5 5 5-5z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="checkbox-group">
+            <input type="checkbox" id="relocationReadiness">
+            <label for="relocationReadiness" data-kk="Қоныс аударуға дайын" data-ru="Готов к переезду">Қоныс аударуға дайын</label>
+        </div>
+
+        <div class="checkbox-group">
+            <input type="checkbox" id="workPermit">
+            <label for="workPermit" data-kk="Жұмыс рұқсаты бар" data-ru="Есть разрешение на работу">Жұмыс рұқсаты бар</label>
+        </div>
+    </div>
+
+    <!-- Education Section -->
+    <div class="section">
+        <h2 class="section-title" data-kk="Білім" data-ru="Образование">Білім</h2>
+        <div id="educationContainer">
+            <!-- Education items will be added here -->
+        </div>
+        <button type="button" class="add-btn" onclick="addEducation()" data-kk="Білім қосу" data-ru="Добавить образование">Білім қосу</button>
+    </div>
+
+    <!-- Additional Courses Section -->
+    <div class="section">
+        <h2 class="section-title" data-kk="Қосымша курстар" data-ru="Дополнительные курсы">Қосымша курстар</h2>
+        <div id="coursesContainer">
+            <!-- Course items will be added here -->
+        </div>
+        <button type="button" class="add-btn" onclick="addCourse()" data-kk="Курс қосу" data-ru="Добавить курс">Курс қосу</button>
+    </div>
+
+    <!-- Work Experience Section -->
+    <div class="section">
+        <h2 class="section-title" data-kk="Жұмыс тәжірибесі" data-ru="Опыт работы">Жұмыс тәжірибесі</h2>
+        <div id="workExperienceContainer">
+            <!-- Work experience items will be added here -->
+        </div>
+        <button type="button" class="add-btn" onclick="addWorkExperience()" data-kk="Тәжірибе қосу" data-ru="Добавить опыт">Тәжірибе қосу</button>
+    </div>
+
+    <!-- Skills Section -->
+    <div class="section">
+        <h2 class="section-title" data-kk="Дағдылар" data-ru="Навыки">Дағдылар</h2>
+        <div class="form-group">
+            <button type="button" class="btn-selector" id="skillsBtn" onclick="selectSkills()">
+                <span data-kk="Дағдыларды таңдаңыз" data-ru="Выберите навыки">Дағдыларды таңдаңыз</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M7 10l5 5 5-5z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Additional Information Section -->
+    <div class="section">
+        <h2 class="section-title" data-kk="Қосымша ақпарат" data-ru="Дополнительная информация">Қосымша ақпарат</h2>
+
+        <div class="form-group">
+            <label data-kk="Өзім туралы" data-ru="О себе">Өзім туралы</label>
+            <textarea id="additionalInfo" rows="4" placeholder="Сіздің мамандығыңыз, тәжірибеңіз және мақсаттарыңыз туралы айтып беріңіз..."></textarea>
+        </div>
+
+        <!-- Social Networks -->
+        <div class="form-group">
+            <label data-kk="Әлеуметтік желілер" data-ru="Социальные сети">Әлеуметтік желілер</label>
+            <div id="socialNetworksContainer">
+                <!-- Social network items will be added here -->
+            </div>
+            <button type="button" class="add-btn" onclick="addSocialNetwork()" data-kk="Әлеуметтік желі қосу" data-ru="Добавить соц. сеть">Әлеуметтік желі қосу</button>
+        </div>
+
+        <div class="checkbox-group">
+            <input type="checkbox" id="hasDriverLicense" onchange="handleDriverLicenseChange()">
+            <label for="hasDriverLicense" data-kk="Жүргізуші куәлігі бар" data-ru="Есть водительские права">Жүргізуші куәлігі бар</label>
+        </div>
+        <div id="driverLicenseCategories" style="display: none; margin-top: 0.5rem;">
+            <label data-kk="Категориялар" data-ru="Категории">Категориялар:</label>
+            <div id="selectedCategories" style="color: #2d5a32; font-weight: 500; margin-top: 0.25rem;"></div>
+            <button type="button" class="btn-outline" onclick="showDriverLicenseModal()" style="margin-top: 0.5rem; padding: 0.5rem 1rem;" data-kk="Категорияларды таңдау" data-ru="Выбрать категории">Категорияларды таңдау</button>
+        </div>
+
+        <div class="checkbox-group">
+            <input type="checkbox" id="bargain">
+            <label for="bargain" data-kk="Жалақы туралы келіссөздер мүмкін" data-ru="Возможны переговоры по зарплате">Жалақы туралы келіссөздер мүмкін</label>
+        </div>
+
+        <div class="checkbox-group">
+            <input type="checkbox" id="advance">
+            <label for="advance" data-kk="Аванс қажет" data-ru="Требуется аванс">Аванс қажет</label>
+        </div>
+    </div>
+
+    <button type="button" class="submit-btn" id="submitBtn" onclick="submitCV()">
+        <span data-kk="Резюме жасау" data-ru="Создать резюме">Резюме жасау</span>
+    </button>
+</div>
+
+<!-- Success Modal -->
+<div class="modal" id="successModal">
+    <div class="modal-content">
+        <div class="success-icon">✓</div>
+        <h3 data-kk="Резюме сәтті жасалды!" data-ru="Резюме успешно создано!">Резюме сәтті жасалды!</h3>
+        <p data-kk="Сіздің резюмеңіз жарияланды және жұмыс берушілер көре алады" data-ru="Ваше резюме опубликовано и доступно работодателям">Сіздің резюмеңіз жарияланды және жұмыс берушілер көре алады</p>
+        <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+            <button class="btn-outline" onclick="createAnother()" data-kk="Жаңа резюме" data-ru="Новое резюме">Жаңа резюме</button>
+            <button class="btn" onclick="goToMain()" data-kk="Басты бетке" data-ru="На главную">Басты бетке</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentLanguage = 'kk';
+    let userData = {};
+    let selectedData = {
+        city: null,
+        professions: [],
+        skills: [],
+        workSchedule: [],
+        tripReadiness: null,
+        busyness: []
+    };
+    let educationItems = [];
+    let workExperienceItems = [];
+    let courseItems = [];
+    let socialNetworkItems = [];
+    let userImageFile = null;
+    let selectedDriverLicenses = [];
+
+    // Dictionary data will be loaded from API
+    let cities = [];
+    let professions = [];
+    let skills = [];
+    let workScheduleOptions = [];
+    let universities = [];
+    let specialties = [];
+    let educationTypes = [];
+    let vehicleCategories = [];
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+        checkAuthentication();
+        loadUserData();
+        loadLanguage();
+        loadDictionaries();
+        initializeModalHandlers();
+    });
+
+    // Universal modal handler functions
+    function initializeModalHandlers() {
+        // ESC key handler for all modals
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeAnyOpenModal();
+            }
         });
 
-        // Universal modal handler functions
-        function initializeModalHandlers() {
-            // ESC key handler for all modals
-            document.addEventListener('keydown', function(event) {
-                if (event.key === 'Escape') {
+        // Outside click handler for all modals
+        document.addEventListener('click', function(event) {
+            const openModal = document.querySelector('.modal.show, .modal[style*="display: flex"]');
+            if (openModal) {
+                const modalContent = openModal.querySelector('.modal-content');
+                // Only close if clicking outside the modal content (on the overlay)
+                if (event.target === openModal) {
                     closeAnyOpenModal();
                 }
-            });
+            }
+        });
+    }
 
-            // Outside click handler for all modals
-            document.addEventListener('click', function(event) {
-                const openModal = document.querySelector('.modal.show, .modal[style*="display: flex"]');
-                if (openModal) {
-                    const modalContent = openModal.querySelector('.modal-content');
-                    // Only close if clicking outside the modal content (on the overlay)
-                    if (event.target === openModal) {
-                        closeAnyOpenModal();
-                    }
-                }
-            });
+    function closeAnyOpenModal() {
+        // Close success modal (static modal)
+        const successModal = document.getElementById('successModal');
+        if (successModal && successModal.classList.contains('show')) {
+            successModal.classList.remove('show');
+            return;
         }
 
-        function closeAnyOpenModal() {
-            // Close success modal (static modal)
-            const successModal = document.getElementById('successModal');
-            if (successModal && successModal.classList.contains('show')) {
-                successModal.classList.remove('show');
-                return;
-            }
-
-            // Close city modal (dynamic modal)
-            const cityModal = document.getElementById('cityModal');
-            if (cityModal) {
-                closeCityModal();
-                return;
-            }
-
-            // Close profession modal (dynamic modal)
-            const professionModal = document.getElementById('professionModal');
-            if (professionModal) {
-                closeProfessionModal();
-                return;
-            }
-
-            // Close skills modal (dynamic modal)
-            const skillsModal = document.getElementById('skillsModal');
-            if (skillsModal) {
-                closeSkillsModal();
-                return;
-            }
-
-            // Close busyness modal (dynamic modal)
-            const busynessModal = document.getElementById('busynessModal');
-            if (busynessModal) {
-                closeBusynessModal();
-                return;
-            }
-
-            // Close work schedule modal (dynamic modal)
-            const workScheduleModal = document.getElementById('workScheduleModal');
-            if (workScheduleModal) {
-                closeWorkScheduleModal();
-                return;
-            }
-
-            // Close university modal (dynamic modal)
-            const universityModal = document.getElementById('universityModal');
-            if (universityModal) {
-                closeUniversityModal();
-                return;
-            }
-
-            // Close specialty modal (dynamic modal)
-            const specialtyModal = document.getElementById('specialtyModal');
-            if (specialtyModal) {
-                closeSpecialtyModal();
-                return;
-            }
-
-            // Close driver license modal (dynamic modal)
-            const driverLicenseModal = document.getElementById('driverLicenseModal');
-            if (driverLicenseModal) {
-                closeDriverLicenseModal();
-                return;
-            }
-
-            // Close any other dynamically created modals
-            const dynamicModals = document.querySelectorAll('.modal[style*="display: flex"]');
-            dynamicModals.forEach(modal => {
-                modal.remove();
-            });
+        // Close city modal (dynamic modal)
+        const cityModal = document.getElementById('cityModal');
+        if (cityModal) {
+            closeCityModal();
+            return;
         }
 
-        function checkAuthentication() {
-            const storedAuth = localStorage.getItem('stroyka_cv_auth');
-            if (!storedAuth) {
-                window.location.href = 'cv.html';
-                return;
-            }
+        // Close profession modal (dynamic modal)
+        const professionModal = document.getElementById('professionModal');
+        if (professionModal) {
+            closeProfessionModal();
+            return;
+        }
 
-            try {
-                userData = JSON.parse(storedAuth);
-                const twentyFourHours = 24 * 60 * 60 * 1000;
-                
-                if (!userData.isAuthenticated || 
-                    !userData.timestamp || 
-                    (Date.now() - userData.timestamp) > twentyFourHours) {
-                    localStorage.removeItem('stroyka_cv_auth');
-                    window.location.href = 'cv.html';
-                }
-            } catch (e) {
+        // Close skills modal (dynamic modal)
+        const skillsModal = document.getElementById('skillsModal');
+        if (skillsModal) {
+            closeSkillsModal();
+            return;
+        }
+
+        // Close busyness modal (dynamic modal)
+        const busynessModal = document.getElementById('busynessModal');
+        if (busynessModal) {
+            closeBusynessModal();
+            return;
+        }
+
+        // Close work schedule modal (dynamic modal)
+        const workScheduleModal = document.getElementById('workScheduleModal');
+        if (workScheduleModal) {
+            closeWorkScheduleModal();
+            return;
+        }
+
+        // Close university modal (dynamic modal)
+        const universityModal = document.getElementById('universityModal');
+        if (universityModal) {
+            closeUniversityModal();
+            return;
+        }
+
+        // Close specialty modal (dynamic modal)
+        const specialtyModal = document.getElementById('specialtyModal');
+        if (specialtyModal) {
+            closeSpecialtyModal();
+            return;
+        }
+
+        // Close driver license modal (dynamic modal)
+        const driverLicenseModal = document.getElementById('driverLicenseModal');
+        if (driverLicenseModal) {
+            closeDriverLicenseModal();
+            return;
+        }
+
+        // Close any other dynamically created modals
+        const dynamicModals = document.querySelectorAll('.modal[style*="display: flex"]');
+        dynamicModals.forEach(modal => {
+            modal.remove();
+        });
+    }
+
+    function checkAuthentication() {
+        const storedAuth = localStorage.getItem('stroyka_cv_auth');
+        if (!storedAuth) {
+            window.location.href = 'cv.html';
+            return;
+        }
+
+        try {
+            userData = JSON.parse(storedAuth);
+            const twentyFourHours = 24 * 60 * 60 * 1000;
+
+            if (!userData.isAuthenticated ||
+                !userData.timestamp ||
+                (Date.now() - userData.timestamp) > twentyFourHours) {
                 localStorage.removeItem('stroyka_cv_auth');
                 window.location.href = 'cv.html';
             }
+        } catch (e) {
+            localStorage.removeItem('stroyka_cv_auth');
+            window.location.href = 'cv.html';
+        }
+    }
+
+    function loadUserData() {
+        if (userData.phone) {
+            document.getElementById('phoneNumber').value = '+' + userData.phone;
         }
 
-        function loadUserData() {
-            if (userData.phone) {
-                document.getElementById('phoneNumber').value = '+' + userData.phone;
-            }
-            
-            // Set auth token for API calls
-            if (userData.accessToken) {
-                apiService.setAuthToken(userData.accessToken);
-            }
+        // Set auth token for API calls
+        if (userData.accessToken) {
+            apiService.setAuthToken(userData.accessToken);
         }
+    }
 
-        function loadLanguage() {
-            const savedLang = localStorage.getItem('stroyka_lang') || 'kk';
-            changeLanguage(savedLang);
+    function loadLanguage() {
+        const savedLang = localStorage.getItem('stroyka_lang') || 'kk';
+        changeLanguage(savedLang);
+    }
+
+    function changeLanguage(lang) {
+        currentLanguage = lang;
+        apiService.setLanguage(lang);
+        document.querySelectorAll('[data-kk][data-ru]').forEach(element => {
+            element.textContent = element.getAttribute('data-' + lang);
+        });
+        localStorage.setItem('stroyka_lang', lang);
+    }
+
+    async function loadDictionaries() {
+        await Promise.all([
+            loadCities(),
+            loadProfessions(),
+            loadSkills(),
+            loadWorkSchedule(),
+            loadUniversities(),
+            loadSpecialties(),
+            loadEducationTypes(),
+            loadVehicleCategories()
+        ]);
+        // Multi-select initialization no longer needed - using modals
+    }
+
+    async function loadWorkSchedule() {
+        try {
+            workScheduleOptions = await apiService.getWorkSchedule();
+            console.log('Work schedule options loaded:', workScheduleOptions.length);
+            // Work schedule options loaded - ready for modal display
+        } catch (error) {
+            console.error('Error loading work schedule options:', error);
+            // Fallback to basic options if API fails
+            setFallbackWorkSchedule();
         }
+    }
 
-        function changeLanguage(lang) {
-            currentLanguage = lang;
-            apiService.setLanguage(lang);
-            document.querySelectorAll('[data-kk][data-ru]').forEach(element => {
-                element.textContent = element.getAttribute('data-' + lang);
-            });
-            localStorage.setItem('stroyka_lang', lang);
-        }
+    function setFallbackWorkSchedule() {
+        workScheduleOptions = [
+            { code: "FULL", name: currentLanguage === 'kk' ? "Толық күн" : "Полный день" },
+            { code: "SHIFT", name: currentLanguage === 'kk' ? "Ауысымдық" : "Сменный" },
+            { code: "FLEXIBLE", name: currentLanguage === 'kk' ? "Икемді кесте" : "Гибкий график" },
+            { code: "REMOTE", name: currentLanguage === 'kk' ? "Қашықтан жұмыс" : "Удаленная работа" }
+        ];
+        // Work schedule options set - ready for modal display
+    }
 
-        async function loadDictionaries() {
-            await Promise.all([
-                loadCities(),
-                loadProfessions(),
-                loadSkills(),
-                loadWorkSchedule(),
-                loadUniversities(),
-                loadSpecialties(),
-                loadEducationTypes(),
-                loadVehicleCategories()
-            ]);
-            // Multi-select initialization no longer needed - using modals
-        }
 
-        async function loadWorkSchedule() {
-            try {
-                workScheduleOptions = await apiService.getWorkSchedule();
-                console.log('Work schedule options loaded:', workScheduleOptions.length);
-                // Work schedule options loaded - ready for modal display
-            } catch (error) {
-                console.error('Error loading work schedule options:', error);
-                // Fallback to basic options if API fails
-                setFallbackWorkSchedule();
-            }
-        }
 
-        function setFallbackWorkSchedule() {
-            workScheduleOptions = [
-                { code: "FULL", name: currentLanguage === 'kk' ? "Толық күн" : "Полный день" },
-                { code: "SHIFT", name: currentLanguage === 'kk' ? "Ауысымдық" : "Сменный" },
-                { code: "FLEXIBLE", name: currentLanguage === 'kk' ? "Икемді кесте" : "Гибкий график" },
-                { code: "REMOTE", name: currentLanguage === 'kk' ? "Қашықтан жұмыс" : "Удаленная работа" }
+
+
+    async function loadCities() {
+        try {
+            cities = await apiService.getCities();
+            console.log('Cities loaded:', cities.length);
+        } catch (error) {
+            console.error('Error loading cities:', error);
+            // Fallback to basic cities if API fails
+            cities = [
+                { code: "110000000", name: "Астана" },
+                { code: "190000000", name: "Алматы" },
+                { code: "310000000", name: "Шымкент" }
             ];
-            // Work schedule options set - ready for modal display
+        }
+    }
+
+    async function loadProfessions() {
+        try {
+            professions = await apiService.getProfessions();
+            console.log('Professions loaded:', professions.length);
+        } catch (error) {
+            console.error('Error loading professions:', error);
+            // Fallback to basic professions if API fails
+            professions = [
+                { id: 1, name: "Құрылысшы" },
+                { id: 2, name: "Крановщик" },
+                { id: 3, name: "Сварщик" },
+                { id: 4, name: "Электрик" },
+                { id: 5, name: "Слесарь" },
+                { id: 6, name: "Монтажник" },
+                { id: 7, name: "Отделочник" },
+                { id: 8, name: "Прораб" }
+            ];
+        }
+    }
+
+    async function loadSkills() {
+        try {
+            skills = await apiService.getSkills();
+            console.log('Skills loaded:', skills.length);
+        } catch (error) {
+            console.error('Error loading skills:', error);
+            // Fallback to basic skills if API fails
+            skills = [
+                { id: 1, name: "Сварка" },
+                { id: 2, name: "Электромонтаж" },
+                { id: 3, name: "Бетонные работы" },
+                { id: 4, name: "Кровельные работы" },
+                { id: 5, name: "Отделочные работы" },
+                { id: 6, name: "Работа на высоте" },
+                { id: 7, name: "Чтение чертежей" },
+                { id: 8, name: "Управление краном" }
+            ];
+        }
+    }
+
+    async function loadUniversities() {
+        try {
+            universities = await apiService.getUniversities();
+            console.log('Universities loaded:', universities.length);
+        } catch (error) {
+            console.error('Error loading universities:', error);
+            // Fallback to basic universities if API fails
+            universities = [
+                { id: 1, name: "Евразийский национальный университет им. Л.Н.Гумилева" },
+                { id: 2, name: "Казахская национальная академия искусств им. Т. Жургенова" },
+                { id: 3, name: "Казахский национальный университет им. аль-Фараби" }
+            ];
+        }
+    }
+
+    async function loadSpecialties() {
+        try {
+            specialties = await apiService.getSpecialties();
+            console.log('Specialties loaded:', specialties.length);
+        } catch (error) {
+            console.error('Error loading specialties:', error);
+            // Fallback to basic specialties if API fails
+            specialties = [
+                { id: 1, name: "Дошкольное обучение и воспитание" },
+                { id: 2, name: "Педагогика и методика начального обучения" },
+                { id: 3, name: "Строительство" },
+                { id: 4, name: "Архитектура" }
+            ];
+        }
+    }
+
+    async function loadEducationTypes() {
+        try {
+            educationTypes = await apiService.getEducationTypes();
+            console.log('Education types loaded:', educationTypes.length);
+        } catch (error) {
+            console.error('Error loading education types:', error);
+            // Fallback to basic education types if API fails
+            educationTypes = [
+                { code: "SECONDARY_EDUCATION", name: "Среднее образование" },
+                { code: "HIGHER_EDUCATION", name: "Высшее образование" },
+                { code: "POSTGRADUATE_EDUCATION", name: "Послевузовское образование" }
+            ];
+        }
+    }
+
+    async function loadVehicleCategories() {
+        try {
+            vehicleCategories = await apiService.getVehicleCategories();
+            console.log('Vehicle categories loaded:', vehicleCategories.length);
+        } catch (error) {
+            console.error('Error loading vehicle categories:', error);
+            // Fallback to basic vehicle categories if API fails
+            vehicleCategories = [
+                { category: "A", description: "Мотоциклдер" },
+                { category: "A1", description: "Жеңіл мотоциклдер" },
+                { category: "B", description: "Жеңіл автомобильдер" },
+                { category: "C", description: "Жүк көліктері" }
+            ];
+        }
+    }
+
+    function selectCity() {
+        if (cities.length === 0) {
+            alert(currentLanguage === 'kk' ? 'Қалалар жүктелуде...' : 'Загрузка городов...');
+            return;
         }
 
+        // Create a simple modal for city selection
+        showCityModal();
+    }
 
-
-
-
-        async function loadCities() {
-            try {
-                cities = await apiService.getCities();
-                console.log('Cities loaded:', cities.length);
-            } catch (error) {
-                console.error('Error loading cities:', error);
-                // Fallback to basic cities if API fails
-                cities = [
-                    { code: "110000000", name: "Астана" },
-                    { code: "190000000", name: "Алматы" },
-                    { code: "310000000", name: "Шымкент" }
-                ];
-            }
-        }
-
-        async function loadProfessions() {
-            try {
-                professions = await apiService.getProfessions();
-                console.log('Professions loaded:', professions.length);
-            } catch (error) {
-                console.error('Error loading professions:', error);
-                // Fallback to basic professions if API fails
-                professions = [
-                    { id: 1, name: "Құрылысшы" },
-                    { id: 2, name: "Крановщик" },
-                    { id: 3, name: "Сварщик" },
-                    { id: 4, name: "Электрик" },
-                    { id: 5, name: "Слесарь" },
-                    { id: 6, name: "Монтажник" },
-                    { id: 7, name: "Отделочник" },
-                    { id: 8, name: "Прораб" }
-                ];
-            }
-        }
-
-        async function loadSkills() {
-            try {
-                skills = await apiService.getSkills();
-                console.log('Skills loaded:', skills.length);
-            } catch (error) {
-                console.error('Error loading skills:', error);
-                // Fallback to basic skills if API fails
-                skills = [
-                    { id: 1, name: "Сварка" },
-                    { id: 2, name: "Электромонтаж" },
-                    { id: 3, name: "Бетонные работы" },
-                    { id: 4, name: "Кровельные работы" },
-                    { id: 5, name: "Отделочные работы" },
-                    { id: 6, name: "Работа на высоте" },
-                    { id: 7, name: "Чтение чертежей" },
-                    { id: 8, name: "Управление краном" }
-                ];
-            }
-        }
-
-        async function loadUniversities() {
-            try {
-                universities = await apiService.getUniversities();
-                console.log('Universities loaded:', universities.length);
-            } catch (error) {
-                console.error('Error loading universities:', error);
-                // Fallback to basic universities if API fails
-                universities = [
-                    { id: 1, name: "Евразийский национальный университет им. Л.Н.Гумилева" },
-                    { id: 2, name: "Казахская национальная академия искусств им. Т. Жургенова" },
-                    { id: 3, name: "Казахский национальный университет им. аль-Фараби" }
-                ];
-            }
-        }
-
-        async function loadSpecialties() {
-            try {
-                specialties = await apiService.getSpecialties();
-                console.log('Specialties loaded:', specialties.length);
-            } catch (error) {
-                console.error('Error loading specialties:', error);
-                // Fallback to basic specialties if API fails
-                specialties = [
-                    { id: 1, name: "Дошкольное обучение и воспитание" },
-                    { id: 2, name: "Педагогика и методика начального обучения" },
-                    { id: 3, name: "Строительство" },
-                    { id: 4, name: "Архитектура" }
-                ];
-            }
-        }
-
-        async function loadEducationTypes() {
-            try {
-                educationTypes = await apiService.getEducationTypes();
-                console.log('Education types loaded:', educationTypes.length);
-            } catch (error) {
-                console.error('Error loading education types:', error);
-                // Fallback to basic education types if API fails
-                educationTypes = [
-                    { code: "SECONDARY_EDUCATION", name: "Среднее образование" },
-                    { code: "HIGHER_EDUCATION", name: "Высшее образование" },
-                    { code: "POSTGRADUATE_EDUCATION", name: "Послевузовское образование" }
-                ];
-            }
-        }
-
-        async function loadVehicleCategories() {
-            try {
-                vehicleCategories = await apiService.getVehicleCategories();
-                console.log('Vehicle categories loaded:', vehicleCategories.length);
-            } catch (error) {
-                console.error('Error loading vehicle categories:', error);
-                // Fallback to basic vehicle categories if API fails
-                vehicleCategories = [
-                    { category: "A", description: "Мотоциклдер" },
-                    { category: "A1", description: "Жеңіл мотоциклдер" },
-                    { category: "B", description: "Жеңіл автомобильдер" },
-                    { category: "C", description: "Жүк көліктері" }
-                ];
-            }
-        }
-
-        function selectCity() {
-            if (cities.length === 0) {
-                alert(currentLanguage === 'kk' ? 'Қалалар жүктелуде...' : 'Загрузка городов...');
-                return;
-            }
-            
-            // Create a simple modal for city selection
-            showCityModal();
-        }
-
-        function showCityModal() {
-            // Create modal HTML
-            const modalHTML = `
+    function showCityModal() {
+        // Create modal HTML
+        const modalHTML = `
                 <div class="modal show" id="cityModal" style="display: flex;">
                     <div class="modal-content" style="max-width: 500px; max-height: 70vh;">
                         <h3 style="margin-bottom: 1rem;" data-kk="Қаланы таңдаңыз" data-ru="Выберите город">Қаланы таңдаңыз</h3>
                         <div style="margin-bottom: 1rem;">
-                            <input type="text" id="citySearch" placeholder="${currentLanguage === 'kk' ? 'Қаланы іздеу...' : 'Поиск города...'}" 
+                            <input type="text" id="citySearch" placeholder="${currentLanguage === 'kk' ? 'Қаланы іздеу...' : 'Поиск города...'}"
                                 style="width: 100%; padding: 0.75rem; border: 2px solid #e1e5e9; border-radius: 8px; font-size: 1rem;">
                                 </div>
                         <div id="cityList" style="max-height: 300px; overflow-y: auto; border: 1px solid #e1e5e9; border-radius: 8px;">
@@ -1062,89 +1205,89 @@
                     </div>
                 </div>
             `;
-            
-            // Add modal to body
-            document.body.insertAdjacentHTML('beforeend', modalHTML);
-            
-            // Initialize search functionality
-            const searchInput = document.getElementById('citySearch');
-            searchInput.addEventListener('input', function() {
-                const searchText = this.value.toLowerCase();
-                const filteredCities = cities.filter(city => 
-                    city.name.toLowerCase().includes(searchText)
-                );
-                document.getElementById('cityList').innerHTML = renderCityOptions(filteredCities);
-                addCityOptionHoverEffects();
-            });
-            
-            // Add initial hover effects
-            addCityOptionHoverEffects();
-            
-            // Focus search input
-            setTimeout(() => searchInput.focus(), 100);
-            
-            // Update text content for current language
-            document.querySelectorAll('#cityModal [data-kk][data-ru]').forEach(element => {
-                element.textContent = element.getAttribute('data-' + currentLanguage);
-            });
-        }
 
-        function renderCityOptions(cityList) {
-            return cityList.map(city => `
-                <div class="city-option" style="padding: 0.75rem; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: background 0.3s;" 
+        // Add modal to body
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+        // Initialize search functionality
+        const searchInput = document.getElementById('citySearch');
+        searchInput.addEventListener('input', function() {
+            const searchText = this.value.toLowerCase();
+            const filteredCities = cities.filter(city =>
+                city.name.toLowerCase().includes(searchText)
+            );
+            document.getElementById('cityList').innerHTML = renderCityOptions(filteredCities);
+            addCityOptionHoverEffects();
+        });
+
+        // Add initial hover effects
+        addCityOptionHoverEffects();
+
+        // Focus search input
+        setTimeout(() => searchInput.focus(), 100);
+
+        // Update text content for current language
+        document.querySelectorAll('#cityModal [data-kk][data-ru]').forEach(element => {
+            element.textContent = element.getAttribute('data-' + currentLanguage);
+        });
+    }
+
+    function renderCityOptions(cityList) {
+        return cityList.map(city => `
+                <div class="city-option" style="padding: 0.75rem; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: background 0.3s;"
                      onclick="selectCityOption('${city.code}', '${city.name.replace(/'/g, "\\'")}')">
                     ${city.name}
                 </div>
             `).join('');
-        }
+    }
 
-        function addCityOptionHoverEffects() {
-            document.querySelectorAll('.city-option').forEach(option => {
-                option.addEventListener('mouseenter', function() {
-                    this.style.backgroundColor = '#f8f9fa';
-                });
-                option.addEventListener('mouseleave', function() {
-                    this.style.backgroundColor = '';
-                });
+    function addCityOptionHoverEffects() {
+        document.querySelectorAll('.city-option').forEach(option => {
+            option.addEventListener('mouseenter', function() {
+                this.style.backgroundColor = '#f8f9fa';
             });
+            option.addEventListener('mouseleave', function() {
+                this.style.backgroundColor = '';
+            });
+        });
+    }
+
+    function selectCityOption(code, name) {
+        const city = cities.find(c => c.code === code);
+        if (city) {
+            selectedData.city = city;
+            document.getElementById('cityBtn').querySelector('span').textContent = city.name;
+            document.getElementById('cityBtn').classList.add('selected');
+            document.getElementById('cityError').style.display = 'none';
+            document.getElementById('cityBtn').classList.remove('error');
+        }
+        closeCityModal();
+    }
+
+    function closeCityModal() {
+        const modal = document.getElementById('cityModal');
+        if (modal) {
+            modal.remove();
+        }
+    }
+
+    function selectProfessions() {
+        if (professions.length === 0) {
+            alert(currentLanguage === 'kk' ? 'Мамандықтар жүктелуде...' : 'Загрузка профессий...');
+            return;
         }
 
-        function selectCityOption(code, name) {
-            const city = cities.find(c => c.code === code);
-            if (city) {
-                selectedData.city = city;
-                document.getElementById('cityBtn').querySelector('span').textContent = city.name;
-                document.getElementById('cityBtn').classList.add('selected');
-                document.getElementById('cityError').style.display = 'none';
-                document.getElementById('cityBtn').classList.remove('error');
-            }
-            closeCityModal();
-        }
+        showProfessionModal();
+    }
 
-        function closeCityModal() {
-            const modal = document.getElementById('cityModal');
-            if (modal) {
-                modal.remove();
-            }
-        }
-
-        function selectProfessions() {
-            if (professions.length === 0) {
-                alert(currentLanguage === 'kk' ? 'Мамандықтар жүктелуде...' : 'Загрузка профессий...');
-                return;
-            }
-            
-            showProfessionModal();
-        }
-
-        function showProfessionModal() {
-            // Create modal HTML
-            const modalHTML = `
+    function showProfessionModal() {
+        // Create modal HTML
+        const modalHTML = `
                 <div class="modal show" id="professionModal" style="display: flex;">
                     <div class="modal-content" style="max-width: 500px; max-height: 70vh;">
                         <h3 style="margin-bottom: 1rem;" data-kk="Мамандықтарды таңдаңыз" data-ru="Выберите профессии">Мамандықтарды таңдаңыз</h3>
                         <div style="margin-bottom: 1rem;">
-                            <input type="text" id="professionSearch" placeholder="${currentLanguage === 'kk' ? 'Мамандықты іздеу...' : 'Поиск профессии...'}" 
+                            <input type="text" id="professionSearch" placeholder="${currentLanguage === 'kk' ? 'Мамандықты іздеу...' : 'Поиск профессии...'}"
                                 style="width: 100%; padding: 0.75rem; border: 2px solid #e1e5e9; border-radius: 8px; font-size: 1rem;">
                         </div>
                         <div id="professionList" style="max-height: 300px; overflow-y: auto; border: 1px solid #e1e5e9; border-radius: 8px;">
@@ -1160,158 +1303,158 @@
                     </div>
                 </div>
             `;
-            
-            // Add modal to body
-            document.body.insertAdjacentHTML('beforeend', modalHTML);
-            
-            // Initialize search functionality
-            const searchInput = document.getElementById('professionSearch');
-            searchInput.addEventListener('input', function() {
-                const searchText = this.value.toLowerCase();
-                const filteredProfessions = professions.filter(profession => 
-                    profession.name.toLowerCase().includes(searchText)
-                );
-                document.getElementById('professionList').innerHTML = renderProfessionOptions(filteredProfessions);
-                addProfessionOptionClickEffects();
-            });
-            
-            // Add initial click effects and restore selections
-            addProfessionOptionClickEffects();
-            restoreProfessionSelections();
-            
-            // Focus search input
-            setTimeout(() => searchInput.focus(), 100);
-            
-            // Update text content for current language
-            document.querySelectorAll('#professionModal [data-kk][data-ru]').forEach(element => {
-                element.textContent = element.getAttribute('data-' + currentLanguage);
-            });
-        }
 
-        function renderProfessionOptions(professionList) {
-            const selectedIds = selectedData.professions.map(p => p.id);
-            
-            return professionList.map(profession => {
-                const isSelected = selectedIds.includes(profession.id);
-                const selectedAttr = isSelected ? 'data-selected="true"' : 'data-selected="false"';
-                const selectedStyle = isSelected ? 'background-color: #e8f5e8; color: #2d5a32; font-weight: 600;' : '';
-                
-                return `
-                    <div class="profession-option" style="padding: 0.75rem; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; ${selectedStyle}" 
+        // Add modal to body
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+        // Initialize search functionality
+        const searchInput = document.getElementById('professionSearch');
+        searchInput.addEventListener('input', function() {
+            const searchText = this.value.toLowerCase();
+            const filteredProfessions = professions.filter(profession =>
+                profession.name.toLowerCase().includes(searchText)
+            );
+            document.getElementById('professionList').innerHTML = renderProfessionOptions(filteredProfessions);
+            addProfessionOptionClickEffects();
+        });
+
+        // Add initial click effects and restore selections
+        addProfessionOptionClickEffects();
+        restoreProfessionSelections();
+
+        // Focus search input
+        setTimeout(() => searchInput.focus(), 100);
+
+        // Update text content for current language
+        document.querySelectorAll('#professionModal [data-kk][data-ru]').forEach(element => {
+            element.textContent = element.getAttribute('data-' + currentLanguage);
+        });
+    }
+
+    function renderProfessionOptions(professionList) {
+        const selectedIds = selectedData.professions.map(p => p.id);
+
+        return professionList.map(profession => {
+            const isSelected = selectedIds.includes(profession.id);
+            const selectedAttr = isSelected ? 'data-selected="true"' : 'data-selected="false"';
+            const selectedStyle = isSelected ? 'background-color: #e8f5e8; color: #2d5a32; font-weight: 600;' : '';
+
+            return `
+                    <div class="profession-option" style="padding: 0.75rem; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; ${selectedStyle}"
                          data-id="${profession.id}" data-name="${profession.name.replace(/"/g, '&quot;')}" ${selectedAttr}>
                         <span style="width: 100%;">${profession.name}</span>
                     </div>
                 `;
-            }).join('');
-        }
+        }).join('');
+    }
 
-        function addProfessionOptionClickEffects() {
-            document.querySelectorAll('.profession-option').forEach(option => {
-                option.addEventListener('click', function() {
-                    const isSelected = this.dataset.selected === 'true';
-                    const professionId = parseInt(this.dataset.id);
-                    const professionName = this.dataset.name;
-                    
-                    if (isSelected) {
-                        // Deselect - remove from selectedData.professions
-                        this.dataset.selected = 'false';
-                        this.style.backgroundColor = '';
-                        this.style.color = '';
-                        this.style.fontWeight = '';
-                        selectedData.professions = selectedData.professions.filter(p => p.id !== professionId);
-                    } else {
-                        // Select - add to selectedData.professions
-                        this.dataset.selected = 'true';
-                        this.style.backgroundColor = '#e8f5e8';
-                        this.style.color = '#2d5a32';
-                        this.style.fontWeight = '600';
-                        selectedData.professions.push({ id: professionId, name: professionName });
-                    }
-                });
-                
-                option.addEventListener('mouseenter', function() {
-                    if (this.dataset.selected !== 'true') {
-                        this.style.backgroundColor = '#f8f9fa';
-                    }
-                });
-                
-                option.addEventListener('mouseleave', function() {
-                    if (this.dataset.selected !== 'true') {
-                        this.style.backgroundColor = '';
-                    }
-                });
-            });
-        }
+    function addProfessionOptionClickEffects() {
+        document.querySelectorAll('.profession-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const isSelected = this.dataset.selected === 'true';
+                const professionId = parseInt(this.dataset.id);
+                const professionName = this.dataset.name;
 
-        function restoreProfessionSelections() {
-            const selectedIds = selectedData.professions.map(p => p.id);
-            document.querySelectorAll('.profession-option').forEach(option => {
-                const professionId = parseInt(option.dataset.id);
-                
-                if (selectedIds.includes(professionId)) {
-                    option.dataset.selected = 'true';
-                    option.style.backgroundColor = '#e8f5e8';
-                    option.style.color = '#2d5a32';
-                    option.style.fontWeight = '600';
+                if (isSelected) {
+                    // Deselect - remove from selectedData.professions
+                    this.dataset.selected = 'false';
+                    this.style.backgroundColor = '';
+                    this.style.color = '';
+                    this.style.fontWeight = '';
+                    selectedData.professions = selectedData.professions.filter(p => p.id !== professionId);
                 } else {
-                    option.dataset.selected = 'false';
-                    option.style.backgroundColor = '';
-                    option.style.color = '';
-                    option.style.fontWeight = '';
+                    // Select - add to selectedData.professions
+                    this.dataset.selected = 'true';
+                    this.style.backgroundColor = '#e8f5e8';
+                    this.style.color = '#2d5a32';
+                    this.style.fontWeight = '600';
+                    selectedData.professions.push({ id: professionId, name: professionName });
                 }
             });
-        }
 
-        function confirmProfessionSelection() {
-            const selectedOptions = document.querySelectorAll('.profession-option[data-selected="true"]');
-            selectedData.professions = [];
-            
-            selectedOptions.forEach(option => {
-                selectedData.professions.push({
-                    id: parseInt(option.dataset.id),
-                    name: option.dataset.name
-                });
+            option.addEventListener('mouseenter', function() {
+                if (this.dataset.selected !== 'true') {
+                    this.style.backgroundColor = '#f8f9fa';
+                }
             });
-                
-                if (selectedData.professions.length > 0) {
-                    const displayText = selectedData.professions.map(p => p.name).join(', ');
-                    document.getElementById('professionsBtn').querySelector('span').textContent = displayText;
-                    document.getElementById('professionsBtn').classList.add('selected');
-                document.getElementById('professionsError').style.display = 'none';
-                document.getElementById('professionsBtn').classList.remove('error');
+
+            option.addEventListener('mouseleave', function() {
+                if (this.dataset.selected !== 'true') {
+                    this.style.backgroundColor = '';
+                }
+            });
+        });
+    }
+
+    function restoreProfessionSelections() {
+        const selectedIds = selectedData.professions.map(p => p.id);
+        document.querySelectorAll('.profession-option').forEach(option => {
+            const professionId = parseInt(option.dataset.id);
+
+            if (selectedIds.includes(professionId)) {
+                option.dataset.selected = 'true';
+                option.style.backgroundColor = '#e8f5e8';
+                option.style.color = '#2d5a32';
+                option.style.fontWeight = '600';
             } else {
-                document.getElementById('professionsBtn').querySelector('span').textContent = 
-                    currentLanguage === 'kk' ? 'Мамандықтарды таңдаңыз' : 'Выберите профессии';
-                document.getElementById('professionsBtn').classList.remove('selected');
+                option.dataset.selected = 'false';
+                option.style.backgroundColor = '';
+                option.style.color = '';
+                option.style.fontWeight = '';
             }
-            
-            closeProfessionModal();
+        });
+    }
+
+    function confirmProfessionSelection() {
+        const selectedOptions = document.querySelectorAll('.profession-option[data-selected="true"]');
+        selectedData.professions = [];
+
+        selectedOptions.forEach(option => {
+            selectedData.professions.push({
+                id: parseInt(option.dataset.id),
+                name: option.dataset.name
+            });
+        });
+
+        if (selectedData.professions.length > 0) {
+            const displayText = selectedData.professions.map(p => p.name).join(', ');
+            document.getElementById('professionsBtn').querySelector('span').textContent = displayText;
+            document.getElementById('professionsBtn').classList.add('selected');
+            document.getElementById('professionsError').style.display = 'none';
+            document.getElementById('professionsBtn').classList.remove('error');
+        } else {
+            document.getElementById('professionsBtn').querySelector('span').textContent =
+                currentLanguage === 'kk' ? 'Мамандықтарды таңдаңыз' : 'Выберите профессии';
+            document.getElementById('professionsBtn').classList.remove('selected');
         }
 
-        function closeProfessionModal() {
-            const modal = document.getElementById('professionModal');
-            if (modal) {
-                modal.remove();
-            }
+        closeProfessionModal();
+    }
+
+    function closeProfessionModal() {
+        const modal = document.getElementById('professionModal');
+        if (modal) {
+            modal.remove();
+        }
+    }
+
+    function selectSkills() {
+        if (skills.length === 0) {
+            alert(currentLanguage === 'kk' ? 'Дағдылар жүктелуде...' : 'Загрузка навыков...');
+            return;
         }
 
-        function selectSkills() {
-            if (skills.length === 0) {
-                alert(currentLanguage === 'kk' ? 'Дағдылар жүктелуде...' : 'Загрузка навыков...');
-                return;
-            }
-            
-            showSkillsModal();
-        }
+        showSkillsModal();
+    }
 
-        function showSkillsModal() {
-            // Create modal HTML
-            const modalHTML = `
+    function showSkillsModal() {
+        // Create modal HTML
+        const modalHTML = `
                 <div class="modal show" id="skillsModal" style="display: flex;">
                     <div class="modal-content" style="max-width: 500px; max-height: 70vh;">
                         <h3 style="margin-bottom: 1rem;" data-kk="Дағдыларды таңдаңыз" data-ru="Выберите навыки">Дағдыларды таңдаңыз</h3>
                         <div style="margin-bottom: 1rem;">
-                            <input type="text" id="skillsSearch" placeholder="${currentLanguage === 'kk' ? 'Дағдыны іздеу...' : 'Поиск навыка...'}" 
+                            <input type="text" id="skillsSearch" placeholder="${currentLanguage === 'kk' ? 'Дағдыны іздеу...' : 'Поиск навыка...'}"
                                 style="width: 100%; padding: 0.75rem; border: 2px solid #e1e5e9; border-radius: 8px; font-size: 1rem;">
                         </div>
                         <div id="skillsList" style="max-height: 300px; overflow-y: auto; border: 1px solid #e1e5e9; border-radius: 8px;">
@@ -1327,125 +1470,125 @@
                     </div>
                 </div>
             `;
-            
-            // Add modal to body
-            document.body.insertAdjacentHTML('beforeend', modalHTML);
-            
-            // Initialize search functionality
-            const searchInput = document.getElementById('skillsSearch');
-            searchInput.addEventListener('input', function() {
-                const searchText = this.value.toLowerCase();
-                const filteredSkills = skills.filter(skill => 
-                    skill.name.toLowerCase().includes(searchText)
-                );
-                document.getElementById('skillsList').innerHTML = renderSkillsOptions(filteredSkills);
-                addSkillsOptionClickEffects();
-            });
-            
-            // Add initial click effects
-            addSkillsOptionClickEffects();
-            
-            // Focus search input
-            setTimeout(() => searchInput.focus(), 100);
-            
-            // Update text content for current language
-            document.querySelectorAll('#skillsModal [data-kk][data-ru]').forEach(element => {
-                element.textContent = element.getAttribute('data-' + currentLanguage);
-            });
-        }
 
-        function renderSkillsOptions(skillsList) {
-            const selectedIds = selectedData.skills.map(s => s.id);
-            
-            return skillsList.map(skill => {
-                const isSelected = selectedIds.includes(skill.id);
-                const selectedAttr = isSelected ? 'data-selected="true"' : 'data-selected="false"';
-                const selectedStyle = isSelected ? 'background-color: #e8f5e8; color: #2d5a32; font-weight: 600;' : '';
-                
-                return `
-                    <div class="skills-option" style="padding: 0.75rem; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; ${selectedStyle}" 
+        // Add modal to body
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+        // Initialize search functionality
+        const searchInput = document.getElementById('skillsSearch');
+        searchInput.addEventListener('input', function() {
+            const searchText = this.value.toLowerCase();
+            const filteredSkills = skills.filter(skill =>
+                skill.name.toLowerCase().includes(searchText)
+            );
+            document.getElementById('skillsList').innerHTML = renderSkillsOptions(filteredSkills);
+            addSkillsOptionClickEffects();
+        });
+
+        // Add initial click effects
+        addSkillsOptionClickEffects();
+
+        // Focus search input
+        setTimeout(() => searchInput.focus(), 100);
+
+        // Update text content for current language
+        document.querySelectorAll('#skillsModal [data-kk][data-ru]').forEach(element => {
+            element.textContent = element.getAttribute('data-' + currentLanguage);
+        });
+    }
+
+    function renderSkillsOptions(skillsList) {
+        const selectedIds = selectedData.skills.map(s => s.id);
+
+        return skillsList.map(skill => {
+            const isSelected = selectedIds.includes(skill.id);
+            const selectedAttr = isSelected ? 'data-selected="true"' : 'data-selected="false"';
+            const selectedStyle = isSelected ? 'background-color: #e8f5e8; color: #2d5a32; font-weight: 600;' : '';
+
+            return `
+                    <div class="skills-option" style="padding: 0.75rem; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; ${selectedStyle}"
                          data-id="${skill.id}" data-name="${skill.name.replace(/"/g, '&quot;')}" ${selectedAttr}>
                         <span style="width: 100%;">${skill.name}</span>
                     </div>
                 `;
-            }).join('');
-        }
+        }).join('');
+    }
 
-        function addSkillsOptionClickEffects() {
-            document.querySelectorAll('.skills-option').forEach(option => {
-                option.addEventListener('click', function() {
-                    const isSelected = this.dataset.selected === 'true';
-                    const skillId = parseInt(this.dataset.id);
-                    const skillName = this.dataset.name;
-                    
-                    if (isSelected) {
-                        // Deselect
-                        this.dataset.selected = 'false';
-                        this.style.backgroundColor = '';
-                        this.style.color = '';
-                        this.style.fontWeight = '';
-                        selectedData.skills = selectedData.skills.filter(s => s.id !== skillId);
-                    } else {
-                        // Select
-                        this.dataset.selected = 'true';
-                        this.style.backgroundColor = '#e8f5e8';
-                        this.style.color = '#2d5a32';
-                        this.style.fontWeight = '600';
-                        selectedData.skills.push({ id: skillId, name: skillName });
-                    }
-                });
-                
-                option.addEventListener('mouseenter', function() {
-                    if (this.dataset.selected !== 'true') {
-                        this.style.backgroundColor = '#f8f9fa';
-                    }
-                });
-                
-                option.addEventListener('mouseleave', function() {
-                    if (this.dataset.selected !== 'true') {
-                        this.style.backgroundColor = '';
-                    }
-                });
+    function addSkillsOptionClickEffects() {
+        document.querySelectorAll('.skills-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const isSelected = this.dataset.selected === 'true';
+                const skillId = parseInt(this.dataset.id);
+                const skillName = this.dataset.name;
+
+                if (isSelected) {
+                    // Deselect
+                    this.dataset.selected = 'false';
+                    this.style.backgroundColor = '';
+                    this.style.color = '';
+                    this.style.fontWeight = '';
+                    selectedData.skills = selectedData.skills.filter(s => s.id !== skillId);
+                } else {
+                    // Select
+                    this.dataset.selected = 'true';
+                    this.style.backgroundColor = '#e8f5e8';
+                    this.style.color = '#2d5a32';
+                    this.style.fontWeight = '600';
+                    selectedData.skills.push({ id: skillId, name: skillName });
+                }
             });
-        }
 
-        function confirmSkillsSelection() {
-            const selectedOptions = document.querySelectorAll('.skills-option[data-selected="true"]');
-            selectedData.skills = [];
-            
-            selectedOptions.forEach(option => {
-                selectedData.skills.push({
-                    id: parseInt(option.dataset.id),
-                    name: option.dataset.name
-                });
+            option.addEventListener('mouseenter', function() {
+                if (this.dataset.selected !== 'true') {
+                    this.style.backgroundColor = '#f8f9fa';
+                }
             });
-                
-                if (selectedData.skills.length > 0) {
-                    const displayText = selectedData.skills.map(s => s.name).join(', ');
-                    document.getElementById('skillsBtn').querySelector('span').textContent = displayText;
-                    document.getElementById('skillsBtn').classList.add('selected');
-            } else {
-                document.getElementById('skillsBtn').querySelector('span').textContent = 
-                    currentLanguage === 'kk' ? 'Дағдыларды таңдаңыз' : 'Выберите навыки';
-                document.getElementById('skillsBtn').classList.remove('selected');
-            }
-            
-            closeSkillsModal();
+
+            option.addEventListener('mouseleave', function() {
+                if (this.dataset.selected !== 'true') {
+                    this.style.backgroundColor = '';
+                }
+            });
+        });
+    }
+
+    function confirmSkillsSelection() {
+        const selectedOptions = document.querySelectorAll('.skills-option[data-selected="true"]');
+        selectedData.skills = [];
+
+        selectedOptions.forEach(option => {
+            selectedData.skills.push({
+                id: parseInt(option.dataset.id),
+                name: option.dataset.name
+            });
+        });
+
+        if (selectedData.skills.length > 0) {
+            const displayText = selectedData.skills.map(s => s.name).join(', ');
+            document.getElementById('skillsBtn').querySelector('span').textContent = displayText;
+            document.getElementById('skillsBtn').classList.add('selected');
+        } else {
+            document.getElementById('skillsBtn').querySelector('span').textContent =
+                currentLanguage === 'kk' ? 'Дағдыларды таңдаңыз' : 'Выберите навыки';
+            document.getElementById('skillsBtn').classList.remove('selected');
         }
 
-        function closeSkillsModal() {
-            const modal = document.getElementById('skillsModal');
-            if (modal) {
-                modal.remove();
-            }
-        }
+        closeSkillsModal();
+    }
 
-        function selectWorkSchedule() {
-            showWorkScheduleModal();
+    function closeSkillsModal() {
+        const modal = document.getElementById('skillsModal');
+        if (modal) {
+            modal.remove();
         }
+    }
 
-        function showWorkScheduleModal() {
-            const modalHTML = `
+    function selectWorkSchedule() {
+        showWorkScheduleModal();
+    }
+
+    function showWorkScheduleModal() {
+        const modalHTML = `
                 <div class="modal show" id="workScheduleModal" style="display: flex;">
                     <div class="modal-content" style="max-width: 500px; max-height: 70vh;">
                         <h3 style="margin-bottom: 1rem;" data-kk="Жұмыс кестесін таңдаңыз" data-ru="Выберите график работы">Жұмыс кестесін таңдаңыз</h3>
@@ -1459,108 +1602,108 @@
                     </div>
                 </div>
             `;
-            
-            document.body.insertAdjacentHTML('beforeend', modalHTML);
-            addWorkScheduleOptionClickEffects();
-            
-            document.querySelectorAll('#workScheduleModal [data-kk][data-ru]').forEach(element => {
-                element.textContent = element.getAttribute('data-' + currentLanguage);
-            });
-        }
 
-        function renderWorkScheduleOptions(workScheduleList) {
-            const selectedCodes = selectedData.workSchedule;
-            
-            return workScheduleList.map(schedule => {
-                const isSelected = selectedCodes.includes(schedule.code);
-                const selectedAttr = isSelected ? 'data-selected="true"' : 'data-selected="false"';
-                const selectedStyle = isSelected ? 'background-color: #e8f5e8; color: #2d5a32; font-weight: 600;' : '';
-                
-                return `
-                    <div class="workschedule-option" style="padding: 0.75rem; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; ${selectedStyle}" 
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        addWorkScheduleOptionClickEffects();
+
+        document.querySelectorAll('#workScheduleModal [data-kk][data-ru]').forEach(element => {
+            element.textContent = element.getAttribute('data-' + currentLanguage);
+        });
+    }
+
+    function renderWorkScheduleOptions(workScheduleList) {
+        const selectedCodes = selectedData.workSchedule;
+
+        return workScheduleList.map(schedule => {
+            const isSelected = selectedCodes.includes(schedule.code);
+            const selectedAttr = isSelected ? 'data-selected="true"' : 'data-selected="false"';
+            const selectedStyle = isSelected ? 'background-color: #e8f5e8; color: #2d5a32; font-weight: 600;' : '';
+
+            return `
+                    <div class="workschedule-option" style="padding: 0.75rem; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; ${selectedStyle}"
                          data-code="${schedule.code}" data-name="${schedule.name.replace(/"/g, '&quot;')}" ${selectedAttr}>
                         <span style="width: 100%;">${schedule.name}</span>
                     </div>
                 `;
-            }).join('');
-        }
+        }).join('');
+    }
 
-        function addWorkScheduleOptionClickEffects() {
-            document.querySelectorAll('.workschedule-option').forEach(option => {
-                option.addEventListener('click', function() {
-                    const isSelected = this.dataset.selected === 'true';
-                    const scheduleCode = this.dataset.code;
-                    
-                    if (isSelected) {
-                        // Deselect
-                        this.dataset.selected = 'false';
-                        this.style.backgroundColor = '';
-                        this.style.color = '';
-                        this.style.fontWeight = '';
-                        selectedData.workSchedule = selectedData.workSchedule.filter(s => s !== scheduleCode);
-                    } else {
-                        // Select
-                        this.dataset.selected = 'true';
-                        this.style.backgroundColor = '#e8f5e8';
-                        this.style.color = '#2d5a32';
-                        this.style.fontWeight = '600';
-                        selectedData.workSchedule.push(scheduleCode);
-                    }
-                });
-                
-                option.addEventListener('mouseenter', function() {
-                    if (this.dataset.selected !== 'true') {
-                        this.style.backgroundColor = '#f8f9fa';
-                    }
-                });
-                
-                option.addEventListener('mouseleave', function() {
-                    if (this.dataset.selected !== 'true') {
-                        this.style.backgroundColor = '';
-                    }
-                });
+    function addWorkScheduleOptionClickEffects() {
+        document.querySelectorAll('.workschedule-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const isSelected = this.dataset.selected === 'true';
+                const scheduleCode = this.dataset.code;
+
+                if (isSelected) {
+                    // Deselect
+                    this.dataset.selected = 'false';
+                    this.style.backgroundColor = '';
+                    this.style.color = '';
+                    this.style.fontWeight = '';
+                    selectedData.workSchedule = selectedData.workSchedule.filter(s => s !== scheduleCode);
+                } else {
+                    // Select
+                    this.dataset.selected = 'true';
+                    this.style.backgroundColor = '#e8f5e8';
+                    this.style.color = '#2d5a32';
+                    this.style.fontWeight = '600';
+                    selectedData.workSchedule.push(scheduleCode);
+                }
             });
+
+            option.addEventListener('mouseenter', function() {
+                if (this.dataset.selected !== 'true') {
+                    this.style.backgroundColor = '#f8f9fa';
+                }
+            });
+
+            option.addEventListener('mouseleave', function() {
+                if (this.dataset.selected !== 'true') {
+                    this.style.backgroundColor = '';
+                }
+            });
+        });
+    }
+
+    function confirmWorkScheduleSelection() {
+        if (selectedData.workSchedule.length > 0) {
+            const displayText = selectedData.workSchedule.map(code => {
+                const option = workScheduleOptions.find(opt => opt.code === code);
+                return option ? option.name : code;
+            }).join(', ');
+
+            document.getElementById('workScheduleBtn').querySelector('span').textContent = displayText;
+            document.getElementById('workScheduleBtn').classList.add('selected');
+        } else {
+            document.getElementById('workScheduleBtn').querySelector('span').textContent =
+                currentLanguage === 'kk' ? 'Жұмыс кестесін таңдаңыз' : 'Выберите график работы';
+            document.getElementById('workScheduleBtn').classList.remove('selected');
         }
 
-        function confirmWorkScheduleSelection() {
-            if (selectedData.workSchedule.length > 0) {
-                const displayText = selectedData.workSchedule.map(code => {
-                    const option = workScheduleOptions.find(opt => opt.code === code);
-                    return option ? option.name : code;
-                }).join(', ');
-                
-                document.getElementById('workScheduleBtn').querySelector('span').textContent = displayText;
-                document.getElementById('workScheduleBtn').classList.add('selected');
-            } else {
-                document.getElementById('workScheduleBtn').querySelector('span').textContent = 
-                    currentLanguage === 'kk' ? 'Жұмыс кестесін таңдаңыз' : 'Выберите график работы';
-                document.getElementById('workScheduleBtn').classList.remove('selected');
-            }
-            
-            closeWorkScheduleModal();
+        closeWorkScheduleModal();
+    }
+
+    function closeWorkScheduleModal() {
+        const modal = document.getElementById('workScheduleModal');
+        if (modal) {
+            modal.remove();
         }
+    }
 
-        function closeWorkScheduleModal() {
-            const modal = document.getElementById('workScheduleModal');
-            if (modal) {
-                modal.remove();
-            }
-        }
+    function selectBusyness() {
+        showBusynessModal();
+    }
 
-        function selectBusyness() {
-            showBusynessModal();
-        }
+    function showBusynessModal() {
+        const busynessOptions = [
+            { code: "FULL", name: currentLanguage === 'kk' ? "Толық" : "Полная" },
+            { code: "PARTIAL", name: currentLanguage === 'kk' ? "Ішінара" : "Частичная" },
+            { code: "PROJECT", name: currentLanguage === 'kk' ? "Жоба" : "Проектная" },
+            { code: "INTERNSHIP", name: currentLanguage === 'kk' ? "Тәжірибе" : "Стажировка" },
+            { code: "REMOTE", name: currentLanguage === 'kk' ? "Қашықтан" : "Удаленная" }
+        ];
 
-        function showBusynessModal() {
-            const busynessOptions = [
-                { code: "FULL", name: currentLanguage === 'kk' ? "Толық" : "Полная" },
-                { code: "PARTIAL", name: currentLanguage === 'kk' ? "Ішінара" : "Частичная" },
-                { code: "PROJECT", name: currentLanguage === 'kk' ? "Жоба" : "Проектная" },
-                { code: "INTERNSHIP", name: currentLanguage === 'kk' ? "Тәжірибе" : "Стажировка" },
-                { code: "REMOTE", name: currentLanguage === 'kk' ? "Қашықтан" : "Удаленная" }
-            ];
-
-            const modalHTML = `
+        const modalHTML = `
                 <div class="modal show" id="busynessModal" style="display: flex;">
                     <div class="modal-content" style="max-width: 500px; max-height: 70vh;">
                         <h3 style="margin-bottom: 1rem;" data-kk="Занятостын таңдаңыз" data-ru="Выберите занятость">Занятостын таңдаңыз</h3>
@@ -1577,177 +1720,177 @@
                     </div>
                 </div>
             `;
-            
-            document.body.insertAdjacentHTML('beforeend', modalHTML);
-            addBusynessOptionClickEffects();
-            
-            document.querySelectorAll('#busynessModal [data-kk][data-ru]').forEach(element => {
-                element.textContent = element.getAttribute('data-' + currentLanguage);
-            });
-        }
 
-        function renderBusynessOptions(busynessList) {
-            const selectedCodes = selectedData.busyness;
-            
-            return busynessList.map(busyness => {
-                const isSelected = selectedCodes.includes(busyness.code);
-                const selectedAttr = isSelected ? 'data-selected="true"' : 'data-selected="false"';
-                const selectedStyle = isSelected ? 'background-color: #e8f5e8; color: #2d5a32; font-weight: 600;' : '';
-                
-                return `
-                    <div class="busyness-option" style="padding: 0.75rem; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; ${selectedStyle}" 
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        addBusynessOptionClickEffects();
+
+        document.querySelectorAll('#busynessModal [data-kk][data-ru]').forEach(element => {
+            element.textContent = element.getAttribute('data-' + currentLanguage);
+        });
+    }
+
+    function renderBusynessOptions(busynessList) {
+        const selectedCodes = selectedData.busyness;
+
+        return busynessList.map(busyness => {
+            const isSelected = selectedCodes.includes(busyness.code);
+            const selectedAttr = isSelected ? 'data-selected="true"' : 'data-selected="false"';
+            const selectedStyle = isSelected ? 'background-color: #e8f5e8; color: #2d5a32; font-weight: 600;' : '';
+
+            return `
+                    <div class="busyness-option" style="padding: 0.75rem; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; ${selectedStyle}"
                          data-code="${busyness.code}" data-name="${busyness.name.replace(/"/g, '&quot;')}" ${selectedAttr}>
                         <span style="width: 100%;">${busyness.name}</span>
                     </div>
                 `;
-            }).join('');
-        }
+        }).join('');
+    }
 
-        function addBusynessOptionClickEffects() {
-            document.querySelectorAll('.busyness-option').forEach(option => {
-                option.addEventListener('click', function() {
-                    const isSelected = this.dataset.selected === 'true';
-                    const busynessCode = this.dataset.code;
-                    
-                    if (isSelected) {
-                        // Deselect
-                        this.dataset.selected = 'false';
-                        this.style.backgroundColor = '';
-                        this.style.color = '';
-                        this.style.fontWeight = '';
-                        selectedData.busyness = selectedData.busyness.filter(b => b !== busynessCode);
-                    } else {
-                        // Select
-                        this.dataset.selected = 'true';
-                        this.style.backgroundColor = '#e8f5e8';
-                        this.style.color = '#2d5a32';
-                        this.style.fontWeight = '600';
-                        selectedData.busyness.push(busynessCode);
-                    }
-                });
-                
-                option.addEventListener('mouseenter', function() {
-                    if (this.dataset.selected !== 'true') {
-                        this.style.backgroundColor = '#f8f9fa';
-                    }
-                });
-                
-                option.addEventListener('mouseleave', function() {
-                    if (this.dataset.selected !== 'true') {
-                        this.style.backgroundColor = '';
-                    }
-                });
+    function addBusynessOptionClickEffects() {
+        document.querySelectorAll('.busyness-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const isSelected = this.dataset.selected === 'true';
+                const busynessCode = this.dataset.code;
+
+                if (isSelected) {
+                    // Deselect
+                    this.dataset.selected = 'false';
+                    this.style.backgroundColor = '';
+                    this.style.color = '';
+                    this.style.fontWeight = '';
+                    selectedData.busyness = selectedData.busyness.filter(b => b !== busynessCode);
+                } else {
+                    // Select
+                    this.dataset.selected = 'true';
+                    this.style.backgroundColor = '#e8f5e8';
+                    this.style.color = '#2d5a32';
+                    this.style.fontWeight = '600';
+                    selectedData.busyness.push(busynessCode);
+                }
             });
-        }
 
-        function confirmBusynessSelection() {
-            if (selectedData.busyness.length > 0) {
-                const busynessOptions = [
-                    { code: "FULL", name: currentLanguage === 'kk' ? "Толық" : "Полная" },
-                    { code: "PARTIAL", name: currentLanguage === 'kk' ? "Ішінара" : "Частичная" },
-                    { code: "PROJECT", name: currentLanguage === 'kk' ? "Жоба" : "Проектная" },
-                    { code: "INTERNSHIP", name: currentLanguage === 'kk' ? "Тәжірибе" : "Стажировка" },
-                    { code: "REMOTE", name: currentLanguage === 'kk' ? "Қашықтан" : "Удаленная" }
-                ];
-                
-                const displayText = selectedData.busyness.map(code => {
-                    const option = busynessOptions.find(opt => opt.code === code);
-                    return option ? option.name : code;
-                }).join(', ');
-                
-                document.getElementById('busynessBtn').querySelector('span').textContent = displayText;
-                document.getElementById('busynessBtn').classList.add('selected');
-            } else {
-                document.getElementById('busynessBtn').querySelector('span').textContent = 
-                    currentLanguage === 'kk' ? 'Занятостын таңдаңыз' : 'Выберите занятость';
-                document.getElementById('busynessBtn').classList.remove('selected');
-            }
-            
-            closeBusynessModal();
-        }
-
-        function closeBusynessModal() {
-            const modal = document.getElementById('busynessModal');
-            if (modal) {
-                modal.remove();
-            }
-        }
-
-        function toggleCustomUniversity(index) {
-            const checkbox = document.getElementById(`customUniversity_${index}`);
-            const universityBtn = document.getElementById(`universityBtn_${index}`);
-            const universityOther = document.getElementById(`universityOther_${index}`);
-            
-            if (checkbox.checked) {
-                universityBtn.style.display = 'none';
-                universityOther.style.display = 'block';
-                universityOther.focus();
-                // Clear selected university
-                if (educationItems[index]) {
-                    educationItems[index].selectedUniversity = null;
+            option.addEventListener('mouseenter', function() {
+                if (this.dataset.selected !== 'true') {
+                    this.style.backgroundColor = '#f8f9fa';
                 }
-                universityBtn.classList.remove('selected');
-                universityBtn.querySelector('span').textContent = 
-                    currentLanguage === 'kk' ? 'Университетті таңдаңыз' : 'Выберите университет';
-            } else {
-                universityBtn.style.display = 'flex';
-                universityOther.style.display = 'none';
-                universityOther.value = '';
-            }
-        }
+            });
 
-        function toggleCustomSpecialty(index) {
-            const checkbox = document.getElementById(`customSpecialty_${index}`);
-            const specialtyBtn = document.getElementById(`specialtyBtn_${index}`);
-            const specialtyOther = document.getElementById(`specialtyOther_${index}`);
-            
-            if (checkbox.checked) {
-                specialtyBtn.style.display = 'none';
-                specialtyOther.style.display = 'block';
-                specialtyOther.focus();
-                // Clear selected specialty
-                if (educationItems[index]) {
-                    educationItems[index].selectedSpecialty = null;
+            option.addEventListener('mouseleave', function() {
+                if (this.dataset.selected !== 'true') {
+                    this.style.backgroundColor = '';
                 }
-                specialtyBtn.classList.remove('selected');
-                specialtyBtn.querySelector('span').textContent = 
-                    currentLanguage === 'kk' ? 'Мамандықты таңдаңыз' : 'Выберите специальность';
-            } else {
-                specialtyBtn.style.display = 'flex';
-                specialtyOther.style.display = 'none';
-                specialtyOther.value = '';
-            }
+            });
+        });
+    }
+
+    function confirmBusynessSelection() {
+        if (selectedData.busyness.length > 0) {
+            const busynessOptions = [
+                { code: "FULL", name: currentLanguage === 'kk' ? "Толық" : "Полная" },
+                { code: "PARTIAL", name: currentLanguage === 'kk' ? "Ішінара" : "Частичная" },
+                { code: "PROJECT", name: currentLanguage === 'kk' ? "Жоба" : "Проектная" },
+                { code: "INTERNSHIP", name: currentLanguage === 'kk' ? "Тәжірибе" : "Стажировка" },
+                { code: "REMOTE", name: currentLanguage === 'kk' ? "Қашықтан" : "Удаленная" }
+            ];
+
+            const displayText = selectedData.busyness.map(code => {
+                const option = busynessOptions.find(opt => opt.code === code);
+                return option ? option.name : code;
+            }).join(', ');
+
+            document.getElementById('busynessBtn').querySelector('span').textContent = displayText;
+            document.getElementById('busynessBtn').classList.add('selected');
+        } else {
+            document.getElementById('busynessBtn').querySelector('span').textContent =
+                currentLanguage === 'kk' ? 'Занятостын таңдаңыз' : 'Выберите занятость';
+            document.getElementById('busynessBtn').classList.remove('selected');
         }
 
-        function selectUniversity(index) {
-            if (universities.length === 0) {
-                alert(currentLanguage === 'kk' ? 'Университеттер жүктелуде...' : 'Загрузка университетов...');
-                return;
+        closeBusynessModal();
+    }
+
+    function closeBusynessModal() {
+        const modal = document.getElementById('busynessModal');
+        if (modal) {
+            modal.remove();
+        }
+    }
+
+    function toggleCustomUniversity(index) {
+        const checkbox = document.getElementById(`customUniversity_${index}`);
+        const universityBtn = document.getElementById(`universityBtn_${index}`);
+        const universityOther = document.getElementById(`universityOther_${index}`);
+
+        if (checkbox.checked) {
+            universityBtn.style.display = 'none';
+            universityOther.style.display = 'block';
+            universityOther.focus();
+            // Clear selected university
+            if (educationItems[index]) {
+                educationItems[index].selectedUniversity = null;
             }
-            
-            currentEducationIndex = index;
-            showUniversityModal();
+            universityBtn.classList.remove('selected');
+            universityBtn.querySelector('span').textContent =
+                currentLanguage === 'kk' ? 'Университетті таңдаңыз' : 'Выберите университет';
+        } else {
+            universityBtn.style.display = 'flex';
+            universityOther.style.display = 'none';
+            universityOther.value = '';
+        }
+    }
+
+    function toggleCustomSpecialty(index) {
+        const checkbox = document.getElementById(`customSpecialty_${index}`);
+        const specialtyBtn = document.getElementById(`specialtyBtn_${index}`);
+        const specialtyOther = document.getElementById(`specialtyOther_${index}`);
+
+        if (checkbox.checked) {
+            specialtyBtn.style.display = 'none';
+            specialtyOther.style.display = 'block';
+            specialtyOther.focus();
+            // Clear selected specialty
+            if (educationItems[index]) {
+                educationItems[index].selectedSpecialty = null;
+            }
+            specialtyBtn.classList.remove('selected');
+            specialtyBtn.querySelector('span').textContent =
+                currentLanguage === 'kk' ? 'Мамандықты таңдаңыз' : 'Выберите специальность';
+        } else {
+            specialtyBtn.style.display = 'flex';
+            specialtyOther.style.display = 'none';
+            specialtyOther.value = '';
+        }
+    }
+
+    function selectUniversity(index) {
+        if (universities.length === 0) {
+            alert(currentLanguage === 'kk' ? 'Университеттер жүктелуде...' : 'Загрузка университетов...');
+            return;
         }
 
-        function selectSpecialty(index) {
-            if (specialties.length === 0) {
-                alert(currentLanguage === 'kk' ? 'Мамандықтар жүктелуде...' : 'Загрузка специальностей...');
-                return;
-            }
-            
-            currentEducationIndex = index;
-            showSpecialtyModal();
+        currentEducationIndex = index;
+        showUniversityModal();
+    }
+
+    function selectSpecialty(index) {
+        if (specialties.length === 0) {
+            alert(currentLanguage === 'kk' ? 'Мамандықтар жүктелуде...' : 'Загрузка специальностей...');
+            return;
         }
 
-        let currentEducationIndex = null;
+        currentEducationIndex = index;
+        showSpecialtyModal();
+    }
 
-        function showUniversityModal() {
-            const modalHTML = `
+    let currentEducationIndex = null;
+
+    function showUniversityModal() {
+        const modalHTML = `
                 <div class="modal show" id="universityModal" style="display: flex;">
                     <div class="modal-content" style="max-width: 500px; max-height: 70vh;">
                         <h3 style="margin-bottom: 1rem;" data-kk="Университетті таңдаңыз" data-ru="Выберите университет">Университетті таңдаңыз</h3>
                         <div style="margin-bottom: 1rem;">
-                            <input type="text" id="universitySearch" placeholder="${currentLanguage === 'kk' ? 'Университетті іздеу...' : 'Поиск университета...'}" 
+                            <input type="text" id="universitySearch" placeholder="${currentLanguage === 'kk' ? 'Университетті іздеу...' : 'Поиск университета...'}"
                                 style="width: 100%; padding: 0.75rem; border: 2px solid #e1e5e9; border-radius: 8px; font-size: 1rem;">
                         </div>
                         <div id="universityList" style="max-height: 300px; overflow-y: auto; border: 1px solid #e1e5e9; border-radius: 8px;">
@@ -1759,73 +1902,73 @@
                     </div>
                 </div>
             `;
-            
-            document.body.insertAdjacentHTML('beforeend', modalHTML);
-            
-            const searchInput = document.getElementById('universitySearch');
-            searchInput.addEventListener('input', function() {
-                const searchText = this.value.toLowerCase();
-                const filteredUniversities = universities.filter(university => 
-                    university.name.toLowerCase().includes(searchText)
-                );
-                document.getElementById('universityList').innerHTML = renderUniversityOptions(filteredUniversities);
-                addUniversityOptionHoverEffects();
-            });
-            
-            addUniversityOptionHoverEffects();
-            setTimeout(() => searchInput.focus(), 100);
-            
-            document.querySelectorAll('#universityModal [data-kk][data-ru]').forEach(element => {
-                element.textContent = element.getAttribute('data-' + currentLanguage);
-            });
-        }
 
-        function renderUniversityOptions(universityList) {
-            return universityList.map(university => `
-                <div class="university-option" style="padding: 0.75rem; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: background 0.3s;" 
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+        const searchInput = document.getElementById('universitySearch');
+        searchInput.addEventListener('input', function() {
+            const searchText = this.value.toLowerCase();
+            const filteredUniversities = universities.filter(university =>
+                university.name.toLowerCase().includes(searchText)
+            );
+            document.getElementById('universityList').innerHTML = renderUniversityOptions(filteredUniversities);
+            addUniversityOptionHoverEffects();
+        });
+
+        addUniversityOptionHoverEffects();
+        setTimeout(() => searchInput.focus(), 100);
+
+        document.querySelectorAll('#universityModal [data-kk][data-ru]').forEach(element => {
+            element.textContent = element.getAttribute('data-' + currentLanguage);
+        });
+    }
+
+    function renderUniversityOptions(universityList) {
+        return universityList.map(university => `
+                <div class="university-option" style="padding: 0.75rem; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: background 0.3s;"
                      onclick="selectUniversityOption(${university.id}, '${university.name.replace(/'/g, "\\'")}')">
                     ${university.name}
                 </div>
             `).join('');
-        }
+    }
 
-        function addUniversityOptionHoverEffects() {
-            document.querySelectorAll('.university-option').forEach(option => {
-                option.addEventListener('mouseenter', function() {
-                    this.style.backgroundColor = '#f8f9fa';
-                });
-                option.addEventListener('mouseleave', function() {
-                    this.style.backgroundColor = '';
-                });
+    function addUniversityOptionHoverEffects() {
+        document.querySelectorAll('.university-option').forEach(option => {
+            option.addEventListener('mouseenter', function() {
+                this.style.backgroundColor = '#f8f9fa';
             });
-        }
+            option.addEventListener('mouseleave', function() {
+                this.style.backgroundColor = '';
+            });
+        });
+    }
 
-        function selectUniversityOption(id, name) {
-            const university = universities.find(u => u.id === id);
-            if (university && currentEducationIndex !== null) {
-                educationItems[currentEducationIndex].selectedUniversity = university;
-                const btn = document.getElementById(`universityBtn_${currentEducationIndex}`);
-                btn.querySelector('span').textContent = university.name;
-                btn.classList.add('selected');
-            }
-            closeUniversityModal();
+    function selectUniversityOption(id, name) {
+        const university = universities.find(u => u.id === id);
+        if (university && currentEducationIndex !== null) {
+            educationItems[currentEducationIndex].selectedUniversity = university;
+            const btn = document.getElementById(`universityBtn_${currentEducationIndex}`);
+            btn.querySelector('span').textContent = university.name;
+            btn.classList.add('selected');
         }
+        closeUniversityModal();
+    }
 
-        function closeUniversityModal() {
-            const modal = document.getElementById('universityModal');
-            if (modal) {
-                modal.remove();
-            }
-            currentEducationIndex = null;
+    function closeUniversityModal() {
+        const modal = document.getElementById('universityModal');
+        if (modal) {
+            modal.remove();
         }
+        currentEducationIndex = null;
+    }
 
-        function showSpecialtyModal() {
-            const modalHTML = `
+    function showSpecialtyModal() {
+        const modalHTML = `
                 <div class="modal show" id="specialtyModal" style="display: flex;">
                     <div class="modal-content" style="max-width: 500px; max-height: 70vh;">
                         <h3 style="margin-bottom: 1rem;" data-kk="Мамандықты таңдаңыз" data-ru="Выберите специальность">Мамандықты таңдаңыз</h3>
                         <div style="margin-bottom: 1rem;">
-                            <input type="text" id="specialtySearch" placeholder="${currentLanguage === 'kk' ? 'Мамандықты іздеу...' : 'Поиск специальности...'}" 
+                            <input type="text" id="specialtySearch" placeholder="${currentLanguage === 'kk' ? 'Мамандықты іздеу...' : 'Поиск специальности...'}"
                                 style="width: 100%; padding: 0.75rem; border: 2px solid #e1e5e9; border-radius: 8px; font-size: 1rem;">
                         </div>
                         <div id="specialtyList" style="max-height: 300px; overflow-y: auto; border: 1px solid #e1e5e9; border-radius: 8px;">
@@ -1837,127 +1980,127 @@
                     </div>
                 </div>
             `;
-            
-            document.body.insertAdjacentHTML('beforeend', modalHTML);
-            
-            const searchInput = document.getElementById('specialtySearch');
-            searchInput.addEventListener('input', function() {
-                const searchText = this.value.toLowerCase();
-                const filteredSpecialties = specialties.filter(specialty => 
-                    specialty.name.toLowerCase().includes(searchText)
-                );
-                document.getElementById('specialtyList').innerHTML = renderSpecialtyOptions(filteredSpecialties);
-                addSpecialtyOptionHoverEffects();
-            });
-            
-            addSpecialtyOptionHoverEffects();
-            setTimeout(() => searchInput.focus(), 100);
-            
-            document.querySelectorAll('#specialtyModal [data-kk][data-ru]').forEach(element => {
-                element.textContent = element.getAttribute('data-' + currentLanguage);
-            });
-        }
 
-        function renderSpecialtyOptions(specialtyList) {
-            return specialtyList.map(specialty => `
-                <div class="specialty-option" style="padding: 0.75rem; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: background 0.3s;" 
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+        const searchInput = document.getElementById('specialtySearch');
+        searchInput.addEventListener('input', function() {
+            const searchText = this.value.toLowerCase();
+            const filteredSpecialties = specialties.filter(specialty =>
+                specialty.name.toLowerCase().includes(searchText)
+            );
+            document.getElementById('specialtyList').innerHTML = renderSpecialtyOptions(filteredSpecialties);
+            addSpecialtyOptionHoverEffects();
+        });
+
+        addSpecialtyOptionHoverEffects();
+        setTimeout(() => searchInput.focus(), 100);
+
+        document.querySelectorAll('#specialtyModal [data-kk][data-ru]').forEach(element => {
+            element.textContent = element.getAttribute('data-' + currentLanguage);
+        });
+    }
+
+    function renderSpecialtyOptions(specialtyList) {
+        return specialtyList.map(specialty => `
+                <div class="specialty-option" style="padding: 0.75rem; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: background 0.3s;"
                      onclick="selectSpecialtyOption(${specialty.id}, '${specialty.name.replace(/'/g, "\\'")}')">
                     ${specialty.name}
                 </div>
             `).join('');
-        }
+    }
 
-        function addSpecialtyOptionHoverEffects() {
-            document.querySelectorAll('.specialty-option').forEach(option => {
-                option.addEventListener('mouseenter', function() {
-                    this.style.backgroundColor = '#f8f9fa';
-                });
-                option.addEventListener('mouseleave', function() {
-                    this.style.backgroundColor = '';
-                });
+    function addSpecialtyOptionHoverEffects() {
+        document.querySelectorAll('.specialty-option').forEach(option => {
+            option.addEventListener('mouseenter', function() {
+                this.style.backgroundColor = '#f8f9fa';
             });
+            option.addEventListener('mouseleave', function() {
+                this.style.backgroundColor = '';
+            });
+        });
+    }
+
+    function selectSpecialtyOption(id, name) {
+        const specialty = specialties.find(s => s.id === id);
+        if (specialty && currentEducationIndex !== null) {
+            educationItems[currentEducationIndex].selectedSpecialty = specialty;
+            const btn = document.getElementById(`specialtyBtn_${currentEducationIndex}`);
+            btn.querySelector('span').textContent = specialty.name;
+            btn.classList.add('selected');
+        }
+        closeSpecialtyModal();
+    }
+
+    function closeSpecialtyModal() {
+        const modal = document.getElementById('specialtyModal');
+        if (modal) {
+            modal.remove();
+        }
+        currentEducationIndex = null;
+    }
+
+    // Photo upload functions
+    async function handlePhotoUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            alert(currentLanguage === 'kk' ? 'Тек суреттер жүктей аласыз' : 'Можно загружать только изображения');
+            return;
         }
 
-        function selectSpecialtyOption(id, name) {
-            const specialty = specialties.find(s => s.id === id);
-            if (specialty && currentEducationIndex !== null) {
-                educationItems[currentEducationIndex].selectedSpecialty = specialty;
-                const btn = document.getElementById(`specialtyBtn_${currentEducationIndex}`);
-                btn.querySelector('span').textContent = specialty.name;
-                btn.classList.add('selected');
-            }
-            closeSpecialtyModal();
+        // Validate file size (max 10MB)
+        if (file.size > 10 * 1024 * 1024) {
+            alert(currentLanguage === 'kk' ? 'Файл өлшемі 10MB-тан аспауы керек' : 'Размер файла не должен превышать 10MB');
+            return;
         }
 
-        function closeSpecialtyModal() {
-            const modal = document.getElementById('specialtyModal');
-            if (modal) {
-                modal.remove();
-            }
-            currentEducationIndex = null;
-        }
-
-        // Photo upload functions
-        async function handlePhotoUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            // Validate file type
-            if (!file.type.startsWith('image/')) {
-                alert(currentLanguage === 'kk' ? 'Тек суреттер жүктей аласыз' : 'Можно загружать только изображения');
-                return;
-            }
-
-            // Validate file size (max 10MB)
-            if (file.size > 10 * 1024 * 1024) {
-                alert(currentLanguage === 'kk' ? 'Файл өлшемі 10MB-тан аспауы керек' : 'Размер файла не должен превышать 10MB');
-                return;
-            }
-
-            try {
-                // Show loading state
-                const uploadArea = document.getElementById('photoUploadArea');
-                uploadArea.innerHTML = '<div style="padding: 2rem;"><div class="spinner"></div><p>Жүктелуде...</p></div>';
-
-                // Upload photo using existing uploadPhoto method
-                const uploadResult = await apiService.uploadPhoto(file);
-                
-                if (uploadResult) {
-                    userImageFile = uploadResult;
-                    showPhotoPreview(uploadResult.url);
-                } else {
-                    throw new Error('Upload failed');
-                }
-            } catch (error) {
-                console.error('Error uploading photo:', error);
-                alert(currentLanguage === 'kk' ? 'Фото жүктеуде қате орын алды' : 'Ошибка при загрузке фото');
-                resetPhotoUploadArea();
-            }
-        }
-
-        function showPhotoPreview(imageUrl) {
-            const preview = document.getElementById('photoPreview');
+        try {
+            // Show loading state
             const uploadArea = document.getElementById('photoUploadArea');
-            const image = document.getElementById('photoImage');
-            
-            image.src = imageUrl;
-            preview.style.display = 'block';
-            uploadArea.style.display = 'none';
-        }
+            uploadArea.innerHTML = '<div style="padding: 2rem;"><div class="spinner"></div><p>Жүктелуде...</p></div>';
 
-        function removePhoto() {
-            userImageFile = null;
-            const preview = document.getElementById('photoPreview');
-            const uploadArea = document.getElementById('photoUploadArea');
-            
-            preview.style.display = 'none';
-            uploadArea.style.display = 'block';
+            // Upload photo using existing uploadPhoto method
+            const uploadResult = await apiService.uploadPhoto(file);
+
+            if (uploadResult) {
+                userImageFile = uploadResult;
+                showPhotoPreview(uploadResult.url);
+            } else {
+                throw new Error('Upload failed');
+            }
+        } catch (error) {
+            console.error('Error uploading photo:', error);
+            alert(currentLanguage === 'kk' ? 'Фото жүктеуде қате орын алды' : 'Ошибка при загрузке фото');
             resetPhotoUploadArea();
         }
+    }
 
-        function resetPhotoUploadArea() {
-            const uploadArea = document.getElementById('photoUploadArea');
-            uploadArea.innerHTML = `
+    function showPhotoPreview(imageUrl) {
+        const preview = document.getElementById('photoPreview');
+        const uploadArea = document.getElementById('photoUploadArea');
+        const image = document.getElementById('photoImage');
+
+        image.src = imageUrl;
+        preview.style.display = 'block';
+        uploadArea.style.display = 'none';
+    }
+
+    function removePhoto() {
+        userImageFile = null;
+        const preview = document.getElementById('photoPreview');
+        const uploadArea = document.getElementById('photoUploadArea');
+
+        preview.style.display = 'none';
+        uploadArea.style.display = 'block';
+        resetPhotoUploadArea();
+    }
+
+    function resetPhotoUploadArea() {
+        const uploadArea = document.getElementById('photoUploadArea');
+        uploadArea.innerHTML = `
                 <input type="file" id="userPhoto" accept="image/*" style="display: none;" onchange="handlePhotoUpload(event)">
                 <div class="upload-placeholder" onclick="document.getElementById('userPhoto').click()">
                     <svg width="48" height="48" viewBox="0 0 24 24" fill="#ccc">
@@ -1967,19 +2110,19 @@
                     <span data-kk="JPG, PNG форматы" data-ru="Формат JPG, PNG">JPG, PNG форматы</span>
                 </div>
             `;
-            
-            // Update language content
-            document.querySelectorAll('#photoUploadArea [data-kk][data-ru]').forEach(element => {
-                element.textContent = element.getAttribute('data-' + currentLanguage);
-            });
-        }
 
-        // Course management functions
-        function addCourse() {
-            const container = document.getElementById('coursesContainer');
-            const index = courseItems.length;
-            
-            const courseHTML = `
+        // Update language content
+        document.querySelectorAll('#photoUploadArea [data-kk][data-ru]').forEach(element => {
+            element.textContent = element.getAttribute('data-' + currentLanguage);
+        });
+    }
+
+    // Course management functions
+    function addCourse() {
+        const container = document.getElementById('coursesContainer');
+        const index = courseItems.length;
+
+        const courseHTML = `
                 <div class="education-item" data-index="${index}">
                     <button type="button" class="remove-btn" onclick="removeCourse(${index})">×</button>
                     <div class="form-row">
@@ -2002,93 +2145,93 @@
                     </div>
                 </div>
             `;
-            
-            container.insertAdjacentHTML('beforeend', courseHTML);
-            courseItems.push({ 
-                index,
-                file: null
-            });
-            
-            // Update language content
-            document.querySelectorAll(`[data-index="${index}"] [data-kk][data-ru]`).forEach(element => {
-                element.textContent = element.getAttribute('data-' + currentLanguage);
-            });
+
+        container.insertAdjacentHTML('beforeend', courseHTML);
+        courseItems.push({
+            index,
+            file: null
+        });
+
+        // Update language content
+        document.querySelectorAll(`[data-index="${index}"] [data-kk][data-ru]`).forEach(element => {
+            element.textContent = element.getAttribute('data-' + currentLanguage);
+        });
+    }
+
+    function removeCourse(index) {
+        const item = document.querySelector(`#coursesContainer [data-index="${index}"]`);
+        if (item) {
+            item.remove();
+            courseItems = courseItems.filter(item => item.index !== index);
+        }
+    }
+
+    function triggerCourseFileUpload(index) {
+        document.getElementById(`courseFile_${index}`).click();
+    }
+
+    async function handleCourseFileUpload(index, event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        // Validate file type
+        const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
+        if (!allowedTypes.includes(file.type)) {
+            alert(currentLanguage === 'kk' ? 'Тек PDF, JPG, PNG файлдарын жүктей аласыз' : 'Можно загружать только PDF, JPG, PNG файлы');
+            return;
         }
 
-        function removeCourse(index) {
-            const item = document.querySelector(`#coursesContainer [data-index="${index}"]`);
-            if (item) {
-                item.remove();
-                courseItems = courseItems.filter(item => item.index !== index);
-            }
+        // Validate file size (max 10MB)
+        if (file.size > 10 * 1024 * 1024) {
+            alert(currentLanguage === 'kk' ? 'Файл өлшемі 10MB-тан аспауы керек' : 'Размер файла не должен превышать 10MB');
+            return;
         }
 
-        function triggerCourseFileUpload(index) {
-            document.getElementById(`courseFile_${index}`).click();
-        }
+        try {
+            // Show loading state
+            const fileInfo = document.getElementById(`courseFileInfo_${index}`);
+            const fileUpload = document.getElementById(`courseFileUpload_${index}`);
+            fileInfo.innerHTML = '<div class="spinner" style="width: 16px; height: 16px;"></div><span>Жүктелуде...</span>';
 
-        async function handleCourseFileUpload(index, event) {
-            const file = event.target.files[0];
-            if (!file) return;
+            // Upload file using existing uploadPhoto method (works for any file)
+            const uploadResult = await apiService.uploadPhoto(file);
 
-            // Validate file type
-            const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
-            if (!allowedTypes.includes(file.type)) {
-                alert(currentLanguage === 'kk' ? 'Тек PDF, JPG, PNG файлдарын жүктей аласыз' : 'Можно загружать только PDF, JPG, PNG файлы');
-                return;
-            }
+            if (uploadResult) {
+                // Store file data
+                const courseItem = courseItems.find(item => item.index === index);
+                if (courseItem) {
+                    courseItem.file = uploadResult;
+                }
 
-            // Validate file size (max 10MB)
-            if (file.size > 10 * 1024 * 1024) {
-                alert(currentLanguage === 'kk' ? 'Файл өлшемі 10MB-тан аспауы керек' : 'Размер файла не должен превышать 10MB');
-                return;
-            }
-
-            try {
-                // Show loading state
-                const fileInfo = document.getElementById(`courseFileInfo_${index}`);
-                const fileUpload = document.getElementById(`courseFileUpload_${index}`);
-                fileInfo.innerHTML = '<div class="spinner" style="width: 16px; height: 16px;"></div><span>Жүктелуде...</span>';
-
-                // Upload file using existing uploadPhoto method (works for any file)
-                const uploadResult = await apiService.uploadPhoto(file);
-                
-                if (uploadResult) {
-                    // Store file data
-                    const courseItem = courseItems.find(item => item.index === index);
-                    if (courseItem) {
-                        courseItem.file = uploadResult;
-                    }
-                    
-                    // Update UI
-                    fileUpload.classList.add('has-file');
-                    fileInfo.className = 'file-info uploaded';
-                    fileInfo.innerHTML = `
+                // Update UI
+                fileUpload.classList.add('has-file');
+                fileInfo.className = 'file-info uploaded';
+                fileInfo.innerHTML = `
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/>
                         </svg>
                         <span>${file.name}</span>
                     `;
-                } else {
-                    throw new Error('Upload failed');
-                }
-            } catch (error) {
-                console.error('Error uploading file:', error);
-                alert(currentLanguage === 'kk' ? 'Файл жүктеуде қате орын алды' : 'Ошибка при загрузке файла');
-                
-                // Reset file info
-                const fileInfo = document.getElementById(`courseFileInfo_${index}`);
-                fileInfo.className = 'file-info';
-                fileInfo.innerHTML = `<span data-kk="Файл таңдаңыз" data-ru="Выберите файл">${currentLanguage === 'kk' ? 'Файл таңдаңыз' : 'Выберите файл'}</span>`;
+            } else {
+                throw new Error('Upload failed');
             }
-        }
+        } catch (error) {
+            console.error('Error uploading file:', error);
+            alert(currentLanguage === 'kk' ? 'Файл жүктеуде қате орын алды' : 'Ошибка при загрузке файла');
 
-        // Social Network management functions
-        function addSocialNetwork() {
-            const container = document.getElementById('socialNetworksContainer');
-            const index = socialNetworkItems.length;
-            
-            const socialNetworkHTML = `
+            // Reset file info
+            const fileInfo = document.getElementById(`courseFileInfo_${index}`);
+            fileInfo.className = 'file-info';
+            fileInfo.innerHTML = `<span data-kk="Файл таңдаңыз" data-ru="Выберите файл">${currentLanguage === 'kk' ? 'Файл таңдаңыз' : 'Выберите файл'}</span>`;
+        }
+    }
+
+    // Social Network management functions
+    function addSocialNetwork() {
+        const container = document.getElementById('socialNetworksContainer');
+        const index = socialNetworkItems.length;
+
+        const socialNetworkHTML = `
                 <div class="education-item" data-index="${index}">
                     <button type="button" class="remove-btn" onclick="removeSocialNetwork(${index})">×</button>
                     <div class="form-row">
@@ -2117,49 +2260,49 @@
                     </div>
                 </div>
             `;
-            
-            container.insertAdjacentHTML('beforeend', socialNetworkHTML);
-            socialNetworkItems.push({ index });
-            
+
+        container.insertAdjacentHTML('beforeend', socialNetworkHTML);
+        socialNetworkItems.push({ index });
+
+        // Update language content
+        document.querySelectorAll(`#socialNetworksContainer [data-index="${index}"] [data-kk][data-ru]`).forEach(element => {
+            element.textContent = element.getAttribute('data-' + currentLanguage);
+        });
+    }
+
+    function removeSocialNetwork(index) {
+        const item = document.querySelector(`#socialNetworksContainer [data-index="${index}"]`);
+        if (item) {
+            item.remove();
+            socialNetworkItems = socialNetworkItems.filter(item => item.index !== index);
+        }
+    }
+
+    // Driver License functions
+    function handleDriverLicenseChange() {
+        const hasLicense = document.getElementById('hasDriverLicense').checked;
+        const categoriesDiv = document.getElementById('driverLicenseCategories');
+
+        if (hasLicense) {
+            categoriesDiv.style.display = 'block';
             // Update language content
-            document.querySelectorAll(`#socialNetworksContainer [data-index="${index}"] [data-kk][data-ru]`).forEach(element => {
+            document.querySelectorAll('#driverLicenseCategories [data-kk][data-ru]').forEach(element => {
                 element.textContent = element.getAttribute('data-' + currentLanguage);
             });
+        } else {
+            categoriesDiv.style.display = 'none';
+            selectedDriverLicenses = [];
+            updateSelectedCategoriesDisplay();
+        }
+    }
+
+    function showDriverLicenseModal() {
+        if (vehicleCategories.length === 0) {
+            alert(currentLanguage === 'kk' ? 'Категориялар жүктелуде...' : 'Загрузка категорий...');
+            return;
         }
 
-        function removeSocialNetwork(index) {
-            const item = document.querySelector(`#socialNetworksContainer [data-index="${index}"]`);
-            if (item) {
-                item.remove();
-                socialNetworkItems = socialNetworkItems.filter(item => item.index !== index);
-            }
-        }
-
-        // Driver License functions
-        function handleDriverLicenseChange() {
-            const hasLicense = document.getElementById('hasDriverLicense').checked;
-            const categoriesDiv = document.getElementById('driverLicenseCategories');
-            
-            if (hasLicense) {
-                categoriesDiv.style.display = 'block';
-                // Update language content
-                document.querySelectorAll('#driverLicenseCategories [data-kk][data-ru]').forEach(element => {
-                    element.textContent = element.getAttribute('data-' + currentLanguage);
-                });
-            } else {
-                categoriesDiv.style.display = 'none';
-                selectedDriverLicenses = [];
-                updateSelectedCategoriesDisplay();
-            }
-        }
-
-        function showDriverLicenseModal() {
-            if (vehicleCategories.length === 0) {
-                alert(currentLanguage === 'kk' ? 'Категориялар жүктелуде...' : 'Загрузка категорий...');
-                return;
-            }
-            
-            const modalHTML = `
+        const modalHTML = `
                 <div class="modal show" id="driverLicenseModal" style="display: flex;">
                     <div class="modal-content" style="max-width: 500px; max-height: 70vh;">
                         <h3 style="margin-bottom: 1rem;" data-kk="Жүргізу категорияларын таңдаңыз" data-ru="Выберите категории вождения">Жүргізу категорияларын таңдаңыз</h3>
@@ -2176,19 +2319,19 @@
                     </div>
                 </div>
             `;
-            
-            document.body.insertAdjacentHTML('beforeend', modalHTML);
-            addDriverLicenseOptionClickEffects();
-            restoreDriverLicenseSelections();
-            
-            document.querySelectorAll('#driverLicenseModal [data-kk][data-ru]').forEach(element => {
-                element.textContent = element.getAttribute('data-' + currentLanguage);
-            });
-        }
 
-        function renderDriverLicenseOptions(categoriesList) {
-            return categoriesList.map(category => `
-                <div class="driver-license-option" style="padding: 0.75rem; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: all 0.3s; display: flex; align-items: center;" 
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        addDriverLicenseOptionClickEffects();
+        restoreDriverLicenseSelections();
+
+        document.querySelectorAll('#driverLicenseModal [data-kk][data-ru]').forEach(element => {
+            element.textContent = element.getAttribute('data-' + currentLanguage);
+        });
+    }
+
+    function renderDriverLicenseOptions(categoriesList) {
+        return categoriesList.map(category => `
+                <div class="driver-license-option" style="padding: 0.75rem; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: all 0.3s; display: flex; align-items: center;"
                      data-category="${category.category}" data-description="${category.description.replace(/"/g, '&quot;')}" data-selected="false">
                     <div style="width: 100%;">
                         <div style="font-weight: 600; color: #333;">${category.category}</div>
@@ -2196,90 +2339,90 @@
                     </div>
                 </div>
             `).join('');
-        }
+    }
 
-        function addDriverLicenseOptionClickEffects() {
-            document.querySelectorAll('.driver-license-option').forEach(option => {
-                option.addEventListener('click', function() {
-                    const isSelected = this.dataset.selected === 'true';
-                    const categoryCode = this.dataset.category;
-                    
-                    if (isSelected) {
-                        // Deselect
-                        this.dataset.selected = 'false';
-                        this.style.backgroundColor = '';
-                        this.style.color = '';
-                        selectedDriverLicenses = selectedDriverLicenses.filter(cat => cat.category !== categoryCode);
-                    } else {
-                        // Select
-                        this.dataset.selected = 'true';
-                        this.style.backgroundColor = '#e8f5e8';
-                        this.style.color = '#2d5a32';
-                        selectedDriverLicenses.push({
-                            category: categoryCode,
-                            description: this.dataset.description
-                        });
-                    }
-                });
-                
-                option.addEventListener('mouseenter', function() {
-                    if (this.dataset.selected !== 'true') {
-                        this.style.backgroundColor = '#f8f9fa';
-                    }
-                });
-                
-                option.addEventListener('mouseleave', function() {
-                    if (this.dataset.selected !== 'true') {
-                        this.style.backgroundColor = '';
-                    }
-                });
-            });
-        }
+    function addDriverLicenseOptionClickEffects() {
+        document.querySelectorAll('.driver-license-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const isSelected = this.dataset.selected === 'true';
+                const categoryCode = this.dataset.category;
 
-        function restoreDriverLicenseSelections() {
-            const selectedCategories = selectedDriverLicenses.map(cat => cat.category);
-            document.querySelectorAll('.driver-license-option').forEach(option => {
-                const categoryCode = option.dataset.category;
-                
-                if (selectedCategories.includes(categoryCode)) {
-                    option.dataset.selected = 'true';
-                    option.style.backgroundColor = '#e8f5e8';
-                    option.style.color = '#2d5a32';
+                if (isSelected) {
+                    // Deselect
+                    this.dataset.selected = 'false';
+                    this.style.backgroundColor = '';
+                    this.style.color = '';
+                    selectedDriverLicenses = selectedDriverLicenses.filter(cat => cat.category !== categoryCode);
                 } else {
-                    option.dataset.selected = 'false';
-                    option.style.backgroundColor = '';
-                    option.style.color = '';
+                    // Select
+                    this.dataset.selected = 'true';
+                    this.style.backgroundColor = '#e8f5e8';
+                    this.style.color = '#2d5a32';
+                    selectedDriverLicenses.push({
+                        category: categoryCode,
+                        description: this.dataset.description
+                    });
                 }
             });
-        }
 
-        function confirmDriverLicenseSelection() {
-            updateSelectedCategoriesDisplay();
-            closeDriverLicenseModal();
-        }
+            option.addEventListener('mouseenter', function() {
+                if (this.dataset.selected !== 'true') {
+                    this.style.backgroundColor = '#f8f9fa';
+                }
+            });
 
-        function updateSelectedCategoriesDisplay() {
-            const display = document.getElementById('selectedCategories');
-            if (selectedDriverLicenses.length > 0) {
-                const categoriesText = selectedDriverLicenses.map(cat => `${cat.category} - ${cat.description}`).join(', ');
-                display.textContent = categoriesText;
+            option.addEventListener('mouseleave', function() {
+                if (this.dataset.selected !== 'true') {
+                    this.style.backgroundColor = '';
+                }
+            });
+        });
+    }
+
+    function restoreDriverLicenseSelections() {
+        const selectedCategories = selectedDriverLicenses.map(cat => cat.category);
+        document.querySelectorAll('.driver-license-option').forEach(option => {
+            const categoryCode = option.dataset.category;
+
+            if (selectedCategories.includes(categoryCode)) {
+                option.dataset.selected = 'true';
+                option.style.backgroundColor = '#e8f5e8';
+                option.style.color = '#2d5a32';
             } else {
-                display.textContent = currentLanguage === 'kk' ? 'Категориялар таңдалмаған' : 'Категории не выбраны';
+                option.dataset.selected = 'false';
+                option.style.backgroundColor = '';
+                option.style.color = '';
             }
-        }
+        });
+    }
 
-        function closeDriverLicenseModal() {
-            const modal = document.getElementById('driverLicenseModal');
-            if (modal) {
-                modal.remove();
-            }
-        }
+    function confirmDriverLicenseSelection() {
+        updateSelectedCategoriesDisplay();
+        closeDriverLicenseModal();
+    }
 
-        function addEducation() {
-            const container = document.getElementById('educationContainer');
-            const index = educationItems.length;
-            
-            const educationHTML = `
+    function updateSelectedCategoriesDisplay() {
+        const display = document.getElementById('selectedCategories');
+        if (selectedDriverLicenses.length > 0) {
+            const categoriesText = selectedDriverLicenses.map(cat => `${cat.category} - ${cat.description}`).join(', ');
+            display.textContent = categoriesText;
+        } else {
+            display.textContent = currentLanguage === 'kk' ? 'Категориялар таңдалмаған' : 'Категории не выбраны';
+        }
+    }
+
+    function closeDriverLicenseModal() {
+        const modal = document.getElementById('driverLicenseModal');
+        if (modal) {
+            modal.remove();
+        }
+    }
+
+    function addEducation() {
+        const container = document.getElementById('educationContainer');
+        const index = educationItems.length;
+
+        const educationHTML = `
                 <div class="education-item" data-index="${index}">
                     <button type="button" class="remove-btn" onclick="removeEducation(${index})">×</button>
                     <div class="form-row">
@@ -2341,33 +2484,33 @@
                     </div>
                 </div>
             `;
-            
-            container.insertAdjacentHTML('beforeend', educationHTML);
-            educationItems.push({ 
-                index,
-                selectedUniversity: null,
-                selectedSpecialty: null
-            });
-            
-            // Update language content
-            document.querySelectorAll(`[data-index="${index}"] [data-kk][data-ru]`).forEach(element => {
-                element.textContent = element.getAttribute('data-' + currentLanguage);
-            });
-        }
 
-        function removeEducation(index) {
-            const item = document.querySelector(`[data-index="${index}"]`);
-            if (item) {
-                item.remove();
-                educationItems = educationItems.filter(item => item.index !== index);
-            }
-        }
+        container.insertAdjacentHTML('beforeend', educationHTML);
+        educationItems.push({
+            index,
+            selectedUniversity: null,
+            selectedSpecialty: null
+        });
 
-        function addWorkExperience() {
-            const container = document.getElementById('workExperienceContainer');
-            const index = workExperienceItems.length;
-            
-            const workHTML = `
+        // Update language content
+        document.querySelectorAll(`[data-index="${index}"] [data-kk][data-ru]`).forEach(element => {
+            element.textContent = element.getAttribute('data-' + currentLanguage);
+        });
+    }
+
+    function removeEducation(index) {
+        const item = document.querySelector(`[data-index="${index}"]`);
+        if (item) {
+            item.remove();
+            educationItems = educationItems.filter(item => item.index !== index);
+        }
+    }
+
+    function addWorkExperience() {
+        const container = document.getElementById('workExperienceContainer');
+        const index = workExperienceItems.length;
+
+        const workHTML = `
                 <div class="work-experience-item" data-index="${index}">
                     <button type="button" class="remove-btn" onclick="removeWorkExperience(${index})">×</button>
                     <div class="form-row">
@@ -2400,208 +2543,590 @@
                     </div>
                 </div>
             `;
-            
-            container.insertAdjacentHTML('beforeend', workHTML);
-            workExperienceItems.push({ index });
-        }
 
-        function removeWorkExperience(index) {
-            const item = document.querySelector(`.work-experience-item[data-index="${index}"]`);
-            if (item) {
-                item.remove();
-                workExperienceItems = workExperienceItems.filter(item => item.index !== index);
+        container.insertAdjacentHTML('beforeend', workHTML);
+        workExperienceItems.push({ index });
+    }
+
+    function removeWorkExperience(index) {
+        const item = document.querySelector(`.work-experience-item[data-index="${index}"]`);
+        if (item) {
+            item.remove();
+            workExperienceItems = workExperienceItems.filter(item => item.index !== index);
+        }
+    }
+
+    function validateForm() {
+        const errors = [];
+
+        if (!document.getElementById('firstName').value.trim()) errors.push('firstName');
+        if (!document.getElementById('surName').value.trim()) errors.push('surName');
+        if (!document.getElementById('email').value.trim()) errors.push('email');
+        if (!selectedData.city) errors.push('city');
+        if (selectedData.professions.length === 0) errors.push('professions');
+
+        return errors;
+    }
+
+    function showErrors(errors) {
+        errors.forEach(field => {
+            const errorElement = document.getElementById(field + 'Error');
+            const inputElement = document.getElementById(field) || document.getElementById(field + 'Btn');
+
+            if (errorElement) {
+                errorElement.style.display = 'block';
+                errorElement.textContent = currentLanguage === 'kk' ? 'Бұл өрісті толтыру қажет' : 'Это поле обязательно';
             }
-        }
 
-        function validateForm() {
-            const errors = [];
-            
-            if (!document.getElementById('firstName').value.trim()) errors.push('firstName');
-            if (!document.getElementById('surName').value.trim()) errors.push('surName');
-            if (!document.getElementById('email').value.trim()) errors.push('email');
-            if (!selectedData.city) errors.push('city');
-            if (selectedData.professions.length === 0) errors.push('professions');
-            
-            return errors;
-        }
+            if (inputElement) {
+                inputElement.classList.add('error');
+            }
+        });
+    }
 
-        function showErrors(errors) {
-            errors.forEach(field => {
-                const errorElement = document.getElementById(field + 'Error');
-                const inputElement = document.getElementById(field) || document.getElementById(field + 'Btn');
-                
-                if (errorElement) {
-                    errorElement.style.display = 'block';
-                    errorElement.textContent = currentLanguage === 'kk' ? 'Бұл өрісті толтыру қажет' : 'Это поле обязательно';
-                }
-                
-                if (inputElement) {
-                    inputElement.classList.add('error');
-                }
-            });
-        }
+    function collectFormData() {
+        // Collect education data
+        const education = educationItems.map(item => {
+            const index = item.index;
+            const educationTypeSelect = document.getElementById(`educationType_${index}`);
+            const educationTypeCode = educationTypeSelect?.value || '';
+            const educationTypeName = educationTypeSelect?.selectedOptions[0]?.text || '';
 
-        function collectFormData() {
-            // Collect education data
-            const education = educationItems.map(item => {
-                const index = item.index;
-                const educationTypeSelect = document.getElementById(`educationType_${index}`);
-                const educationTypeCode = educationTypeSelect?.value || '';
-                const educationTypeName = educationTypeSelect?.selectedOptions[0]?.text || '';
-                
-                const customUniversity = document.getElementById(`customUniversity_${index}`)?.checked || false;
-                const customSpecialty = document.getElementById(`customSpecialty_${index}`)?.checked || false;
-                
-                return {
-                    educationType: educationTypeCode ? {
-                        code: educationTypeCode,
-                        name: educationTypeName
-                    } : null,
-                    
-                    educationalInstitutionDictionary: !customUniversity && item.selectedUniversity ? {
-                        id: item.selectedUniversity.id,
-                        name: item.selectedUniversity.name
-                    } : null,
-                    
-                    educationalInstitutionOther: customUniversity ? 
-                        document.getElementById(`universityOther_${index}`)?.value || '' : null,
-                    
-                    specialityDictionary: !customSpecialty && item.selectedSpecialty ? {
-                        id: item.selectedSpecialty.id,
-                        name: item.selectedSpecialty.name
-                    } : null,
-                    
-                    specialityOther: customSpecialty ? 
-                        document.getElementById(`specialtyOther_${index}`)?.value || '' : null,
-                    
-                    graduationYear: document.getElementById(`graduationYear_${index}`)?.value || ''
-                };
-            });
-
-            // Collect work experience data
-            const workExperience = workExperienceItems.map(item => {
-                const index = item.index;
-                return {
-                    workPlace: document.getElementById(`workPlace_${index}`)?.value || '',
-                    jobTitle: document.getElementById(`jobTitle_${index}`)?.value || '',
-                    startDate: document.getElementById(`startDate_${index}`)?.value || '',
-                    endDate: document.getElementById(`endDate_${index}`)?.value || '',
-                    tillPresent: document.getElementById(`tillPresent_${index}`)?.checked || false,
-                    responsibilities: document.getElementById(`responsibilities_${index}`)?.value || ''
-                };
-            });
-
-            // Collect additional courses data
-            const additionalCourses = courseItems.map(item => {
-                const index = item.index;
-                const courseName = document.getElementById(`courseName_${index}`)?.value || '';
-                
-                return {
-                    name: courseName,
-                    file: item.file || null
-                };
-            }).filter(course => course.name.trim() !== ''); // Only include courses with names
-
-            // Collect social networks data
-            const socialNetworks = socialNetworkItems.map(item => {
-                const index = item.index;
-                const socialNetworkType = document.getElementById(`socialNetworkType_${index}`)?.value || '';
-                const name = document.getElementById(`socialNetworkName_${index}`)?.value || '';
-                const url = document.getElementById(`socialNetworkUrl_${index}`)?.value || '';
-                
-                return {
-                    socialNetworkType: socialNetworkType,
-                    name: name,
-                    url: url
-                };
-            }).filter(social => social.socialNetworkType && (social.name.trim() !== '' || social.url.trim() !== '')); // Only include social networks with type and either name or URL
+            const customUniversity = document.getElementById(`customUniversity_${index}`)?.checked || false;
+            const customSpecialty = document.getElementById(`customSpecialty_${index}`)?.checked || false;
 
             return {
-                firstName: document.getElementById('firstName').value.trim(),
-                surName: document.getElementById('surName').value.trim(),
-                middleName: document.getElementById('middleName').value.trim(),
-                phoneNumber: document.getElementById('phoneNumber').value.trim(),
-                email: document.getElementById('email').value.trim(),
-                city: selectedData.city,
-                expectedSalaryStart: parseFloat(document.getElementById('expectedSalaryStart').value) || 0,
-                expectedSalaryEnd: parseFloat(document.getElementById('expectedSalaryEnd').value) || 0,
-                workSchedule: selectedData.workSchedule,
-                relocationReadiness: document.getElementById('relocationReadiness').checked,
-                workPermit: document.getElementById('workPermit').checked,
-                professions: selectedData.professions,
-                skills: selectedData.skills,
-                education: education,
-                workExperience: workExperience,
-                additionalCourses: additionalCourses,
-                socialNetworks: socialNetworks,
-                userImage: userImageFile,
-                additionalInfo: document.getElementById('additionalInfo').value.trim(),
-                hasDriverLicense: document.getElementById('hasDriverLicense').checked,
-                driverLicenses: selectedDriverLicenses,
-                bargain: document.getElementById('bargain').checked,
-                advance: document.getElementById('advance').checked,
-                nationality: { code: "KAZAKHSTAN", name: "Қазақстан" },
-                tripReadiness: document.getElementById('tripReadiness').value || "READY",
-                busynesses: selectedData.busyness.length > 0 ? selectedData.busyness : ["FULL"]
+                educationType: educationTypeCode ? {
+                    code: educationTypeCode,
+                    name: educationTypeName
+                } : null,
+
+                educationalInstitutionDictionary: !customUniversity && item.selectedUniversity ? {
+                    id: item.selectedUniversity.id,
+                    name: item.selectedUniversity.name
+                } : null,
+
+                educationalInstitutionOther: customUniversity ?
+                    document.getElementById(`universityOther_${index}`)?.value || '' : null,
+
+                specialityDictionary: !customSpecialty && item.selectedSpecialty ? {
+                    id: item.selectedSpecialty.id,
+                    name: item.selectedSpecialty.name
+                } : null,
+
+                specialityOther: customSpecialty ?
+                    document.getElementById(`specialtyOther_${index}`)?.value || '' : null,
+
+                graduationYear: document.getElementById(`graduationYear_${index}`)?.value || ''
             };
+        });
+
+        // Collect work experience data
+        const workExperience = workExperienceItems.map(item => {
+            const index = item.index;
+            return {
+                workPlace: document.getElementById(`workPlace_${index}`)?.value || '',
+                jobTitle: document.getElementById(`jobTitle_${index}`)?.value || '',
+                startDate: document.getElementById(`startDate_${index}`)?.value || '',
+                endDate: document.getElementById(`endDate_${index}`)?.value || '',
+                tillPresent: document.getElementById(`tillPresent_${index}`)?.checked || false,
+                responsibilities: document.getElementById(`responsibilities_${index}`)?.value || ''
+            };
+        });
+
+        // Collect additional courses data
+        const additionalCourses = courseItems.map(item => {
+            const index = item.index;
+            const courseName = document.getElementById(`courseName_${index}`)?.value || '';
+
+            return {
+                name: courseName,
+                file: item.file || null
+            };
+        }).filter(course => course.name.trim() !== ''); // Only include courses with names
+
+        // Collect social networks data
+        const socialNetworks = socialNetworkItems.map(item => {
+            const index = item.index;
+            const socialNetworkType = document.getElementById(`socialNetworkType_${index}`)?.value || '';
+            const name = document.getElementById(`socialNetworkName_${index}`)?.value || '';
+            const url = document.getElementById(`socialNetworkUrl_${index}`)?.value || '';
+
+            return {
+                socialNetworkType: socialNetworkType,
+                name: name,
+                url: url
+            };
+        }).filter(social => social.socialNetworkType && (social.name.trim() !== '' || social.url.trim() !== '')); // Only include social networks with type and either name or URL
+
+        return {
+            firstName: document.getElementById('firstName').value.trim(),
+            surName: document.getElementById('surName').value.trim(),
+            middleName: document.getElementById('middleName').value.trim(),
+            phoneNumber: document.getElementById('phoneNumber').value.trim(),
+            email: document.getElementById('email').value.trim(),
+            city: selectedData.city,
+            expectedSalaryStart: parseFloat(document.getElementById('expectedSalaryStart').value) || 0,
+            expectedSalaryEnd: parseFloat(document.getElementById('expectedSalaryEnd').value) || 0,
+            workSchedule: selectedData.workSchedule,
+            relocationReadiness: document.getElementById('relocationReadiness').checked,
+            workPermit: document.getElementById('workPermit').checked,
+            professions: selectedData.professions,
+            skills: selectedData.skills,
+            education: education,
+            workExperience: workExperience,
+            additionalCourses: additionalCourses,
+            socialNetworks: socialNetworks,
+            userImage: userImageFile,
+            additionalInfo: document.getElementById('additionalInfo').value.trim(),
+            hasDriverLicense: document.getElementById('hasDriverLicense').checked,
+            driverLicenses: selectedDriverLicenses,
+            bargain: document.getElementById('bargain').checked,
+            advance: document.getElementById('advance').checked,
+            nationality: { code: "KAZAKHSTAN", name: "Қазақстан" },
+            tripReadiness: document.getElementById('tripReadiness').value || "READY",
+            busynesses: selectedData.busyness.length > 0 ? selectedData.busyness : ["FULL"]
+        };
+    }
+
+    async function submitCV() {
+        const errors = validateForm();
+        if (errors.length > 0) {
+            showErrors(errors);
+            return;
         }
 
-        async function submitCV() {
-            const errors = validateForm();
-            if (errors.length > 0) {
-                showErrors(errors);
-                return;
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<div class="spinner"></div>';
+
+        try {
+            const cvData = collectFormData();
+
+            // Create CV
+            const cvId = await apiService.createCV(cvData);
+            console.log('CV created with ID:', cvId);
+
+            // Publish CV
+            await apiService.publishCV(cvId['uuid']);
+            console.log('CV published successfully');
+
+            showSuccessModal();
+
+        } catch (error) {
+            console.error('Error creating CV:', error);
+            alert(currentLanguage === 'kk' ? 'Қате орын алды. Қайталап көріңіз.' : 'Произошла ошибка. Попробуйте снова.');
+        } finally {
+            // Reset submit button
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<span data-kk="Резюме жасау" data-ru="Создать резюме">Резюме жасау</span>';
+        }
+    }
+
+    function showSuccessModal() {
+        document.getElementById('successModal').classList.add('show');
+    }
+
+    function createAnother() {
+        document.getElementById('successModal').classList.remove('show');
+        window.location.reload();
+    }
+
+    function goToMain() {
+        window.location.href = 'cv.html';
+    }
+
+    function goBack() {
+        window.location.href = 'cv.html';
+    }
+
+    function logout() {
+        localStorage.removeItem('stroyka_cv_auth');
+        window.location.href = 'cv.html';
+    }
+
+    // === AI RESUME READER FUNCTIONS ===
+
+    function triggerAIFileUpload() {
+        document.getElementById('aiResumeFile').click();
+    }
+
+    async function handleAIResumeUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        // Validate file type
+        const allowedTypes = [
+            'application/pdf',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'image/jpeg',
+            'image/jpg',
+            'image/png'
+        ];
+
+        if (!allowedTypes.includes(file.type)) {
+            alert(currentLanguage === 'kk' ?
+                'Тек PDF, DOC, DOCX, JPG, PNG файлдарын жүктей аласыз' :
+                'Можно загружать только PDF, DOC, DOCX, JPG, PNG файлы');
+            return;
+        }
+
+        // Validate file size (max 10MB)
+        if (file.size > 10 * 1024 * 1024) {
+            alert(currentLanguage === 'kk' ?
+                'Файл өлшемі 10MB-тан аспауы керек' :
+                'Размер файла не должен превышать 10MB');
+            return;
+        }
+
+        try {
+            // Show processing state
+            showAIProcessing();
+
+            // Upload and process with AI
+            const result = await apiService.uploadAndProcessResume(file);
+
+            if (result && result.aiResult && result.aiResult.requestBody) {
+                // Populate form with AI data
+                await populateFormWithAI(result.aiResult.requestBody);
+
+                // Show success message
+                alert(currentLanguage === 'kk' ?
+                    'Резюме сәтті талданды және форма толтырылды!' :
+                    'Резюме успешно проанализировано и форма заполнена!');
+            } else {
+                throw new Error('Invalid AI response');
             }
 
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<div class="spinner"></div>';
+        } catch (error) {
+            console.error('Error processing AI resume:', error);
+            alert(currentLanguage === 'kk' ?
+                'Резюмені талдауда қате орын алды. Қайталап көріңіз.' :
+                'Ошибка при анализе резюме. Попробуйте снова.');
+        } finally {
+            hideAIProcessing();
+            // Reset file input
+            event.target.value = '';
+        }
+    }
 
-            try {
-                const cvData = collectFormData();
+    function showAIProcessing() {
+        const uploadArea = document.getElementById('aiUploadArea');
+        const processing = document.getElementById('aiProcessing');
 
-                // Create CV
-                const cvId = await apiService.createCV(cvData);
-                console.log('CV created with ID:', cvId);
-                
-                // Publish CV
-                await apiService.publishCV(cvId['uuid']);
-                console.log('CV published successfully');
+        uploadArea.style.display = 'none';
+        processing.classList.add('show');
+    }
 
-                showSuccessModal();
-                
-            } catch (error) {
-                console.error('Error creating CV:', error);
-                alert(currentLanguage === 'kk' ? 'Қате орын алды. Қайталап көріңіз.' : 'Произошла ошибка. Попробуйте снова.');
-            } finally {
-                // Reset submit button
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<span data-kk="Резюме жасау" data-ru="Создать резюме">Резюме жасау</span>';
+    function hideAIProcessing() {
+        const uploadArea = document.getElementById('aiUploadArea');
+        const processing = document.getElementById('aiProcessing');
+
+        uploadArea.style.display = 'block';
+        processing.classList.remove('show');
+    }
+
+    async function populateFormWithAI(aiData) {
+        // Personal Information
+        if (aiData.firstName) {
+            document.getElementById('firstName').value = aiData.firstName;
+            markAsAIPopulated('firstName');
+        }
+
+        if (aiData.surName) {
+            document.getElementById('surName').value = aiData.surName;
+            markAsAIPopulated('surName');
+        }
+
+        if (aiData.middleName) {
+            document.getElementById('middleName').value = aiData.middleName;
+            markAsAIPopulated('middleName');
+        }
+
+        if (aiData.email) {
+            document.getElementById('email').value = aiData.email;
+            markAsAIPopulated('email');
+        }
+
+        // City
+        if (aiData.city) {
+            selectedData.city = aiData.city;
+            const cityBtn = document.getElementById('cityBtn');
+            cityBtn.querySelector('span').textContent = aiData.city.name;
+            cityBtn.classList.add('selected', 'ai-populated');
+            markLabelAsAIPopulated(cityBtn.closest('.form-group').querySelector('label'));
+        }
+
+        // Professions
+        if (aiData.professions && aiData.professions.length > 0) {
+            selectedData.professions = aiData.professions;
+            const professionsBtn = document.getElementById('professionsBtn');
+            const displayText = aiData.professions.map(p => p.name).join(', ');
+            professionsBtn.querySelector('span').textContent = displayText;
+            professionsBtn.classList.add('selected', 'ai-populated');
+            markLabelAsAIPopulated(professionsBtn.closest('.form-group').querySelector('label'));
+        }
+
+        // Skills
+        if (aiData.skills && aiData.skills.length > 0) {
+            selectedData.skills = aiData.skills;
+            const skillsBtn = document.getElementById('skillsBtn');
+            const displayText = aiData.skills.map(s => s.name).join(', ');
+            skillsBtn.querySelector('span').textContent = displayText;
+            skillsBtn.classList.add('selected', 'ai-populated');
+            markLabelAsAIPopulated(skillsBtn.closest('.form-group').querySelector('label'));
+        }
+
+        // Work Schedule
+        if (aiData.workSchedule && aiData.workSchedule.length > 0) {
+            selectedData.workSchedule = aiData.workSchedule;
+            const workScheduleBtn = document.getElementById('workScheduleBtn');
+            // Get display names for work schedule codes
+            const displayText = aiData.workSchedule.map(code => {
+                const option = workScheduleOptions.find(opt => opt.code === code);
+                return option ? option.name : code;
+            }).join(', ');
+            workScheduleBtn.querySelector('span').textContent = displayText;
+            workScheduleBtn.classList.add('selected', 'ai-populated');
+            markLabelAsAIPopulated(workScheduleBtn.closest('.form-group').querySelector('label'));
+        }
+
+        // Salary
+        if (aiData.expectedSalaryStart) {
+            document.getElementById('expectedSalaryStart').value = aiData.expectedSalaryStart;
+            markAsAIPopulated('expectedSalaryStart');
+        }
+
+        if (aiData.expectedSalaryEnd) {
+            document.getElementById('expectedSalaryEnd').value = aiData.expectedSalaryEnd;
+            markAsAIPopulated('expectedSalaryEnd');
+        }
+
+        // Trip readiness
+        if (aiData.tripReadiness) {
+            document.getElementById('tripReadiness').value = aiData.tripReadiness;
+            markAsAIPopulated('tripReadiness');
+        }
+
+        // Busyness
+        if (aiData.busynesses && aiData.busynesses.length > 0) {
+            selectedData.busyness = aiData.busynesses;
+            const busynessBtn = document.getElementById('busynessBtn');
+            // Get display names for busyness codes
+            const busynessOptions = [
+                { code: "FULL", name: currentLanguage === 'kk' ? "Толық" : "Полная" },
+                { code: "PARTIAL", name: currentLanguage === 'kk' ? "Ішінара" : "Частичная" },
+                { code: "PROJECT", name: currentLanguage === 'kk' ? "Жоба" : "Проектная" },
+                { code: "INTERNSHIP", name: currentLanguage === 'kk' ? "Тәжірибе" : "Стажировка" },
+                { code: "REMOTE", name: currentLanguage === 'kk' ? "Қашықтан" : "Удаленная" }
+            ];
+            const displayText = aiData.busynesses.map(code => {
+                const option = busynessOptions.find(opt => opt.code === code);
+                return option ? option.name : code;
+            }).join(', ');
+            busynessBtn.querySelector('span').textContent = displayText;
+            busynessBtn.classList.add('selected', 'ai-populated');
+            markLabelAsAIPopulated(busynessBtn.closest('.form-group').querySelector('label'));
+        }
+
+        // Checkboxes
+        if (aiData.relocationReadiness !== undefined) {
+            document.getElementById('relocationReadiness').checked = aiData.relocationReadiness;
+            markAsAIPopulated('relocationReadiness');
+        }
+
+        if (aiData.workPermit !== undefined) {
+            document.getElementById('workPermit').checked = aiData.workPermit;
+            markAsAIPopulated('workPermit');
+        }
+
+        if (aiData.bargain !== undefined) {
+            document.getElementById('bargain').checked = aiData.bargain;
+            markAsAIPopulated('bargain');
+        }
+
+        if (aiData.advance !== undefined) {
+            document.getElementById('advance').checked = aiData.advance;
+            markAsAIPopulated('advance');
+        }
+
+        // Driver License
+        if (aiData.hasDriverLicense !== undefined) {
+            document.getElementById('hasDriverLicense').checked = aiData.hasDriverLicense;
+            markAsAIPopulated('hasDriverLicense');
+            handleDriverLicenseChange();
+
+            if (aiData.driverLicenses && aiData.driverLicenses.length > 0) {
+                selectedDriverLicenses = aiData.driverLicenses;
+                updateSelectedCategoriesDisplay();
             }
         }
 
-        function showSuccessModal() {
-            document.getElementById('successModal').classList.add('show');
+        // Additional Info
+        if (aiData.additionalInfo) {
+            document.getElementById('additionalInfo').value = aiData.additionalInfo;
+            markAsAIPopulated('additionalInfo');
         }
 
-        function createAnother() {
-            document.getElementById('successModal').classList.remove('show');
-            window.location.reload();
+        // Education
+        if (aiData.education && aiData.education.length > 0) {
+            await populateEducationFromAI(aiData.education);
         }
 
-        function goToMain() {
-            window.location.href = 'cv.html';
+        // Work Experience
+        if (aiData.workExperience && aiData.workExperience.length > 0) {
+            await populateWorkExperienceFromAI(aiData.workExperience);
         }
 
-        function goBack() {
-            window.location.href = 'cv.html';
+        // Additional Courses
+        if (aiData.additionalCourses && aiData.additionalCourses.length > 0) {
+            await populateCoursesFromAI(aiData.additionalCourses);
         }
 
-        function logout() {
-            localStorage.removeItem('stroyka_cv_auth');
-            window.location.href = 'cv.html';
+        // Social Networks
+        if (aiData.socialNetworks && aiData.socialNetworks.length > 0) {
+            await populateSocialNetworksFromAI(aiData.socialNetworks);
         }
-    </script>
-    <script src="api.js"></script>
+    }
+
+    async function populateEducationFromAI(educationData) {
+        for (const edu of educationData) {
+            addEducation();
+            const index = educationItems.length - 1;
+
+            if (edu.educationType) {
+                document.getElementById(`educationType_${index}`).value = edu.educationType.code;
+                markAsAIPopulated(`educationType_${index}`);
+            }
+
+            if (edu.educationalInstitutionDictionary) {
+                educationItems[index].selectedUniversity = edu.educationalInstitutionDictionary;
+                const btn = document.getElementById(`universityBtn_${index}`);
+                btn.querySelector('span').textContent = edu.educationalInstitutionDictionary.name;
+                btn.classList.add('selected', 'ai-populated');
+                markLabelAsAIPopulated(btn.closest('.form-group').querySelector('label'));
+            } else if (edu.educationalInstitutionOther) {
+                document.getElementById(`customUniversity_${index}`).checked = true;
+                toggleCustomUniversity(index);
+                document.getElementById(`universityOther_${index}`).value = edu.educationalInstitutionOther;
+                markAsAIPopulated(`universityOther_${index}`);
+            }
+
+            if (edu.specialityDictionary) {
+                educationItems[index].selectedSpecialty = edu.specialityDictionary;
+                const btn = document.getElementById(`specialtyBtn_${index}`);
+                btn.querySelector('span').textContent = edu.specialityDictionary.name;
+                btn.classList.add('selected', 'ai-populated');
+                markLabelAsAIPopulated(btn.closest('.form-group').querySelector('label'));
+            } else if (edu.specialityOther) {
+                document.getElementById(`customSpecialty_${index}`).checked = true;
+                toggleCustomSpecialty(index);
+                document.getElementById(`specialtyOther_${index}`).value = edu.specialityOther;
+                markAsAIPopulated(`specialtyOther_${index}`);
+            }
+
+            if (edu.graduationYear) {
+                document.getElementById(`graduationYear_${index}`).value = edu.graduationYear;
+                markAsAIPopulated(`graduationYear_${index}`);
+            }
+        }
+    }
+
+    async function populateWorkExperienceFromAI(workData) {
+        for (const work of workData) {
+            addWorkExperience();
+            const index = workExperienceItems.length - 1;
+
+            if (work.workPlace) {
+                document.getElementById(`workPlace_${index}`).value = work.workPlace;
+                markAsAIPopulated(`workPlace_${index}`);
+            }
+
+            if (work.jobTitle) {
+                document.getElementById(`jobTitle_${index}`).value = work.jobTitle;
+                markAsAIPopulated(`jobTitle_${index}`);
+            }
+
+            if (work.startDate) {
+                document.getElementById(`startDate_${index}`).value = work.startDate;
+                markAsAIPopulated(`startDate_${index}`);
+            }
+
+            if (work.endDate) {
+                document.getElementById(`endDate_${index}`).value = work.endDate;
+                markAsAIPopulated(`endDate_${index}`);
+            }
+
+            if (work.tillPresent !== undefined) {
+                document.getElementById(`tillPresent_${index}`).checked = work.tillPresent;
+                markAsAIPopulated(`tillPresent_${index}`);
+            }
+
+            if (work.responsibilities) {
+                document.getElementById(`responsibilities_${index}`).value = work.responsibilities;
+                markAsAIPopulated(`responsibilities_${index}`);
+            }
+        }
+    }
+
+    async function populateCoursesFromAI(coursesData) {
+        for (const course of coursesData) {
+            if (course.name) {
+                addCourse();
+                const index = courseItems.length - 1;
+
+                document.getElementById(`courseName_${index}`).value = course.name;
+                markAsAIPopulated(`courseName_${index}`);
+            }
+        }
+    }
+
+    async function populateSocialNetworksFromAI(socialData) {
+        for (const social of socialData) {
+            addSocialNetwork();
+            const index = socialNetworkItems.length - 1;
+
+            if (social.socialNetworkType) {
+                document.getElementById(`socialNetworkType_${index}`).value = social.socialNetworkType;
+                markAsAIPopulated(`socialNetworkType_${index}`);
+            }
+
+            if (social.name) {
+                document.getElementById(`socialNetworkName_${index}`).value = social.name;
+                markAsAIPopulated(`socialNetworkName_${index}`);
+            }
+
+            if (social.url) {
+                document.getElementById(`socialNetworkUrl_${index}`).value = social.url;
+                markAsAIPopulated(`socialNetworkUrl_${index}`);
+            }
+        }
+    }
+
+    function markAsAIPopulated(elementId) {
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.classList.add('ai-populated');
+
+            // Mark label as AI populated too
+            const formGroup = element.closest('.form-group');
+            if (formGroup) {
+                const label = formGroup.querySelector('label');
+                if (label) {
+                    markLabelAsAIPopulated(label);
+                }
+            }
+        }
+    }
+
+    function markLabelAsAIPopulated(label) {
+        if (label) {
+            label.classList.add('ai-populated-label');
+        }
+    }
+</script>
+<script src="api.js"></script>
 </body>
 </html>
+

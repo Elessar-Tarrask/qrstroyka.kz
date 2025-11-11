@@ -51,25 +51,25 @@ class CVApiService {
 
             // Handle different response types
             const contentType = response.headers.get('content-type');
-            
+
             // Clone the response so we can read it multiple times if needed
             const responseClone = response.clone();
-            
+
             // Try to parse as JSON first
             try {
                 const data = await response.json();
                 return data;
             } catch (jsonError) {
-                
+
                 // Use the cloned response for text reading
                 try {
                     const text = await responseClone.text();
-                    
+
                     // If it looks like a password/token (alphanumeric with special chars), return as is
                     if (text && text.length > 0 && /^[a-zA-Z0-9@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+$/.test(text)) {
                         return text;
                     }
-                    
+
                     // Try to parse as JSON again (sometimes content-type is wrong)
                     try {
                         const parsedData = JSON.parse(text);
@@ -89,7 +89,7 @@ class CVApiService {
     }
 
     // === AUTHENTICATION API ===
-    
+
     /**
      * Register user
      */
@@ -138,7 +138,7 @@ class CVApiService {
      */
     async getAuthToken(phone, password) {
         const url = `${CMR_API_BASE_URL}/oauth2/token`;
-        
+
         const formData = new URLSearchParams();
         formData.append('grant_type', 'password');
         formData.append('username', phone);
@@ -323,10 +323,10 @@ class CVApiService {
     /**
      * Upload photo
      */
-          async uploadPhoto(photoFile) {
-          try {
-              const formData = new FormData();
-              formData.append('file', photoFile);
+    async uploadPhoto(photoFile) {
+        try {
+            const formData = new FormData();
+            formData.append('file', photoFile);
             const response = await fetch(`${CMR_API_BASE_URL}/rest/files`, {
                 method: 'POST',
                 headers: {
@@ -347,6 +347,56 @@ class CVApiService {
             throw error;
         }
         return null;
+    }
+
+    // === AI RESUME PROCESSING API ===
+
+    /**
+     * Process document with AI
+     */
+    async processDocumentWithAI(fileRef) {
+        const AI_API_URL = 'http://157.230.103.104:4242/api/process-document';
+        const AI_USERNAME = 'mister';
+        const AI_PASSWORD = '12345678';
+
+        // Create basic auth header
+        const basicAuth = btoa(`${AI_USERNAME}:${AI_PASSWORD}`);
+
+        return await this.makeRequest(AI_API_URL, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Basic ${basicAuth}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                fileRef: fileRef
+            })
+        });
+    }
+
+    /**
+     * Upload and process resume with AI
+     */
+    async uploadAndProcessResume(file) {
+        try {
+            // First upload the file
+            const uploadResult = await this.uploadPhoto(file);
+
+            if (!uploadResult || !uploadResult.ref) {
+                throw new Error('File upload failed');
+            }
+
+            // Then process with AI
+            const aiResult = await this.processDocumentWithAI(uploadResult.ref);
+
+            return {
+                uploadResult,
+                aiResult
+            };
+        } catch (error) {
+            console.error('Error processing resume with AI:', error);
+            throw error;
+        }
     }
 
     // === UTILITY METHODS ===
@@ -371,11 +421,11 @@ class CVApiService {
      */
     filterBySearch(items, searchText, searchField = 'name') {
         if (!searchText) return items;
-        
+
         const search = searchText.toLowerCase();
         return items.filter(item => {
-            const value = typeof item[searchField] === 'object' 
-                ? Object.values(item[searchField]).join(' ') 
+            const value = typeof item[searchField] === 'object'
+                ? Object.values(item[searchField]).join(' ')
                 : item[searchField];
             return value.toLowerCase().includes(search);
         });
@@ -414,3 +464,4 @@ window.apiService = new CVApiService();
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = CVApiService;
 }
+
