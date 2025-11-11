@@ -356,11 +356,11 @@ class CVApiService {
      */
     async processDocumentWithAI(fileRef) {
         const AI_API_URL = 'http://157.230.103.104:4242/api/process-document';
-        const AI_USERNAME = 'mister';
-        const AI_PASSWORD = '12345678';
+        const token = 'bWlzdGVyOjEyMzQ1Njc4';
+
 
         // Create basic auth header
-        const basicAuth = btoa(`${AI_USERNAME}:${AI_PASSWORD}`);
+        const basicAuth = token;
 
         return await this.makeRequest(AI_API_URL, {
             method: 'POST',
