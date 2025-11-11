@@ -242,6 +242,126 @@
             transform: none;
         }
 
+        .ai-reader-section {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border: 2px solid #e8f5ff;
+        }
+
+        .ai-reader-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ai-reader-icon {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+
+        .ai-upload-area {
+            border: 2px dashed #667eea;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 100%);
+        }
+
+        .ai-upload-area:hover {
+            border-color: #5a67d8;
+            background: linear-gradient(135deg, #f0f7ff 0%, #e8f4ff 100%);
+            transform: translateY(-2px);
+        }
+
+        .ai-upload-area.processing {
+            border-color: #ffa500;
+            background: linear-gradient(135deg, #fff8e1 0%, #fff3cd 100%);
+        }
+
+        .ai-upload-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 1rem;
+            background: #667eea;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .ai-upload-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .ai-upload-subtext {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .ai-processing {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            padding: 2rem;
+        }
+
+        .ai-processing.show {
+            display: flex;
+        }
+
+        .ai-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .ai-processing-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #667eea;
+        }
+
+        .ai-populated {
+            background-color: #fff9c4 !important;
+            border-color: #fbbf24 !important;
+            color: #92400e !important; /* Dark brown text for good contrast on yellow */
+        }
+
+        .btn-selector.ai-populated {
+            background-color: #fff9c4 !important;
+            border-color: #fbbf24 !important;
+            color: #92400e !important; /* Override white text from selected state */
+        }
+
+        .ai-populated-label::after {
+            content: " ✨";
+            color: #f59e0b;
+        }
+
         .spinner {
             width: 20px;
             height: 20px;
@@ -468,6 +588,29 @@
     </div>
 
     <div class="container">
+        <!-- AI Resume Reader Section -->
+        <div class="ai-reader-section">
+            <h2 class="ai-reader-title">
+                <div class="ai-reader-icon">AI</div>
+                <span data-kk="AI резюме оқушысы" data-ru="AI читатель резюме">AI резюме оқушысы</span>
+            </h2>
+            
+            <div class="ai-upload-area" id="aiUploadArea" onclick="triggerAIFileUpload()">
+                <input type="file" id="aiResumeFile" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" style="display: none;" onchange="handleAIResumeUpload(event)">
+                <div class="ai-upload-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                    </svg>
+                </div>
+                <div class="ai-upload-text" data-kk="Резюме файлын жүктеңіз" data-ru="Загрузите файл резюме">Резюме файлын жүктеңіз</div>
+                <div class="ai-upload-subtext" data-kk="PDF, DOC, DOCX, JPG, PNG форматтары қолдау көрсетіледі" data-ru="Поддерживаются форматы PDF, DOC, DOCX, JPG, PNG">PDF, DOC, DOCX, JPG, PNG форматтары қолдау көрсетіледі</div>
+            </div>
+            
+            <div class="ai-processing" id="aiProcessing">
+                <div class="ai-spinner"></div>
+                <div class="ai-processing-text" data-kk="AI резюмені талдап жатыр..." data-ru="AI анализирует резюме...">AI резюмені талдап жатыр...</div>
+            </div>
+        </div>
         <!-- Personal Information Section -->
         <div class="section">
             <h2 class="section-title" data-kk="Жеке ақпарат" data-ru="Личная информация">Жеке ақпарат</h2>
@@ -2600,6 +2743,387 @@
         function logout() {
             localStorage.removeItem('stroyka_cv_auth');
             window.location.href = 'cv.html';
+        }
+
+        // === AI RESUME READER FUNCTIONS ===
+
+        function triggerAIFileUpload() {
+            document.getElementById('aiResumeFile').click();
+        }
+
+        async function handleAIResumeUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Validate file type
+            const allowedTypes = [
+                'application/pdf',
+                'application/msword',
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'image/jpeg',
+                'image/jpg', 
+                'image/png'
+            ];
+            
+            if (!allowedTypes.includes(file.type)) {
+                alert(currentLanguage === 'kk' ? 
+                    'Тек PDF, DOC, DOCX, JPG, PNG файлдарын жүктей аласыз' : 
+                    'Можно загружать только PDF, DOC, DOCX, JPG, PNG файлы');
+                return;
+            }
+
+            // Validate file size (max 10MB)
+            if (file.size > 10 * 1024 * 1024) {
+                alert(currentLanguage === 'kk' ? 
+                    'Файл өлшемі 10MB-тан аспауы керек' : 
+                    'Размер файла не должен превышать 10MB');
+                return;
+            }
+
+            try {
+                // Show processing state
+                showAIProcessing();
+
+                // Upload and process with AI
+                const result = await apiService.uploadAndProcessResume(file);
+                
+                if (result && result.aiResult && result.aiResult.requestBody) {
+                    // Populate form with AI data
+                    await populateFormWithAI(result.aiResult.requestBody);
+                    
+                    // Show success message
+                    alert(currentLanguage === 'kk' ? 
+                        'Резюме сәтті талданды және форма толтырылды!' : 
+                        'Резюме успешно проанализировано и форма заполнена!');
+                } else {
+                    throw new Error('Invalid AI response');
+                }
+                
+            } catch (error) {
+                console.error('Error processing AI resume:', error);
+                alert(currentLanguage === 'kk' ? 
+                    'Резюмені талдауда қате орын алды. Қайталап көріңіз.' : 
+                    'Ошибка при анализе резюме. Попробуйте снова.');
+            } finally {
+                hideAIProcessing();
+                // Reset file input
+                event.target.value = '';
+            }
+        }
+
+        function showAIProcessing() {
+            const uploadArea = document.getElementById('aiUploadArea');
+            const processing = document.getElementById('aiProcessing');
+            
+            uploadArea.style.display = 'none';
+            processing.classList.add('show');
+        }
+
+        function hideAIProcessing() {
+            const uploadArea = document.getElementById('aiUploadArea');
+            const processing = document.getElementById('aiProcessing');
+            
+            uploadArea.style.display = 'block';
+            processing.classList.remove('show');
+        }
+
+        async function populateFormWithAI(aiData) {
+            // Personal Information
+            if (aiData.firstName) {
+                document.getElementById('firstName').value = aiData.firstName;
+                markAsAIPopulated('firstName');
+            }
+            
+            if (aiData.surName) {
+                document.getElementById('surName').value = aiData.surName;
+                markAsAIPopulated('surName');
+            }
+            
+            if (aiData.middleName) {
+                document.getElementById('middleName').value = aiData.middleName;
+                markAsAIPopulated('middleName');
+            }
+            
+            if (aiData.email) {
+                document.getElementById('email').value = aiData.email;
+                markAsAIPopulated('email');
+            }
+
+            // City
+            if (aiData.city) {
+                selectedData.city = aiData.city;
+                const cityBtn = document.getElementById('cityBtn');
+                cityBtn.querySelector('span').textContent = aiData.city.name;
+                cityBtn.classList.add('selected', 'ai-populated');
+                markLabelAsAIPopulated(cityBtn.closest('.form-group').querySelector('label'));
+            }
+
+            // Professions
+            if (aiData.professions && aiData.professions.length > 0) {
+                selectedData.professions = aiData.professions;
+                const professionsBtn = document.getElementById('professionsBtn');
+                const displayText = aiData.professions.map(p => p.name).join(', ');
+                professionsBtn.querySelector('span').textContent = displayText;
+                professionsBtn.classList.add('selected', 'ai-populated');
+                markLabelAsAIPopulated(professionsBtn.closest('.form-group').querySelector('label'));
+            }
+
+            // Skills
+            if (aiData.skills && aiData.skills.length > 0) {
+                selectedData.skills = aiData.skills;
+                const skillsBtn = document.getElementById('skillsBtn');
+                const displayText = aiData.skills.map(s => s.name).join(', ');
+                skillsBtn.querySelector('span').textContent = displayText;
+                skillsBtn.classList.add('selected', 'ai-populated');
+                markLabelAsAIPopulated(skillsBtn.closest('.form-group').querySelector('label'));
+            }
+
+            // Work Schedule
+            if (aiData.workSchedule && aiData.workSchedule.length > 0) {
+                selectedData.workSchedule = aiData.workSchedule;
+                const workScheduleBtn = document.getElementById('workScheduleBtn');
+                // Get display names for work schedule codes
+                const displayText = aiData.workSchedule.map(code => {
+                    const option = workScheduleOptions.find(opt => opt.code === code);
+                    return option ? option.name : code;
+                }).join(', ');
+                workScheduleBtn.querySelector('span').textContent = displayText;
+                workScheduleBtn.classList.add('selected', 'ai-populated');
+                markLabelAsAIPopulated(workScheduleBtn.closest('.form-group').querySelector('label'));
+            }
+
+            // Salary
+            if (aiData.expectedSalaryStart) {
+                document.getElementById('expectedSalaryStart').value = aiData.expectedSalaryStart;
+                markAsAIPopulated('expectedSalaryStart');
+            }
+            
+            if (aiData.expectedSalaryEnd) {
+                document.getElementById('expectedSalaryEnd').value = aiData.expectedSalaryEnd;
+                markAsAIPopulated('expectedSalaryEnd');
+            }
+
+            // Trip readiness
+            if (aiData.tripReadiness) {
+                document.getElementById('tripReadiness').value = aiData.tripReadiness;
+                markAsAIPopulated('tripReadiness');
+            }
+
+            // Busyness
+            if (aiData.busynesses && aiData.busynesses.length > 0) {
+                selectedData.busyness = aiData.busynesses;
+                const busynessBtn = document.getElementById('busynessBtn');
+                // Get display names for busyness codes
+                const busynessOptions = [
+                    { code: "FULL", name: currentLanguage === 'kk' ? "Толық" : "Полная" },
+                    { code: "PARTIAL", name: currentLanguage === 'kk' ? "Ішінара" : "Частичная" },
+                    { code: "PROJECT", name: currentLanguage === 'kk' ? "Жоба" : "Проектная" },
+                    { code: "INTERNSHIP", name: currentLanguage === 'kk' ? "Тәжірибе" : "Стажировка" },
+                    { code: "REMOTE", name: currentLanguage === 'kk' ? "Қашықтан" : "Удаленная" }
+                ];
+                const displayText = aiData.busynesses.map(code => {
+                    const option = busynessOptions.find(opt => opt.code === code);
+                    return option ? option.name : code;
+                }).join(', ');
+                busynessBtn.querySelector('span').textContent = displayText;
+                busynessBtn.classList.add('selected', 'ai-populated');
+                markLabelAsAIPopulated(busynessBtn.closest('.form-group').querySelector('label'));
+            }
+
+            // Checkboxes
+            if (aiData.relocationReadiness !== undefined) {
+                document.getElementById('relocationReadiness').checked = aiData.relocationReadiness;
+                markAsAIPopulated('relocationReadiness');
+            }
+            
+            if (aiData.workPermit !== undefined) {
+                document.getElementById('workPermit').checked = aiData.workPermit;
+                markAsAIPopulated('workPermit');
+            }
+            
+            if (aiData.bargain !== undefined) {
+                document.getElementById('bargain').checked = aiData.bargain;
+                markAsAIPopulated('bargain');
+            }
+            
+            if (aiData.advance !== undefined) {
+                document.getElementById('advance').checked = aiData.advance;
+                markAsAIPopulated('advance');
+            }
+
+            // Driver License
+            if (aiData.hasDriverLicense !== undefined) {
+                document.getElementById('hasDriverLicense').checked = aiData.hasDriverLicense;
+                markAsAIPopulated('hasDriverLicense');
+                handleDriverLicenseChange();
+                
+                if (aiData.driverLicenses && aiData.driverLicenses.length > 0) {
+                    selectedDriverLicenses = aiData.driverLicenses;
+                    updateSelectedCategoriesDisplay();
+                }
+            }
+
+            // Additional Info
+            if (aiData.additionalInfo) {
+                document.getElementById('additionalInfo').value = aiData.additionalInfo;
+                markAsAIPopulated('additionalInfo');
+            }
+
+            // Education
+            if (aiData.education && aiData.education.length > 0) {
+                await populateEducationFromAI(aiData.education);
+            }
+
+            // Work Experience
+            if (aiData.workExperience && aiData.workExperience.length > 0) {
+                await populateWorkExperienceFromAI(aiData.workExperience);
+            }
+
+            // Additional Courses
+            if (aiData.additionalCourses && aiData.additionalCourses.length > 0) {
+                await populateCoursesFromAI(aiData.additionalCourses);
+            }
+
+            // Social Networks
+            if (aiData.socialNetworks && aiData.socialNetworks.length > 0) {
+                await populateSocialNetworksFromAI(aiData.socialNetworks);
+            }
+        }
+
+        async function populateEducationFromAI(educationData) {
+            for (const edu of educationData) {
+                addEducation();
+                const index = educationItems.length - 1;
+                
+                if (edu.educationType) {
+                    document.getElementById(`educationType_${index}`).value = edu.educationType.code;
+                    markAsAIPopulated(`educationType_${index}`);
+                }
+                
+                if (edu.educationalInstitutionDictionary) {
+                    educationItems[index].selectedUniversity = edu.educationalInstitutionDictionary;
+                    const btn = document.getElementById(`universityBtn_${index}`);
+                    btn.querySelector('span').textContent = edu.educationalInstitutionDictionary.name;
+                    btn.classList.add('selected', 'ai-populated');
+                    markLabelAsAIPopulated(btn.closest('.form-group').querySelector('label'));
+                } else if (edu.educationalInstitutionOther) {
+                    document.getElementById(`customUniversity_${index}`).checked = true;
+                    toggleCustomUniversity(index);
+                    document.getElementById(`universityOther_${index}`).value = edu.educationalInstitutionOther;
+                    markAsAIPopulated(`universityOther_${index}`);
+                }
+                
+                if (edu.specialityDictionary) {
+                    educationItems[index].selectedSpecialty = edu.specialityDictionary;
+                    const btn = document.getElementById(`specialtyBtn_${index}`);
+                    btn.querySelector('span').textContent = edu.specialityDictionary.name;
+                    btn.classList.add('selected', 'ai-populated');
+                    markLabelAsAIPopulated(btn.closest('.form-group').querySelector('label'));
+                } else if (edu.specialityOther) {
+                    document.getElementById(`customSpecialty_${index}`).checked = true;
+                    toggleCustomSpecialty(index);
+                    document.getElementById(`specialtyOther_${index}`).value = edu.specialityOther;
+                    markAsAIPopulated(`specialtyOther_${index}`);
+                }
+                
+                if (edu.graduationYear) {
+                    document.getElementById(`graduationYear_${index}`).value = edu.graduationYear;
+                    markAsAIPopulated(`graduationYear_${index}`);
+                }
+            }
+        }
+
+        async function populateWorkExperienceFromAI(workData) {
+            for (const work of workData) {
+                addWorkExperience();
+                const index = workExperienceItems.length - 1;
+                
+                if (work.workPlace) {
+                    document.getElementById(`workPlace_${index}`).value = work.workPlace;
+                    markAsAIPopulated(`workPlace_${index}`);
+                }
+                
+                if (work.jobTitle) {
+                    document.getElementById(`jobTitle_${index}`).value = work.jobTitle;
+                    markAsAIPopulated(`jobTitle_${index}`);
+                }
+                
+                if (work.startDate) {
+                    document.getElementById(`startDate_${index}`).value = work.startDate;
+                    markAsAIPopulated(`startDate_${index}`);
+                }
+                
+                if (work.endDate) {
+                    document.getElementById(`endDate_${index}`).value = work.endDate;
+                    markAsAIPopulated(`endDate_${index}`);
+                }
+                
+                if (work.tillPresent !== undefined) {
+                    document.getElementById(`tillPresent_${index}`).checked = work.tillPresent;
+                    markAsAIPopulated(`tillPresent_${index}`);
+                }
+                
+                if (work.responsibilities) {
+                    document.getElementById(`responsibilities_${index}`).value = work.responsibilities;
+                    markAsAIPopulated(`responsibilities_${index}`);
+                }
+            }
+        }
+
+        async function populateCoursesFromAI(coursesData) {
+            for (const course of coursesData) {
+                if (course.name) {
+                    addCourse();
+                    const index = courseItems.length - 1;
+                    
+                    document.getElementById(`courseName_${index}`).value = course.name;
+                    markAsAIPopulated(`courseName_${index}`);
+                }
+            }
+        }
+
+        async function populateSocialNetworksFromAI(socialData) {
+            for (const social of socialData) {
+                addSocialNetwork();
+                const index = socialNetworkItems.length - 1;
+                
+                if (social.socialNetworkType) {
+                    document.getElementById(`socialNetworkType_${index}`).value = social.socialNetworkType;
+                    markAsAIPopulated(`socialNetworkType_${index}`);
+                }
+                
+                if (social.name) {
+                    document.getElementById(`socialNetworkName_${index}`).value = social.name;
+                    markAsAIPopulated(`socialNetworkName_${index}`);
+                }
+                
+                if (social.url) {
+                    document.getElementById(`socialNetworkUrl_${index}`).value = social.url;
+                    markAsAIPopulated(`socialNetworkUrl_${index}`);
+                }
+            }
+        }
+
+        function markAsAIPopulated(elementId) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.classList.add('ai-populated');
+                
+                // Mark label as AI populated too
+                const formGroup = element.closest('.form-group');
+                if (formGroup) {
+                    const label = formGroup.querySelector('label');
+                    if (label) {
+                        markLabelAsAIPopulated(label);
+                    }
+                }
+            }
+        }
+
+        function markLabelAsAIPopulated(label) {
+            if (label) {
+                label.classList.add('ai-populated-label');
+            }
         }
     </script>
     <script src="api.js"></script>

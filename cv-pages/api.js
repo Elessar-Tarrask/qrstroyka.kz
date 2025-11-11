@@ -349,6 +349,56 @@ class CVApiService {
         return null;
     }
 
+    // === AI RESUME PROCESSING API ===
+    
+    /**
+     * Process document with AI
+     */
+    async processDocumentWithAI(fileRef) {
+        const AI_API_URL = 'http://157.230.103.104:4242/api/process-document';
+        const AI_USERNAME = 'mister';
+        const AI_PASSWORD = '12345678';
+        
+        // Create basic auth header
+        const basicAuth = btoa(`${AI_USERNAME}:${AI_PASSWORD}`);
+        
+        return await this.makeRequest(AI_API_URL, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Basic ${basicAuth}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                fileRef: fileRef
+            })
+        });
+    }
+
+    /**
+     * Upload and process resume with AI
+     */
+    async uploadAndProcessResume(file) {
+        try {
+            // First upload the file
+            const uploadResult = await this.uploadPhoto(file);
+            
+            if (!uploadResult || !uploadResult.ref) {
+                throw new Error('File upload failed');
+            }
+            
+            // Then process with AI
+            const aiResult = await this.processDocumentWithAI(uploadResult.ref);
+            
+            return {
+                uploadResult,
+                aiResult
+            };
+        } catch (error) {
+            console.error('Error processing resume with AI:', error);
+            throw error;
+        }
+    }
+
     // === UTILITY METHODS ===
 
     /**
