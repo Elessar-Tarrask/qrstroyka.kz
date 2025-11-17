@@ -7,7 +7,7 @@
 const DEFAULT_DOCSIGN_CONFIG = {
     // API Base URL - can be overridden by environment variables
     //API_BASE_URL: 'http://localhost:8080',
-    API_BASE_URL: 'https://cmr.api.stroyka.kz',
+    API_BASE_URL: 'https://cmr.test.api.stroyka.kz',
     
     // Endpoints
     SIGNATORY_ENDPOINT: '/rest/api/v1/aitu/sign-applications/by-signatory/',

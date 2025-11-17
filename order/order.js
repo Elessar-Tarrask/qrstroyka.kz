@@ -1,7 +1,7 @@
 // API Configuration
 const DEFAULT_ORDER_CONFIG = {
     // API Base URL - can be overridden by environment variables
-    API_BASE_URL: 'https://cmr.api.stroyka.kz', //cmr.api.stroyka.kz
+    API_BASE_URL: 'https://cmr.test.api.stroyka.kz', //cmr.api.stroyka.kz
     // API_BASE_URL: 'http://localhost:8080',
     // API_BASE_URL: 'https://cmr.test.api.stroyka.kz',
     
