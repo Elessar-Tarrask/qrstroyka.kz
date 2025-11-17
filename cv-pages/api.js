@@ -3,8 +3,8 @@
  * Handles all API calls for CV creation and operations
  */
 
-const API_BASE_URL = 'https://dictionary.test.api.stroyka.kz/api/v1';
-const CMR_API_BASE_URL = 'https://cmr.test.api.stroyka.kz';
+const API_BASE_URL = 'https://dictionary.api.stroyka.kz/api/v1';
+const CMR_API_BASE_URL = 'https://cmr.api.stroyka.kz';
 
 class CVApiService {
     constructor() {
@@ -355,7 +355,7 @@ class CVApiService {
      * Process document with AI
      */
     async processDocumentWithAI(fileRef) {
-        const AI_API_URL = 'http://157.230.103.104:4242/api/process-document';
+        const AI_API_URL = 'https://ai.parser.stroyka.kz/api/process-document';
 
         return await this.makeRequest(AI_API_URL, {
             method: 'POST',
