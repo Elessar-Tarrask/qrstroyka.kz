@@ -3,8 +3,8 @@
  * Handles all API calls for machinery and equipment operations
  */
 
-const API_BASE_URL = 'https://dictionary.api.stroyka.kz/api/v1';
-const CMR_API_BASE_URL = 'https://cmr.api.stroyka.kz';
+const API_BASE_URL = 'https://dictionary.test.api.stroyka.kz/api/v1';
+const CMR_API_BASE_URL = 'https://cmr.test.api.stroyka.kz';
 
 class ApiService {
     constructor() {
