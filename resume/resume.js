@@ -1,7 +1,7 @@
 // API Configuration
 const DEFAULT_RESUME_CONFIG = {
     // API Base URL - use test API by default; can be overridden later if needed
-    API_BASE_URL: 'https://cmr.api.stroyka.kz',
+    API_BASE_URL: 'https://cmr.test.api.stroyka.kz',
     // API_BASE_URL: 'http://localhost:8080',
     // API_BASE_URL: 'https://cmr.test.api.stroyka.kz',
     // Endpoints

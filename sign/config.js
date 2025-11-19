@@ -6,10 +6,10 @@
 // API Configuration
 const DEFAULT_API_CONFIG = {
     // API_BASE_URL: 'http://localhost:8393',
-    API_BASE_URL: 'https://adata.api.stroyka.kz',
+    API_BASE_URL: 'https://adata.test.api.stroyka.kz',
     
     // NOTIFICATION_API_BASE_URL: 'http://localhost:8292',
-    NOTIFICATION_API_BASE_URL: 'https://notification.api.stroyka.kz',
+    NOTIFICATION_API_BASE_URL: 'https://notification.test.api.stroyka.kz',
     
     // Auth endpoints
     AUTH_CALLBACK_ENDPOINT: '/api/v1/aitu/callback',
