@@ -33,16 +33,31 @@ class CVApiService {
     }
 
     /**
+     * Check if URL is from dictionary service
+     */
+    isDictionaryEndpoint(url) {
+        return url.startsWith(API_BASE_URL);
+    }
+
+    /**
      * Generic fetch wrapper with error handling
      */
     async makeRequest(url, options = {}) {
         try {
+            // Add language header only for dictionary endpoints
+            const headers = {
+                ...this.headers,
+                ...options.headers
+            };
+
+            // Add language header only for dictionary service endpoints
+            if (this.isDictionaryEndpoint(url)) {
+                headers['language'] = this.language;
+            }
+
             const response = await fetch(url, {
                 ...options,
-                headers: {
-                    ...this.headers,
-                    ...options.headers
-                }
+                headers
             });
 
             if (!response.ok) {

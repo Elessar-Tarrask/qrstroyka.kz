@@ -33,11 +33,33 @@
         }
 
         .header-content {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .language-selector {
+            display: flex;
+            gap: 0.5rem;
+            margin-left: auto;
+        }
+
+        .lang-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 0.5rem 0.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .lang-btn.active {
+            background: rgba(255,255,255,0.9);
+            color: #4CAF50;
         }
 
         .back-btn {
@@ -570,6 +592,30 @@
             .container {
                 padding: 1rem 0.5rem;
             }
+
+            .header-content {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            .back-btn {
+                order: 1;
+            }
+
+            .header-title {
+                order: 2;
+                flex: 1 1 100%;
+                text-align: center;
+                font-size: 1.1rem;
+            }
+
+            .language-selector {
+                order: 3;
+            }
+
+            .logout-btn {
+                order: 4;
+            }
         }
     </style>
 </head>
@@ -583,6 +629,10 @@
             <span data-kk="Артқа" data-ru="Назад">Артқа</span>
         </button>
         <h1 class="header-title" data-kk="Резюме жасау" data-ru="Создание резюме">Резюме жасау</h1>
+        <div class="language-selector">
+            <button class="lang-btn active" id="langKk" onclick="changeLanguage('kk')">ҚАЗ</button>
+            <button class="lang-btn" id="langRu" onclick="changeLanguage('ru')">РУС</button>
+        </div>
         <button class="logout-btn" onclick="logout()" data-kk="Шығу" data-ru="Выйти">Шығу</button>
     </div>
 </div>
@@ -639,19 +689,28 @@
         <div class="form-row">
             <div class="form-group">
                 <label data-kk="Аты" data-ru="Имя">Аты</label>
-                <input type="text" id="firstName" placeholder="Аскар">
+                <input type="text" id="firstName" 
+                    data-placeholder-kk="Аскар" 
+                    data-placeholder-ru="Аскар"
+                    placeholder="Аскар">
                 <div class="error-message" id="firstNameError"></div>
             </div>
             <div class="form-group">
                 <label data-kk="Тегі" data-ru="Фамилия">Тегі</label>
-                <input type="text" id="surName" placeholder="Назарбаев">
+                <input type="text" id="surName" 
+                    data-placeholder-kk="Назарбаев" 
+                    data-placeholder-ru="Назарбаев"
+                    placeholder="Назарбаев">
                 <div class="error-message" id="surNameError"></div>
             </div>
         </div>
         <div class="form-row">
             <div class="form-group">
                 <label data-kk="Әкесінің аты" data-ru="Отчество">Әкесінің аты</label>
-                <input type="text" id="middleName" placeholder="Нұрсұлтанұлы">
+                <input type="text" id="middleName" 
+                    data-placeholder-kk="Нұрсұлтанұлы" 
+                    data-placeholder-ru="Нурсултанович"
+                    placeholder="Нұрсұлтанұлы">
             </div>
             <div class="form-group">
                 <label data-kk="Телефон" data-ru="Телефон">Телефон</label>
@@ -661,7 +720,10 @@
         <div class="form-row">
             <div class="form-group">
                 <label data-kk="Email" data-ru="Email">Email</label>
-                <input type="email" id="email" placeholder="askar@example.com">
+                <input type="email" id="email" 
+                    data-placeholder-kk="askar@example.com" 
+                    data-placeholder-ru="askar@example.com"
+                    placeholder="askar@example.com">
                 <div class="error-message" id="emailError"></div>
             </div>
             <div class="form-group">
@@ -694,11 +756,17 @@
         <div class="form-row">
             <div class="form-group">
                 <label data-kk="Күтілетін жалақы (бастап)" data-ru="Ожидаемая зарплата (от)">Күтілетін жалақы (бастап)</label>
-                <input type="number" id="expectedSalaryStart" placeholder="50000" min="0">
+                <input type="number" id="expectedSalaryStart" 
+                    data-placeholder-kk="50000" 
+                    data-placeholder-ru="50000"
+                    placeholder="50000" min="0">
             </div>
             <div class="form-group">
                 <label data-kk="Күтілетін жалақы (дейін)" data-ru="Ожидаемая зарплата (до)">Күтілетін жалақы (дейін)</label>
-                <input type="number" id="expectedSalaryEnd" placeholder="100000" min="0">
+                <input type="number" id="expectedSalaryEnd" 
+                    data-placeholder-kk="100000" 
+                    data-placeholder-ru="100000"
+                    placeholder="100000" min="0">
             </div>
         </div>
 
@@ -790,7 +858,10 @@
 
         <div class="form-group">
             <label data-kk="Өзім туралы" data-ru="О себе">Өзім туралы</label>
-            <textarea id="additionalInfo" rows="4" placeholder="Сіздің мамандығыңыз, тәжірибеңіз және мақсаттарыңыз туралы айтып беріңіз..."></textarea>
+            <textarea id="additionalInfo" rows="4" 
+                data-placeholder-kk="Сіздің мамандығыңыз, тәжірибеңіз және мақсаттарыңыз туралы айтып беріңіз..." 
+                data-placeholder-ru="Расскажите о своей специальности, опыте и целях..."
+                placeholder="Сіздің мамандығыңыз, тәжірибеңіз және мақсаттарыңыз туралы айтып беріңіз..."></textarea>
         </div>
 
         <!-- Social Networks -->
@@ -842,7 +913,7 @@
 </div>
 
 <script>
-    let currentLanguage = 'kk';
+    let currentLanguage = localStorage.getItem('stroyka_lang') || 'kk';
     let userData = {};
     let selectedData = {
         city: null,
@@ -870,11 +941,11 @@
     let vehicleCategories = [];
 
     // Initialize page
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', async function() {
         checkAuthentication();
         loadUserData();
-        loadLanguage();
-        loadDictionaries();
+        loadLanguage(); // Sets language without reloading dictionaries
+        await loadDictionaries(); // Initial dictionary load
         initializeModalHandlers();
     });
 
@@ -1007,16 +1078,158 @@
 
     function loadLanguage() {
         const savedLang = localStorage.getItem('stroyka_lang') || 'kk';
-        changeLanguage(savedLang);
+        changeLanguage(savedLang, false); // Don't reload on initial load
     }
 
-    function changeLanguage(lang) {
+    async function changeLanguage(lang, shouldReloadDictionaries = true) {
         currentLanguage = lang;
         apiService.setLanguage(lang);
+        
+        // Update language button states
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        if (lang === 'kk') {
+            document.getElementById('langKk').classList.add('active');
+        } else {
+            document.getElementById('langRu').classList.add('active');
+        }
+        
+        // Update all text content
         document.querySelectorAll('[data-kk][data-ru]').forEach(element => {
             element.textContent = element.getAttribute('data-' + lang);
         });
+        
+        // Update all placeholders
+        document.querySelectorAll('[data-placeholder-kk][data-placeholder-ru]').forEach(element => {
+            element.placeholder = element.getAttribute('data-placeholder-' + lang);
+        });
+        
         localStorage.setItem('stroyka_lang', lang);
+        
+        // Reload dictionaries with new language
+        if (shouldReloadDictionaries) {
+            await reloadDictionaries();
+        }
+    }
+    
+    async function reloadDictionaries() {
+        try {
+            // Show loading indicator (optional)
+            console.log('Reloading dictionaries with language:', currentLanguage);
+            
+            // Reload all dictionaries
+            await Promise.all([
+                loadCities(),
+                loadProfessions(),
+                loadSkills(),
+                loadWorkSchedule(),
+                loadUniversities(),
+                loadSpecialties(),
+                loadEducationTypes(),
+                loadVehicleCategories()
+            ]);
+            
+            // Update UI with new dictionary data
+            updateUIWithNewLanguageData();
+            
+            console.log('Dictionaries reloaded successfully');
+        } catch (error) {
+            console.error('Error reloading dictionaries:', error);
+        }
+    }
+    
+    function updateUIWithNewLanguageData() {
+        // Update selected city display
+        if (selectedData.city) {
+            const city = cities.find(c => c.code === selectedData.city.code);
+            if (city) {
+                selectedData.city = city;
+                document.getElementById('cityBtn').querySelector('span').textContent = city.name;
+            }
+        }
+        
+        // Update selected professions display
+        if (selectedData.professions.length > 0) {
+            const updatedProfessions = [];
+            selectedData.professions.forEach(selectedProf => {
+                const prof = professions.find(p => p.id === selectedProf.id);
+                if (prof) {
+                    updatedProfessions.push(prof);
+                }
+            });
+            if (updatedProfessions.length > 0) {
+                selectedData.professions = updatedProfessions;
+                const displayText = updatedProfessions.map(p => p.name).join(', ');
+                document.getElementById('professionsBtn').querySelector('span').textContent = displayText;
+            }
+        }
+        
+        // Update selected skills display
+        if (selectedData.skills.length > 0) {
+            const updatedSkills = [];
+            selectedData.skills.forEach(selectedSkill => {
+                const skill = skills.find(s => s.id === selectedSkill.id);
+                if (skill) {
+                    updatedSkills.push(skill);
+                }
+            });
+            if (updatedSkills.length > 0) {
+                selectedData.skills = updatedSkills;
+                const displayText = updatedSkills.map(s => s.name).join(', ');
+                document.getElementById('skillsBtn').querySelector('span').textContent = displayText;
+            }
+        }
+        
+        // Update work schedule display
+        if (selectedData.workSchedule.length > 0) {
+            const displayText = selectedData.workSchedule.map(code => {
+                const option = workScheduleOptions.find(opt => opt.code === code);
+                return option ? option.name : code;
+            }).join(', ');
+            document.getElementById('workScheduleBtn').querySelector('span').textContent = displayText;
+        }
+        
+        // Update busyness display
+        if (selectedData.busyness.length > 0) {
+            const busynessOptions = [
+                { code: "FULL", name: currentLanguage === 'kk' ? "Толық" : "Полная" },
+                { code: "PARTIAL", name: currentLanguage === 'kk' ? "Ішінара" : "Частичная" },
+                { code: "PROJECT", name: currentLanguage === 'kk' ? "Жоба" : "Проектная" },
+                { code: "INTERNSHIP", name: currentLanguage === 'kk' ? "Тәжірибе" : "Стажировка" },
+                { code: "REMOTE", name: currentLanguage === 'kk' ? "Қашықтан" : "Удаленная" }
+            ];
+            const displayText = selectedData.busyness.map(code => {
+                const option = busynessOptions.find(opt => opt.code === code);
+                return option ? option.name : code;
+            }).join(', ');
+            document.getElementById('busynessBtn').querySelector('span').textContent = displayText;
+        }
+        
+        // Update education items with new university/specialty names
+        educationItems.forEach(item => {
+            if (item.selectedUniversity) {
+                const university = universities.find(u => u.id === item.selectedUniversity.id);
+                if (university) {
+                    item.selectedUniversity = university;
+                    const btn = document.getElementById(`universityBtn_${item.index}`);
+                    if (btn) {
+                        btn.querySelector('span').textContent = university.name;
+                    }
+                }
+            }
+            
+            if (item.selectedSpecialty) {
+                const specialty = specialties.find(s => s.id === item.selectedSpecialty.id);
+                if (specialty) {
+                    item.selectedSpecialty = specialty;
+                    const btn = document.getElementById(`specialtyBtn_${item.index}`);
+                    if (btn) {
+                        btn.querySelector('span').textContent = specialty.name;
+                    }
+                }
+            }
+        });
     }
 
     async function loadDictionaries() {
