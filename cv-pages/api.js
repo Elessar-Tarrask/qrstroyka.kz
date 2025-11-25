@@ -37,12 +37,19 @@ class CVApiService {
      */
     async makeRequest(url, options = {}) {
         try {
+            // Add language header only for dictionary API calls
+            const headers = {
+                ...this.headers,
+                ...options.headers
+            };
+            
+            if (url.includes(API_BASE_URL)) {
+                headers['language'] = this.language;
+            }
+            
             const response = await fetch(url, {
                 ...options,
-                headers: {
-                    ...this.headers,
-                    ...options.headers
-                }
+                headers: headers
             });
 
             if (!response.ok) {
