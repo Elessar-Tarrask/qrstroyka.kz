@@ -362,7 +362,7 @@ class CVApiService {
      * Process document with AI
      */
     async processDocumentWithAI(fileRef) {
-        const AI_API_URL = 'http://139.59.5.75:4242/api/process-document';
+        const AI_API_URL = 'https://ai.test.api.stroyka.kz/api/process-document';
 
         return await this.makeRequest(AI_API_URL, {
             method: 'POST',
