@@ -3,8 +3,8 @@
  * Handles all API calls for CV creation and operations
  */
 
-const API_BASE_URL = 'https://dictionary.api.stroyka.kz/api/v1';
-const CMR_API_BASE_URL = 'https://cmr.api.stroyka.kz';
+const API_BASE_URL = 'https://dictionary.test.api.stroyka.kz/api/v1';
+const CMR_API_BASE_URL = 'https://cmr.test.api.stroyka.kz';
 
 class CVApiService {
     constructor() {
@@ -37,12 +37,19 @@ class CVApiService {
      */
     async makeRequest(url, options = {}) {
         try {
+            // Add language header only for dictionary API calls
+            const headers = {
+                ...this.headers,
+                ...options.headers
+            };
+
+            if (url.includes(API_BASE_URL)) {
+                headers['language'] = this.language;
+            }
+
             const response = await fetch(url, {
                 ...options,
-                headers: {
-                    ...this.headers,
-                    ...options.headers
-                }
+                headers: headers
             });
 
             if (!response.ok) {
@@ -108,7 +115,7 @@ class CVApiService {
      * Send SMS verification code
      */
     async sendSMS(phone) {
-        const url = `${CMR_API_BASE_URL}/rest/api/v1/register/send/test`;
+        const url = `${CMR_API_BASE_URL}/rest/api/v1/register/send`;
         return await this.makeRequest(url, {
             method: 'POST',
             body: JSON.stringify({
@@ -355,7 +362,7 @@ class CVApiService {
      * Process document with AI
      */
     async processDocumentWithAI(fileRef) {
-        const AI_API_URL = 'https://ai.parser.stroyka.kz/api/process-document';
+        const AI_API_URL = 'https://ai.test.api.stroyka.kz/api/process-document';
 
         return await this.makeRequest(AI_API_URL, {
             method: 'POST',

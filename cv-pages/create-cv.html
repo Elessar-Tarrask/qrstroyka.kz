@@ -44,13 +44,15 @@
             background: rgba(255,255,255,0.2);
             border: none;
             color: white;
-            padding: 0.5rem;
+            padding: 0.5rem 1rem;
             border-radius: 8px;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 0.5rem;
             transition: background 0.3s;
+            font-size: 0.9rem;
+            margin-right: 1rem;
         }
 
         .back-btn:hover {
@@ -60,6 +62,7 @@
         .header-title {
             font-size: 1.3rem;
             font-weight: 600;
+            flex: 1;
         }
 
         .logout-btn {
@@ -75,6 +78,37 @@
 
         .logout-btn:hover {
             background: rgba(255,255,255,0.3);
+        }
+
+        .language-selector {
+            display: flex;
+            gap: 0.5rem;
+            margin-left: auto;
+            margin-right: 1rem;
+        }
+
+        .lang-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 0.5rem 0.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .lang-btn.active {
+            background: rgba(255,255,255,0.9);
+            color: #4CAF50;
+        }
+
+        .lang-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .lang-btn.active:hover {
+            background: rgba(255,255,255,0.95);
         }
 
         .container {
@@ -583,6 +617,10 @@
             <span data-kk="Артқа" data-ru="Назад">Артқа</span>
         </button>
         <h1 class="header-title" data-kk="Резюме жасау" data-ru="Создание резюме">Резюме жасау</h1>
+        <div class="language-selector">
+            <button class="lang-btn active" onclick="changeLanguage('kk')">ҚАЗ</button>
+            <button class="lang-btn" onclick="changeLanguage('ru')">РУС</button>
+        </div>
         <button class="logout-btn" onclick="logout()" data-kk="Шығу" data-ru="Выйти">Шығу</button>
     </div>
 </div>
@@ -790,7 +828,7 @@
 
         <div class="form-group">
             <label data-kk="Өзім туралы" data-ru="О себе">Өзім туралы</label>
-            <textarea id="additionalInfo" rows="4" placeholder="Сіздің мамандығыңыз, тәжірибеңіз және мақсаттарыңыз туралы айтып беріңіз..."></textarea>
+            <textarea id="additionalInfo" rows="4" placeholder="Сіздің мамандығыңыз, тәжірибеңіз және мақсаттарыңыз туралы айтып беріңіз..." data-placeholder-kk="Сіздің мамандығыңыз, тәжірибеңіз және мақсаттарыңыз туралы айтып беріңіз..." data-placeholder-ru="Расскажите о вашей специальности, опыте и целях..."></textarea>
         </div>
 
         <!-- Social Networks -->
@@ -1007,16 +1045,56 @@
 
     function loadLanguage() {
         const savedLang = localStorage.getItem('stroyka_lang') || 'kk';
-        changeLanguage(savedLang);
+        currentLanguage = savedLang;
+        apiService.setLanguage(savedLang);
+
+        // Update language buttons
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if ((savedLang === 'kk' && btn.textContent.includes('ҚАЗ')) ||
+                (savedLang === 'ru' && btn.textContent.includes('РУС'))) {
+                btn.classList.add('active');
+            }
+        });
+
+        // Update text content
+        document.querySelectorAll('[data-kk][data-ru]').forEach(element => {
+            element.textContent = element.getAttribute('data-' + savedLang);
+        });
+
+        // Update placeholders
+        document.querySelectorAll('[data-placeholder-kk][data-placeholder-ru]').forEach(element => {
+            element.placeholder = element.getAttribute('data-placeholder-' + savedLang);
+        });
     }
 
     function changeLanguage(lang) {
         currentLanguage = lang;
         apiService.setLanguage(lang);
+
+        // Update language buttons
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if ((lang === 'kk' && btn.textContent.includes('ҚАЗ')) ||
+                (lang === 'ru' && btn.textContent.includes('РУС'))) {
+                btn.classList.add('active');
+            }
+        });
+
+        // Update text content
         document.querySelectorAll('[data-kk][data-ru]').forEach(element => {
             element.textContent = element.getAttribute('data-' + lang);
         });
+
+        // Update placeholders
+        document.querySelectorAll('[data-placeholder-kk][data-placeholder-ru]').forEach(element => {
+            element.placeholder = element.getAttribute('data-placeholder-' + lang);
+        });
+
         localStorage.setItem('stroyka_lang', lang);
+
+        // Reload dictionaries with new language
+        loadDictionaries();
     }
 
     async function loadDictionaries() {
@@ -2434,6 +2512,12 @@
                             </select>
                         </div>
                         <div class="form-group">
+                            <label data-kk="Бітірген жылы" data-ru="Год окончания">Бітірген жылы</label>
+                            <input type="number" id="graduationYear_${index}" placeholder="2025" min="1950" max="2030">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
                             <label data-kk="Оқу орны" data-ru="Учебное заведение">Оқу орны</label>
                             <button type="button" class="btn-selector" id="universityBtn_${index}" onclick="selectUniversity(${index})">
                                 <span data-kk="Университетті таңдаңыз" data-ru="Выберите университет">Университетті таңдаңыз</span>
@@ -2442,12 +2526,16 @@
                                 </svg>
                             </button>
                         </div>
-                    </div>
-                    <div class="form-row">
                         <div class="form-group">
                             <label data-kk="Басқа оқу орны" data-ru="Другое учебное заведение">Басқа оқу орны</label>
                             <input type="text" id="universityOther_${index}" placeholder="${currentLanguage === 'kk' ? 'Егер тізімде жоқ болса' : 'Если нет в списке'}" style="display: none;">
+                            <div class="checkbox-group" style="margin-top: 0.5rem;">
+                                <input type="checkbox" id="customUniversity_${index}" onchange="toggleCustomUniversity(${index})">
+                                <label for="customUniversity_${index}" data-kk="Басқа университет" data-ru="Другой университет">Басқа университет</label>
+                            </div>
                         </div>
+                    </div>
+                    <div class="form-row">
                         <div class="form-group">
                             <label data-kk="Мамандық" data-ru="Специальность">Мамандық</label>
                             <button type="button" class="btn-selector" id="specialtyBtn_${index}" onclick="selectSpecialty(${index})">
@@ -2457,26 +2545,10 @@
                                 </svg>
                             </button>
                         </div>
-                    </div>
-                    <div class="form-row">
                         <div class="form-group">
                             <label data-kk="Басқа мамандық" data-ru="Другая специальность">Басқа мамандық</label>
                             <input type="text" id="specialtyOther_${index}" placeholder="${currentLanguage === 'kk' ? 'Егер тізімде жоқ болса' : 'Если нет в списке'}" style="display: none;">
-                        </div>
-                        <div class="form-group">
-                            <label data-kk="Бітірген жылы" data-ru="Год окончания">Бітірген жылы</label>
-                            <input type="number" id="graduationYear_${index}" placeholder="2025" min="1950" max="2030">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="customUniversity_${index}" onchange="toggleCustomUniversity(${index})">
-                                <label for="customUniversity_${index}" data-kk="Басқа университет" data-ru="Другой университет">Басқа университет</label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="checkbox-group">
+                            <div class="checkbox-group" style="margin-top: 0.5rem;">
                                 <input type="checkbox" id="customSpecialty_${index}" onchange="toggleCustomSpecialty(${index})">
                                 <label for="customSpecialty_${index}" data-kk="Басқа мамандық" data-ru="Другая специальность">Басқа мамандық</label>
                             </div>
